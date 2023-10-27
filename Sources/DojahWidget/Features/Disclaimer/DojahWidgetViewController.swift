@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class DojahWidgetViewController: UIViewController {
+public class DojahWidgetViewController: DJBaseViewController {
     
     private let navView = DJNavBarView()
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
@@ -49,7 +49,7 @@ public class DojahWidgetViewController: UIViewController {
     }
     
     private func setupUI() {
-        backgroundColor = .white
+        backgroundColor = .aSystemBackground
         addSubviews(navView, contentStackView, poweredView)
         
         navView.anchor(
@@ -77,6 +77,7 @@ public class DojahWidgetViewController: UIViewController {
         
         disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 10))
         disclaimerItemsTableView.constraintHeight(200)
+        disclaimerItemsTableView.addClearBackground()
         
         addTapGestures()
     }
