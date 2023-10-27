@@ -43,8 +43,13 @@ public class DojahWidgetViewController: UIViewController {
         setupUI()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        showNavBar(false)
+    }
+    
     private func setupUI() {
-        backgroundColor = .aSystemBackground
+        backgroundColor = .white
         addSubviews(navView, contentStackView, poweredView)
         
         navView.anchor(
