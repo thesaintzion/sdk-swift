@@ -40,6 +40,7 @@ public class DojahWidgetViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
     }
     
     private func setupUI() {
