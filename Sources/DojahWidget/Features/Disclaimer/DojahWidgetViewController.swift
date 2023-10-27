@@ -13,7 +13,7 @@ public class DojahWidgetViewController: DJBaseViewController {
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
     private let disclaimerTitleLabel = UILabel(
         text: "Please note the following",
-        font: .primarySemibold(15),
+        font: .primaryMedium(15),
         alignment: .left
     )
     private lazy var disclaimerItemsTableView = UITableView(
@@ -29,7 +29,7 @@ public class DojahWidgetViewController: DJBaseViewController {
     private lazy var disclaimerView = UIView(
         subviews: [disclaimerStackView],
         backgroundColor: .primaryGrey,
-        radius: 4
+        radius: 5
     )
     private lazy var continueButton = DJButton(title: "Continue")
     private lazy var contentStackView = VStackView(
@@ -75,8 +75,8 @@ public class DojahWidgetViewController: DJBaseViewController {
             )
         }
         
-        disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 10))
-        disclaimerItemsTableView.constraintHeight(200)
+        disclaimerStackView.fillSuperview(padding: .kinit(allEdges: 15))
+        disclaimerItemsTableView.constraintHeight(180)
         disclaimerItemsTableView.addClearBackground()
         
         addTapGestures()
@@ -108,6 +108,7 @@ extension DojahWidgetViewController: UITableViewConformable {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let infoText = DJConstants.disclaimerItems[indexPath.row]
         let cell = tableView.deque(cell: DisclaimerCell.self, at: indexPath)
+        cell.selectionStyle = .none
         cell.infoLabel.text = infoText
         return cell
     }
