@@ -22,6 +22,7 @@ final class DisclaimerCell: BaseTableViewCell {
     )
     
     override func setup() {
+        addClearBackground()
         with(contentStackView) {
             kaddSubview($0)
             $0.fillSuperview(padding: .kinit(topBottom: 10))

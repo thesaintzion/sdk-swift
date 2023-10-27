@@ -64,7 +64,7 @@ public class DojahWidgetViewController: UIViewController {
             top: navView.bottomAnchor,
             leading: safeAreaLeadingAnchor,
             trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 30, leftRight: 16)
+            padding: .kinit(topBottom: 60, leftRight: 16)
         )
         
         with(poweredView) {
