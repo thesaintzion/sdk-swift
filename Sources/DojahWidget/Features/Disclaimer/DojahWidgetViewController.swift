@@ -24,7 +24,7 @@ public class DojahWidgetViewController: DJBaseViewController {
     )
     private lazy var disclaimerStackView = VStackView(
         subviews: [disclaimerTitleLabel, disclaimerItemsTableView],
-        spacing: 15
+        spacing: 10
     )
     private lazy var disclaimerView = UIView(
         subviews: [disclaimerStackView],
@@ -75,8 +75,8 @@ public class DojahWidgetViewController: DJBaseViewController {
             )
         }
         
-        disclaimerStackView.fillSuperview(padding: .kinit(allEdges: 15))
-        disclaimerItemsTableView.constraintHeight(180)
+        disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 20))
+        disclaimerItemsTableView.constraintHeight(170)
         disclaimerItemsTableView.addClearBackground()
         
         addTapGestures()
