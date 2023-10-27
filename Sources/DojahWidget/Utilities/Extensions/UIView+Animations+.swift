@@ -400,4 +400,24 @@ public extension UIView {
         }, completion: nil)
     }
     
+    func breathe(
+        scaleX: CGFloat = 1.2,
+        scaleY: CGFloat = 1.2,
+        duration: Double = 0.7,
+        options: UIView.AnimationOptions = [.autoreverse, .repeat, .allowUserInteraction],
+        completion: (() -> Void)?
+    ) {
+        UIView.animate(withDuration: duration, delay: 0, options: options) {
+            self.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+        } completion: { _ in
+            completion?()
+        }
+    }
+    
+    func stopBreathing() {
+        UIView.animate(withDuration: 0.5 ) {
+            self.transform = CGAffineTransform.identity
+        }
+    }
+    
 }

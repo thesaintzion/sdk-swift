@@ -19,20 +19,15 @@ extension UIImageView {
     }
       
     convenience init(
-        subviews: [UIView]? = nil,
         image: UIImage? = nil,
         contentMode: UIView.ContentMode = .scaleAspectFit,
         tintColor: UIColor? = nil,
         size: CGFloat? = nil,
         height: CGFloat? = nil,
         width: CGFloat? = nil,
-        cornerRadius: CGFloat? = nil,
-        backgroundColor: UIColor? = nil
+        cornerRadius: CGFloat? = nil
     ) {
         self.init(image: image)
-        if let subviews = subviews {
-            addSubviews(subviews)
-        }
         if let tintColor = tintColor {
             self.tintColor = tintColor
         }
@@ -48,9 +43,6 @@ extension UIImageView {
         }
         if let cornerRadius = cornerRadius {
             viewCornerRadius = cornerRadius
-        }
-        if let backgroundColor = backgroundColor {
-            self.backgroundColor = backgroundColor
         }
     }
 }

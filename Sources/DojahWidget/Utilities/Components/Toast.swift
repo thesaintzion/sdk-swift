@@ -29,7 +29,7 @@ class Toast: UIView {
             case .error:
                 backgroundColor = .red
             case .success:
-                backgroundColor = .appGreen
+                backgroundColor = .djGreen
             }
         }
     }

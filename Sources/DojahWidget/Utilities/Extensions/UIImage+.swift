@@ -8,6 +8,9 @@
 import UIKit
 
 extension UIImage {
+    static func res(_ res: ImageResource) -> UIImage {
+        UIImage(resource: res)
+    }
     
     static func imageWithColor(color: UIColor, size: CGSize) -> UIImage? {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)

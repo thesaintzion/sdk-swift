@@ -8,6 +8,10 @@
 import Foundation
 import os.log
 
+enum LogType {
+    case debug, info, warning, error
+}
+
 final class OSLogger {
     static func debug(_ msg: String) {
         #if DEBUG

@@ -269,3 +269,16 @@ extension NSObject {
         return namespaceClassName.components(separatedBy: ".").last!
     }
 }
+
+func log(message: String, type: LogType = .debug) {
+    switch type {
+    case .debug:
+        OSLogger.debug(message)
+    case .info:
+        OSLogger.info(message)
+    case .warning:
+        OSLogger.warning(message)
+    case .error:
+        OSLogger.error(message)
+    }
+}

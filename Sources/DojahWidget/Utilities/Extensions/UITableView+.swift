@@ -10,8 +10,7 @@ import UIKit
 extension UITableView {
     
     convenience init(
-        cell: UITableViewCell.Type,
-        reuseId: String = "",
+        cells: [UITableViewCell.Type],
         showIndicators: Bool = false,
         delegate: UITableViewDelegate? = nil,
         datasource: UITableViewDataSource? = nil,
@@ -29,7 +28,9 @@ extension UITableView {
         }
         self.separatorStyle = separatorStyle
         self.separatorColor = separatorColor
-        register(cell.self, forCellReuseIdentifier: cell.className)
+        cells.forEach {
+            register($0.self, forCellReuseIdentifier: $0.className)
+        }
         isScrollEnabled = scrollable
     }
 

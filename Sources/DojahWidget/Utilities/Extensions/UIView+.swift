@@ -171,17 +171,6 @@ extension UIView {
         layer.masksToBounds = maskToBounds
     }
     
-    func animateOnClick(completion: (() -> Void)? = nil) {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.alpha = 0.5
-        }) { completed in
-            UIView.animate(withDuration: 0.5, animations: {
-                self.alpha = 1
-                completion?()
-            })
-        }
-    }
-    
     func showView(_ show: Bool = true) {
         isHidden = !show
     }
@@ -197,9 +186,30 @@ extension UIView {
         }
     }
     
-    func animateViewOnTapGesture(duration: TimeInterval = 0.2, completion: (() -> Void)? = nil) {
+    func animateOnTap(
+        scaleX: CGFloat = 0.94,
+        scaleY: CGFloat = 1,
+        duration: Double = 0.1
+    ) {
+        breathe(
+            scaleX: scaleX,
+            scaleY: scaleY,
+            duration: duration,
+            options: []
+        ) { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.stopBreathing()
+        }
+    }
+    
+    func didTap(duration: TimeInterval = 0.15, completion: (() -> Void)? = nil) {
         addTapGesture {
-            self.animateView(duration: duration, completion: completion)
+            self.animateOnTap()
+            runAfter(duration) {
+                completion?()
+            }
         }
     }
     

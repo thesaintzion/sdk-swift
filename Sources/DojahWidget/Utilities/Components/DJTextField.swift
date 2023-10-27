@@ -146,7 +146,7 @@ class DJTextField: BaseView {
             $0.setNeedsLayout()
             $0.layoutIfNeeded()
         }
-        passwordIconImageView.animateViewOnTapGesture(duration: 0.1, completion: togglePasswordVisibility)
+        passwordIconImageView.didTap(duration: 0.1, completion: togglePasswordVisibility)
     }
     
     func togglePasswordVisibility() {
