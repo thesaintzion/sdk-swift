@@ -34,10 +34,15 @@ extension UILabel {
         }
     }
     
-    convenience init(attributedText: NSAttributedString, numberOfLines: Int = 1) {
+    convenience init(
+        attributedText: NSAttributedString,
+        numberOfLines: Int = 0,
+        alignment: NSTextAlignment = .center
+    ) {
         self.init(frame: .zero)
         self.attributedText = attributedText
         self.numberOfLines = numberOfLines
+        self.textAlignment = alignment
         self.adjustsFontSizeToFitWidth = true
     }
     
