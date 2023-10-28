@@ -12,7 +12,7 @@ final class DJTextField: BaseView {
         text: "Title Label",
         font: .regular(14),
         numberOfLines: 0,
-        color: .primary,
+        color: .aLabel,
         alignment: .left
     )
     fileprivate let errorLabel = UILabel(
@@ -23,6 +23,14 @@ final class DJTextField: BaseView {
         alignment: .left
     )
     let textField = TextField()
+    lazy var valueView = UIView(
+        subviews: [textField],
+        height: 50,
+        backgroundColor: .primaryGrey,
+        borderWidth: 1,
+        borderColor: .djBorder,
+        radius: 5
+    )
     fileprivate let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
     fileprivate let pickerManager = PickerManager()
     fileprivate let pickerView = UIPickerView()
@@ -182,7 +190,7 @@ final class DJTextField: BaseView {
             $0.viewCornerRadius = 5
             $0.viewBorderWidth = 1
             $0.borderColor = .djBorder
-            $0.backgroundColor = .primaryGrey
+            $0.backgroundColor = UIColor.primaryGrey
             $0.clipsToBounds = true
         }
         
