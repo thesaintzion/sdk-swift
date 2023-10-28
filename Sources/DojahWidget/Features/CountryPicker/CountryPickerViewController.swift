@@ -16,6 +16,7 @@ final class CountryPickerViewController: DJBaseViewController {
     private let termsAttrText = AttributedStringBuilder()
         .text("By proceeding you agree to our ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
         .text("Terms of Use ", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
+        .newline()
         .text("and ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
         .text("Privacy Policy", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
         .attributedString
