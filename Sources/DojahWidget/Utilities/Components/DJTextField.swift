@@ -227,7 +227,7 @@ final class DJTextField: BaseView {
         let iconButton = UIButton(type: .system)
         iconButton.frame = CGRect(x: 0, y: 5, width: frame.height, height: frame.height)
         iconButton.setImage(icon, for: .normal)
-        iconButton.tintColor = .primary
+        iconButton.tintColor = .aSecondaryLabel
         iconButton.contentEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 10)
         textField.rightView =  HStackView(subviews: [iconButton, UIView.hspacer(5)], alignment: .center)
         textField.rightViewMode = .always
