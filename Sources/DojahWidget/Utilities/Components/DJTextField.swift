@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DJTextField: BaseView {
+final class DJTextField: BaseView {
     fileprivate let titleLabel = UILabel(
         text: "Title Label",
         font: .regular(14),
@@ -23,7 +23,7 @@ class DJTextField: BaseView {
         alignment: .left
     )
     let textField = TextField()
-    fileprivate let passwordIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
+    fileprivate let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
     fileprivate let pickerManager = PickerManager()
     fileprivate let pickerView = UIPickerView()
     fileprivate var passwordVisible = false
@@ -63,7 +63,7 @@ class DJTextField: BaseView {
                 string: placeholder,
                 attributes: [
                     .font: UIFont.regular(14),
-                        .foregroundColor: UIColor.aPlaceholderText
+                    .foregroundColor: UIColor.aPlaceholderText
                 ]
             )
             $0.font = .regular(15)
@@ -137,7 +137,7 @@ class DJTextField: BaseView {
     
     func setupPassword() {
         let paddingView = UIView(size: 15, backgroundColor: .clear)
-        let passwordIconStackView = HStackView(subviews: [passwordIconImageView, paddingView], alignment: .center)
+        let passwordIconStackView = HStackView(subviews: [rightIconImageView, paddingView], alignment: .center)
         with(textField) {
             $0.padding = .kinit(top: 0, left: 15, bottom: 0, right: 45)
             $0.rightView = passwordIconStackView
@@ -146,25 +146,31 @@ class DJTextField: BaseView {
             $0.setNeedsLayout()
             $0.layoutIfNeeded()
         }
-        passwordIconImageView.didTap(duration: 0.1, completion: togglePasswordVisibility)
+        rightIconImageView.didTap(duration: 0.1, completion: togglePasswordVisibility)
     }
     
     func togglePasswordVisibility() {
         if !passwordVisible && text.isNotEmpty {
             textField.isSecureTextEntry = false
             passwordVisible = true
-            passwordIconImageView.image = UIImage()
+            rightIconImageView.image = UIImage()
         } else {
             textField.isSecureTextEntry = true
             passwordVisible = false
-            passwordIconImageView.image = UIImage()
+            rightIconImageView.image = UIImage()
         }
     }
     
     override public func setup() {
         super.setup()
         addSubviews(titleLabel, textField, errorLabel)
-        titleLabel.anchor(top: topAnchor, leading: leadingAnchor, trailing: trailingAnchor)
+        
+        titleLabel.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            trailing: trailingAnchor
+        )
+        
         with(textField) {
             $0.anchor(
                 top: titleLabel.bottomAnchor,
@@ -173,11 +179,13 @@ class DJTextField: BaseView {
                 padding: .kinit(top: 5)
             )
             $0.constraintHeight(50)
-            $0.viewCornerRadius = 8
+            $0.viewCornerRadius = 5
             $0.viewBorderWidth = 1
-            $0.borderColor = .primary.withAlphaComponent(0.7)
+            $0.borderColor = .djBorder
+            $0.backgroundColor = .primaryGrey
             $0.clipsToBounds = true
         }
+        
         with(errorLabel) {
             $0.anchor(
                 top: textField.bottomAnchor,

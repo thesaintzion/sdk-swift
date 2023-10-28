@@ -10,7 +10,7 @@ import UIKit
 public class DJBaseViewController: UIViewController {
     
     let navView = DJNavBarView()
-    private let poweredView = DJPoweredView()
+    let poweredView = DJPoweredView()
 
     public override func viewDidLoad() {
         super.viewDidLoad()

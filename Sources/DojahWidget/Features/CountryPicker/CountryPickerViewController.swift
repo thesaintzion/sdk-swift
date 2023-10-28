@@ -33,7 +33,7 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     private func showBioData() {
-        
+        kpushViewController(BioDataViewController())
     }
     
     override func addTapGestures() {

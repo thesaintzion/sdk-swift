@@ -35,4 +35,14 @@ extension UIScrollView {
     var kleadingAnchor: NSLayoutXAxisAnchor? { frameLayoutGuide.leadingAnchor }
     
     var ktrailingAnchor: NSLayoutXAxisAnchor? { frameLayoutGuide.trailingAnchor }
+    
+    func fillView(with view: UIView, padding: UIEdgeInsets = .zero) {
+        view.anchor(
+            top: ktopAnchor,
+            leading: kleadingAnchor,
+            bottom: kbottomAnchor,
+            trailing: ktrailingAnchor,
+            padding: padding
+        )
+    }
 }
