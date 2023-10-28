@@ -16,16 +16,20 @@ public class DJBaseViewController: UIViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
+        setupNavView()
     }
     
-    private func configureNavView() {
-        navView.delegate = self
-        navView.anchor(
-            top: safeAreaTopAnchor,
-            leading: safeAreaLeadingAnchor,
-            trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 10, leftRight: 16)
-        )
+    private func setupNavView() {
+        with(navView) {
+            addSubview($0)
+            $0.delegate = self
+            $0.anchor(
+                top: safeAreaTopAnchor,
+                leading: safeAreaLeadingAnchor,
+                trailing: safeAreaTrailingAnchor,
+                padding: .kinit(topBottom: 10, leftRight: 16)
+            )
+        }
     }
 
 }
