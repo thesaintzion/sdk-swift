@@ -47,7 +47,6 @@ public class DojahWidgetViewController: DJBaseViewController {
     }
     
     private func setupUI() {
-        backgroundColor = .aSystemBackground
         addSubviews(navView, contentStackView)
         
         contentStackView.anchor(

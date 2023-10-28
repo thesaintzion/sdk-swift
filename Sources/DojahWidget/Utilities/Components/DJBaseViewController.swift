@@ -17,6 +17,7 @@ public class DJBaseViewController: UIViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
+        backgroundColor = .aSystemBackground
         setupNavView()
         setupPoweredView()
         addTapGestures()
@@ -30,7 +31,7 @@ public class DJBaseViewController: UIViewController {
                 top: safeAreaTopAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
-                padding: .kinit(top: 10, left: 10, right: 16)
+                padding: .kinit(top: 10, left: 5, right: 16)
             )
         }
     }
