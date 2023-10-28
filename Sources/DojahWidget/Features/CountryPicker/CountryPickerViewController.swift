@@ -48,9 +48,15 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     private func showCountries() {
-        let viewController = CountriesViewController()
-        viewController.delegate = self
-        present(viewController, animated: true)
+//        let viewController = CountriesViewController()
+//        viewController.delegate = self
+//        present(viewController, animated: true)
+        showSelectableItemsViewController(
+            title: "Choose Country",
+            items: Country.allCases,
+            height: 220,
+            delegate: self
+        )
     }
 
 }
@@ -68,5 +74,13 @@ extension CountryPickerViewController: TermsAndPrivacyViewDelegate {
     
     func didTapPrivacy() {
         
+    }
+}
+
+extension CountryPickerViewController: SelectableItemsViewDelegate {
+    func didChooseItem(_ item: SelectableItem) {
+        if let country = item as? Country {
+            countryPickerView.updateInfo(country: country)
+        }
     }
 }

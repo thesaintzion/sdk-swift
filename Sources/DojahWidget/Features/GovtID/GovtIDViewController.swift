@@ -17,7 +17,7 @@ final class GovtIDViewController: DJBaseViewController {
         self?.didTapContinueButton()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [govtIDView, govtIDNumberTextField, verificationMethodView],
+        subviews: [govtIDView, govtIDNumberTextField, verificationMethodView, continueButton],
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])

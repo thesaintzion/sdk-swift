@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum Country: CaseIterable {
+enum Country: CaseIterable, SelectableItem {
     case nigeria, ghana, kenya
     
     var name: String {
@@ -30,5 +30,15 @@ enum Country: CaseIterable {
         case .kenya:
             return .res(.kenyaFlag)
         }
+    }
+    
+    var title: String { name }
+    
+    var iconConfig: SelectableItemIconConfig {
+        .init(
+            icon: flag,
+            size: .init(width: 19, height: 14),
+            contentMode: .scaleAspectFill
+        )
     }
 }

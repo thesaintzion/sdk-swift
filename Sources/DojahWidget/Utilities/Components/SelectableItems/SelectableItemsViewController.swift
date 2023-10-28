@@ -64,7 +64,7 @@ final class SelectableItemsViewController: BottomPopupViewController {
             leading: leadingAnchor,
             bottom: safeAreaBottomAnchor,
             trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 10, leftRight: 20)
+            padding: .kinit(topBottom: 15, leftRight: 20)
         )
     }
     
