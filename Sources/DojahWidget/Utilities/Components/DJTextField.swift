@@ -65,7 +65,7 @@ final class DJTextField: BaseView {
         backgroundColor = .clear
         titleLabel.text = title
         with(textField) {
-            $0.backgroundColor = .clear
+            $0.backgroundColor = .primaryGrey
             $0.keyboardType = keyboardType
             $0.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
@@ -190,7 +190,7 @@ final class DJTextField: BaseView {
             $0.viewCornerRadius = 5
             $0.viewBorderWidth = 1
             $0.borderColor = .djBorder
-            $0.backgroundColor = UIColor.primaryGrey
+            $0.backgroundColor = .primaryGrey
             $0.clipsToBounds = true
         }
         

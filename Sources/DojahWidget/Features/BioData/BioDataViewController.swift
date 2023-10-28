@@ -14,12 +14,13 @@ final class BioDataViewController: DJBaseViewController {
         icon: .res(.greenInfoCircle),
         position: .left,
         iconSize: 20,
+        iconPadding: 2,
         textColor: .djGreen
     )
     private lazy var fillFormView = UIView(
         subviews: [fillFormLabel],
         backgroundColor: .djLightGreen,
-        radius: 8
+        radius: 12
     )
     private let firstNameTextField = DJTextField(
         title: "First name",
