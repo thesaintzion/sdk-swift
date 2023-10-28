@@ -29,9 +29,7 @@ final class CountriesViewController: BottomPopupViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = .light
-        }
+        setUserInterfaceStyle()
         backgroundColor = .aSystemBackground
         addSubviews(countriesLabel, countriesTableView)
         

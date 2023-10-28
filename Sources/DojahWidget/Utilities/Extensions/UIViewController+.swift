@@ -9,6 +9,12 @@ import UIKit
 
 extension UIViewController {
     
+    func setUserInterfaceStyle(style: UIUserInterfaceStyle = .light) {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = style
+        }
+    }
+    
     func add(asChildViewController viewController: UIViewController) {
         // Add Child View Controller
         addChild(viewController)

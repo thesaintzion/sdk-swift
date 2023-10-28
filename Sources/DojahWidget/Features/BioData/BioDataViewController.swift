@@ -31,13 +31,12 @@ final class BioDataViewController: DJBaseViewController {
         editable: false,
         rightIcon: .res(.calendar)
     )
-    private let datePicker = UIDatePicker(dateMode: .date)
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.showGovtID()
     }
     private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
-        subviews: [firstNameTextField, lastNameTextField, middleNameTextField, dobTextField, datePicker, continueButton, termsView],
+        subviews: [firstNameTextField, lastNameTextField, middleNameTextField, dobTextField, continueButton, termsView],
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])
@@ -73,12 +72,6 @@ final class BioDataViewController: DJBaseViewController {
                 padding: .kinit(top: 50, bottom: 20)
             )
         }
-        contentStackView.setCustomSpacing(0, after: dobTextField)
-        with(datePicker) {
-            $0.showView(false)
-            $0.addTarget(self, action: #selector(dateDidChanged), for: .valueChanged)
-            $0.maximumDate = Date()
-        }
     }
     
     private func showGovtID() {
@@ -92,14 +85,9 @@ final class BioDataViewController: DJBaseViewController {
     }
     
     private func didTapDOBTextField() {
-        //datePicker.isHidden.toggle()
         let datePickerController = DatePickerViewController()
         datePickerController.delegate = self
         present(datePickerController, animated: true)
-    }
-    
-    @objc private func dateDidChanged() {
-        
     }
 
 }
@@ -116,6 +104,6 @@ extension BioDataViewController: TermsAndPrivacyViewDelegate {
 
 extension BioDataViewController: DatePickerViewDelegate {
     func didChooseDate(_ date: String) {
-        dobTextField.text = datePicker.dateString()
+        dobTextField.text = date
     }
 }

@@ -31,12 +31,14 @@ final class DatePickerViewController: BottomPopupViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundColor = .aSystemBackground
+        setUserInterfaceStyle()
         with(contentStackView) {
             addSubview($0)
             $0.fillSuperview(padding: .kinit(allEdges: 20))
         }
         with(datePicker) {
             $0.maximumDate = Date()
+            $0.tintColor = .primary
             $0.addTarget(self, action: #selector(dateDidChanged), for: .valueChanged)
         }
     }
@@ -45,7 +47,7 @@ final class DatePickerViewController: BottomPopupViewController {
         delegate?.didChooseDate(datePicker.dateString())
     }
     
-    override var popupHeight: CGFloat { 500 }
+    override var popupHeight: CGFloat { 550 }
     
     override var popupTopCornerRadius: CGFloat { 20 }
     
