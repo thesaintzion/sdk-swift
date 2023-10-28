@@ -10,14 +10,14 @@ import UIKit
 class DJTextField: BaseView {
     fileprivate let titleLabel = UILabel(
         text: "Title Label",
-        font: .primaryRegular(14),
+        font: .regular(14),
         numberOfLines: 0,
         color: .primary,
         alignment: .left
     )
     fileprivate let errorLabel = UILabel(
         text: "Error Label",
-        font: .primaryRegular(13),
+        font: .regular(13),
         numberOfLines: 0, 
         color: .systemRed,
         alignment: .left
@@ -62,11 +62,11 @@ class DJTextField: BaseView {
             $0.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
                 attributes: [
-                    .font: UIFont.primaryRegular(14),
+                    .font: UIFont.regular(14),
                         .foregroundColor: UIColor.aPlaceholderText
                 ]
             )
-            $0.font = .primaryRegular(15)
+            $0.font = .regular(15)
             $0.delegate = self
             $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         }
@@ -102,11 +102,11 @@ class DJTextField: BaseView {
             $0.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
                 attributes: [
-                    .font: UIFont.primaryRegular(14),
+                    .font: UIFont.regular(14),
                         .foregroundColor: UIColor.aPlaceholderText
                 ]
             )
-            $0.font = .primaryRegular(15)
+            $0.font = .regular(15)
             $0.text = valueText
         }
         titleLabel.constraintHeight(titleLabel.intrinsicContentSize.height)

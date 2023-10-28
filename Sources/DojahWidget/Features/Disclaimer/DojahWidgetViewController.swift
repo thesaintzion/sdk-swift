@@ -12,7 +12,7 @@ public class DojahWidgetViewController: DJBaseViewController {
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
     private let disclaimerTitleLabel = UILabel(
         text: "Please note the following",
-        font: .primaryMedium(15),
+        font: .medium(15),
         alignment: .left
     )
     private lazy var disclaimerItemsTableView = UITableView(

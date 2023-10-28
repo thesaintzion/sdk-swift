@@ -13,7 +13,7 @@ class IconUILabel: UILabel {
 
     convenience init(
         text: String,
-        font: UIFont = .primaryRegular(15),
+        font: UIFont = .regular(15),
         icon: UIImage,
         position: IconPosition = .left,
         iconSize: Double = 18,

@@ -18,7 +18,7 @@ class IconTextView: BaseView {
 
     convenience init(
         text: String = "",
-        font: UIFont = .primaryRegular(15),
+        font: UIFont = .regular(15),
         placeholderIcon: UIImage? = nil,
         iconURL: String? = nil,
         iconTint: UIColor? = nil,

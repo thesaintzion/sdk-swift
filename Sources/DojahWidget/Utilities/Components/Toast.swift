@@ -17,7 +17,7 @@ class Toast: UIView {
     
     let titleLabel = UILabel(
         text: "Test",
-        font: .primaryRegular(),
+        font: .regular(),
         numberOfLines: 0,
         color: .white,
         alignment: .left

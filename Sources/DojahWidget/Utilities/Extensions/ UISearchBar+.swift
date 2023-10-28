@@ -10,7 +10,7 @@ import UIKit
 extension UISearchBar {
     convenience init(
         placeholder: String = "Search",
-        font: UIFont = .primaryRegular( 15),
+        font: UIFont = .regular( 15),
         showsCancelButton: Bool = true,
         searchBarStyle: UISearchBar.Style = .minimal,
         height: CGFloat? = nil,

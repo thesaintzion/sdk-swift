@@ -14,15 +14,16 @@ final class CountryPickerViewController: DJBaseViewController {
         self?.showBioData()
     }
     private let termsAttrText = AttributedStringBuilder()
-        .text("By proceeding you agree to our ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
-        .text("Terms of Use ", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
+        .text("By proceeding you agree to our ", attributes: [.textColor(.aLabel), .font(.regular(15))])
+        .text("Terms of Use ", attributes: [.textColor(.primary), .font(.regular(15))])
         .newline()
-        .text("and ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
-        .text("Privacy Policy", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
+        .text("and ", attributes: [.textColor(.aLabel), .font(.regular(15))])
+        .text("Privacy Policy", attributes: [.textColor(.primary), .font(.regular(15))])
         .attributedString
     private lazy var termsLabel = UILabel(attributedText: termsAttrText)
+    private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
-        subviews: [countryPickerView, continueButton, termsLabel],
+        subviews: [countryPickerView, continueButton, termsView],
         spacing: 20
     )
     
@@ -44,7 +45,7 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     override func addTapGestures() {
-        termsLabel.didTap()
+        //termsLabel.didTap()
         countryPickerView.valueView.didTap { [weak self] in
             self?.showCountries()
         }
@@ -61,5 +62,15 @@ final class CountryPickerViewController: DJBaseViewController {
 extension CountryPickerViewController: CountriesViewDelegate {
     func didChooseCountry(_ country: Country) {
         countryPickerView.updateInfo(country: country)
+    }
+}
+
+extension CountryPickerViewController: TermsAndPrivacyViewDelegate {
+    func didTapTerms() {
+        
+    }
+    
+    func didTapPrivacy() {
+        
     }
 }

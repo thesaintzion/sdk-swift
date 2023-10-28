@@ -9,7 +9,7 @@ import UIKit
 
 final class DJCountryPickerView: BaseView {
 
-    private let titleLabel = UILabel(text: "Select a country", font: .primaryLight(13))
+    private let titleLabel = UILabel(text: "Select a country", font: .light(13))
     private let flagImageView = UIImageView(
         image: .res(.ngFlag),
         contentMode: .scaleAspectFill,
