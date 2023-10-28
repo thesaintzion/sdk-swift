@@ -20,7 +20,8 @@ final class TermsAndPrivacyView: BaseView {
         title: "Terms of Use",
         font: .regular(15),
         backgroundColor: .clear,
-        textColor: .primary
+        textColor: .primary,
+        height: nil
     ) { [weak self] in
         self?.delegate?.didTapTerms()
     }
@@ -34,7 +35,8 @@ final class TermsAndPrivacyView: BaseView {
         title: "Privacy Policy",
         font: .regular(15),
         backgroundColor: .clear,
-        textColor: .primary
+        textColor: .primary,
+        height: nil
     ) { [weak self] in
         self?.delegate?.didTapPrivacy()
     }
