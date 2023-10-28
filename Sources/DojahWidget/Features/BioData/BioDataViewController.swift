@@ -39,7 +39,9 @@ final class BioDataViewController: DJBaseViewController {
     )
     private let dobTextField = DJTextField(
         title: "Date of birth",
-        placeholder: "dd/mm/yyyy"
+        placeholder: "dd/mm/yyyy",
+        editable: false,
+        rightIcon: .res(.calendar)
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.showGovtID()
@@ -88,6 +90,12 @@ final class BioDataViewController: DJBaseViewController {
     
     private func showGovtID() {
         
+    }
+    
+    override func addTapGestures() {
+        dobTextField.textField.didTap { [weak self] in
+            
+        }
     }
 
 }

@@ -59,7 +59,9 @@ final class DJTextField: BaseView {
         height: CGFloat? = 80,
         validationType: ValidationType? = nil,
         keyboardType: UIKeyboardType = .alphabet,
-        maxLength: Int? = nil
+        maxLength: Int? = nil,
+        editable: Bool = true,
+        rightIcon: UIImage? = nil
     ) {
         self.init(frame: .zero)
         backgroundColor = .clear
@@ -77,6 +79,7 @@ final class DJTextField: BaseView {
             $0.font = .regular(15)
             $0.delegate = self
             $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+            $0.enableUserInteraction(editable)
         }
         titleLabel.constraintHeight(titleLabel.intrinsicContentSize.height)
         self.validationType = validationType
@@ -87,6 +90,10 @@ final class DJTextField: BaseView {
         
         if isPassword {
             setupPassword()
+        }
+        
+        if let rightIcon {
+            addRightIcon(rightIcon)
         }
     }
     
@@ -213,6 +220,16 @@ final class DJTextField: BaseView {
         dropButton.contentEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 10)
         dropButton.addTarget(self, action: #selector(dropdownButtonSelected), for: .touchUpInside)
         textField.rightView =  HStackView(subviews: [dropButton, UIView.hspacer(5)], alignment: .center)
+        textField.rightViewMode = .always
+    }
+    
+    private func addRightIcon(_ icon: UIImage) {
+        let iconButton = UIButton(type: .system)
+        iconButton.frame = CGRect(x: 0, y: 5, width: frame.height, height: frame.height)
+        iconButton.setImage(icon, for: .normal)
+        iconButton.tintColor = .primary
+        iconButton.contentEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 10)
+        textField.rightView =  HStackView(subviews: [iconButton, UIView.hspacer(5)], alignment: .center)
         textField.rightViewMode = .always
     }
     
