@@ -10,12 +10,7 @@ import UIKit
 final class DJPickerView: BaseView {
 
     private let titleLabel = UILabel(text: "", font: .light(13))
-    private let leftIconImageView = UIImageView(
-        image: .res(.ngFlag),
-        contentMode: .scaleAspectFill,
-        height: 14,
-        width: 19
-    )
+    private let leftIconImageView = UIImageView()
     private let valueLabel = UILabel(text: "")
     private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
     private lazy var valueStackView = HStackView(
@@ -39,14 +34,12 @@ final class DJPickerView: BaseView {
     init(
         title: String,
         value: String = "",
-        leftIcon: UIImage? = nil,
-        leftIconSize: CGSize = .zero
+        leftIconConfig: IconConfig = .init()
     ) {
         super.init(frame: .zero)
         titleLabel.text = title
         updateValue(value)
-        leftIconImageView.image = leftIcon
-        leftIconImageView.constraintSize(leftIconSize)
+        updateLeftIcon(config: leftIconConfig)
     }
     
     @available(*, unavailable)
@@ -70,6 +63,14 @@ final class DJPickerView: BaseView {
                 trailing: valueView.trailingAnchor,
                 padding: .kinit(leftRight: 15)
             )
+        }
+    }
+    
+    private func updateLeftIcon(config: IconConfig) {
+        with(leftIconImageView) {
+            $0.image = config.icon
+            $0.contentMode = config.contentMode
+            $0.constraintSize(config.size)
         }
     }
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct SelectableItemIconConfig {
+struct IconConfig {
     let icon: UIImage?
     let size: CGSize
     let contentMode: UIView.ContentMode

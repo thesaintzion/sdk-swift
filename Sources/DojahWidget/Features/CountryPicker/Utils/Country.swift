@@ -34,7 +34,7 @@ enum Country: CaseIterable, SelectableItem {
     
     var title: String { name }
     
-    var iconConfig: SelectableItemIconConfig {
+    var iconConfig: IconConfig {
         .init(
             icon: flag,
             size: .init(width: 19, height: 14),

@@ -25,5 +25,5 @@ enum GovtIDVerificationMethod: CaseIterable, SelectableItem {
         }
     }
     
-    var iconConfig: SelectableItemIconConfig { .init() }
+    var iconConfig: IconConfig { .init() }
 }

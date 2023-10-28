@@ -7,5 +7,5 @@
 
 protocol SelectableItem {
     var title: String { get }
-    var iconConfig: SelectableItemIconConfig { get }
+    var iconConfig: IconConfig { get }
 }
