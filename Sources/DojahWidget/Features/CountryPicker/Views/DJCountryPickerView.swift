@@ -12,13 +12,13 @@ final class DJCountryPickerView: BaseView {
     private let titleLabel = UILabel(text: "Select a country", font: .primaryLight(13))
     private let flagImageView = UIImageView(image: .res(.ngFlag), height: 14, width: 19)
     private let valueLabel = UILabel(text: "Nigeria")
-    private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 16)
+    private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 12)
     private lazy var valueStackView = HStackView(
         subviews: [flagImageView, valueLabel, arrowdownImageView],
         spacing: 10,
         alignment: .center
     )
-    private lazy var valueView = UIView(
+    lazy var valueView = UIView(
         subviews: [valueStackView],
         height: 50,
         backgroundColor: .primaryGrey,
@@ -28,7 +28,7 @@ final class DJCountryPickerView: BaseView {
     )
     private lazy var contentStackView = VStackView(
         subviews: [titleLabel, valueView],
-        spacing: 5
+        spacing: 6
     )
     
     override func setup() {

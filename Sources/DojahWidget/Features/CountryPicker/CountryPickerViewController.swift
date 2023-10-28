@@ -14,10 +14,10 @@ final class CountryPickerViewController: DJBaseViewController {
         self?.showBioData()
     }
     private let termsAttrText = AttributedStringBuilder()
-        .text("By proceeding you agree to our ", attributes: [.textColor(.aLabel), .font(.primaryRegular(14))])
-        .text("Terms of Use ", attributes: [.textColor(.primary), .font(.primaryRegular(14))])
-        .text("and ", attributes: [.textColor(.aLabel), .font(.primaryRegular(14))])
-        .text("Privacy Policy", attributes: [.textColor(.primary), .font(.primaryRegular(14))])
+        .text("By proceeding you agree to our ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
+        .text("Terms of Use ", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
+        .text("and ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
+        .text("Privacy Policy", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
         .attributedString
     private lazy var termsLabel = UILabel(attributedText: termsAttrText)
     private lazy var contentStackView = VStackView(
@@ -44,7 +44,7 @@ final class CountryPickerViewController: DJBaseViewController {
     
     override func addTapGestures() {
         termsLabel.didTap()
-        countryPickerView.didTap()
+        countryPickerView.valueView.didTap()
     }
 
 }

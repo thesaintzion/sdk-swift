@@ -23,7 +23,7 @@ class DJButton: UIButton {
         textColor: UIColor = .white,
         borderWidth: CGFloat? = nil,
         borderColor: UIColor? = nil,
-        cornerRadius: CGFloat = 5,
+        cornerRadius: CGFloat = 8,
         height: CGFloat? = 50,
         width: CGFloat? = nil,
         size: CGFloat? = nil,
