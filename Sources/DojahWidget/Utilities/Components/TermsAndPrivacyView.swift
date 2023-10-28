@@ -47,7 +47,6 @@ final class TermsAndPrivacyView: BaseView {
     )
     private lazy var contentStackView = VStackView(
         subviews: [termsStackView, privacyStackView],
-        spacing: 0,
         alignment: .center
     )
     

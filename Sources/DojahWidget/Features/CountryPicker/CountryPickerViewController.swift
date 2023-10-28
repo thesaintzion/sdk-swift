@@ -13,14 +13,6 @@ final class CountryPickerViewController: DJBaseViewController {
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.showBioData()
     }
-    private let termsAttrText = AttributedStringBuilder()
-        .text("By proceeding you agree to our ", attributes: [.textColor(.aLabel), .font(.regular(15))])
-        .text("Terms of Use ", attributes: [.textColor(.primary), .font(.regular(15))])
-        .newline()
-        .text("and ", attributes: [.textColor(.aLabel), .font(.regular(15))])
-        .text("Privacy Policy", attributes: [.textColor(.primary), .font(.regular(15))])
-        .attributedString
-    private lazy var termsLabel = UILabel(attributedText: termsAttrText)
     private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
         subviews: [countryPickerView, continueButton, termsView],
@@ -45,7 +37,6 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     override func addTapGestures() {
-        //termsLabel.didTap()
         countryPickerView.valueView.didTap { [weak self] in
             self?.showCountries()
         }
