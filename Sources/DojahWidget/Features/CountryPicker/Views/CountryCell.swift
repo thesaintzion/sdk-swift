@@ -9,7 +9,12 @@ import UIKit
 
 final class CountryCell: BaseTableViewCell {
 
-    private let flagImageView = UIImageView(image: .res(.ngFlag), height: 14, width: 19)
+    private let flagImageView = UIImageView(
+        image: .res(.ngFlag),
+        contentMode: .scaleAspectFill,
+        height: 14,
+        width: 19
+    )
     private let nameLabel = UILabel(text: "")
     private lazy var contentStackView = HStackView(
         subviews: [flagImageView, nameLabel],

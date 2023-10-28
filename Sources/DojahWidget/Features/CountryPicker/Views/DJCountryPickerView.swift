@@ -10,7 +10,12 @@ import UIKit
 final class DJCountryPickerView: BaseView {
 
     private let titleLabel = UILabel(text: "Select a country", font: .primaryLight(13))
-    private let flagImageView = UIImageView(image: .res(.ngFlag), height: 14, width: 19)
+    private let flagImageView = UIImageView(
+        image: .res(.ngFlag),
+        contentMode: .scaleAspectFill,
+        height: 14,
+        width: 19
+    )
     private let valueLabel = UILabel(text: "Nigeria")
     private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
     private lazy var valueStackView = HStackView(

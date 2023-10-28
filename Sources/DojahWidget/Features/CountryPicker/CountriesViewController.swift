@@ -32,6 +32,7 @@ final class CountriesViewController: BottomPopupViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
+        backgroundColor = .aSystemBackground
         addSubviews(countriesLabel, countriesTableView)
         countriesLabel.anchor(
             top: safeAreaTopAnchor,
