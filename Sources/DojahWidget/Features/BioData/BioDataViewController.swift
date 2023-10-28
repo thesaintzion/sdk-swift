@@ -73,7 +73,7 @@ final class BioDataViewController: DJBaseViewController {
                 padding: .kinit(top: 50, bottom: 20)
             )
         }
-        contentStackView.setCustomSpacing(4, after: dobTextField)
+        contentStackView.setCustomSpacing(0, after: dobTextField)
         with(datePicker) {
             $0.showView(false)
             $0.addTarget(self, action: #selector(dateDidChanged), for: .valueChanged)
@@ -92,11 +92,14 @@ final class BioDataViewController: DJBaseViewController {
     }
     
     private func didTapDOBTextField() {
-        datePicker.isHidden.toggle()
+        //datePicker.isHidden.toggle()
+        let datePickerController = DatePickerViewController()
+        datePickerController.delegate = self
+        present(datePickerController, animated: true)
     }
     
     @objc private func dateDidChanged() {
-        dobTextField.text = datePicker.dateString()
+        
     }
 
 }
@@ -108,5 +111,11 @@ extension BioDataViewController: TermsAndPrivacyViewDelegate {
     
     func didTapPrivacy() {
         
+    }
+}
+
+extension BioDataViewController: DatePickerViewDelegate {
+    func didChooseDate(_ date: String) {
+        dobTextField.text = datePicker.dateString()
     }
 }
