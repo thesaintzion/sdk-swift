@@ -13,7 +13,7 @@ public class UIViewTapGestureRecognizer: UITapGestureRecognizer {
 }
 
 extension UIView {
-    static func spacer(_ height: CGFloat = 10) -> UIView {
+    static func vspacer(_ height: CGFloat = 10) -> UIView {
         UIView(height: height, backgroundColor: .clear)
     }
     

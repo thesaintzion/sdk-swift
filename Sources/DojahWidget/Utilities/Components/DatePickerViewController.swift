@@ -24,7 +24,7 @@ final class DatePickerViewController: BottomPopupViewController {
         self?.didTapDone()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [dateLabel, datePicker, doneButton],
+        subviews: [dateLabel, datePicker, doneButton, UIView.vspacer(20)],
         spacing: 15
     )
 
@@ -35,6 +35,7 @@ final class DatePickerViewController: BottomPopupViewController {
         with(contentStackView) {
             addSubview($0)
             $0.fillSuperview(padding: .kinit(allEdges: 20))
+            $0.setCustomSpacing(0, after: doneButton)
         }
         with(datePicker) {
             $0.maximumDate = Date()
