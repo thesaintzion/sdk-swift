@@ -40,7 +40,7 @@ public class DJBaseViewController: UIViewController {
             $0.centerXInSuperview()
             $0.anchor(
                 bottom: safeAreaBottomAnchor,
-                padding: .kinit(bottom: 10)
+                padding: .kinit(bottom: 8)
             )
         }
     }

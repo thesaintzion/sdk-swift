@@ -69,7 +69,7 @@ final class GovtIDViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        
+        kpushViewController(GovtIDCaptureViewController())
     }
     
     private func didTapGovtIDView() {

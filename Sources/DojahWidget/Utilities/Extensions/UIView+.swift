@@ -288,6 +288,19 @@ extension UIView {
     func faded(_ fade: Bool = true, alpha: CGFloat = 0.7) {
         self.alpha = fade ? alpha : 1
     }
+    
+    func addDottedBorder(
+        dashPattern: [NSNumber] = [2, 2],
+        strokeColor: UIColor? = nil
+    ) {
+        let borderLayer = CAShapeLayer()
+        borderLayer.strokeColor = (strokeColor ?? borderColor ?? .primary).cgColor
+        borderLayer.lineDashPattern = dashPattern // Adjust the values to control the dash pattern
+        borderLayer.frame = bounds
+        borderLayer.fillColor = nil
+        borderLayer.path = UIBezierPath(rect: bounds).cgPath
+        layer.addSublayer(borderLayer)
+    }
 }
 
 extension Array where Element == UIView {
