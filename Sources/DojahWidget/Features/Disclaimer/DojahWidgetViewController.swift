@@ -9,7 +9,7 @@ import UIKit
 
 public class DojahWidgetViewController: DJBaseViewController {
     
-    private let navView = DJNavBarView()
+    //private let navView = DJNavBarView()
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
     private let disclaimerTitleLabel = UILabel(
         text: "Please note the following",
@@ -52,13 +52,13 @@ public class DojahWidgetViewController: DJBaseViewController {
         backgroundColor = .aSystemBackground
         addSubviews(navView, contentStackView, poweredView)
         
-        navView.anchor(
-            top: safeAreaTopAnchor,
-            leading: safeAreaLeadingAnchor,
-            trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 15, leftRight: 16)
-        )
-        navView.delegate = self
+//        navView.anchor(
+//            top: safeAreaTopAnchor,
+//            leading: safeAreaLeadingAnchor,
+//            trailing: safeAreaTrailingAnchor,
+//            padding: .kinit(topBottom: 10, leftRight: 16)
+//        )
+//        navView.delegate = self
         
         contentStackView.anchor(
             top: navView.bottomAnchor,
@@ -88,16 +88,6 @@ public class DojahWidgetViewController: DJBaseViewController {
         }
     }
 
-}
-
-extension DojahWidgetViewController: DJNavBarViewDelegate {
-    func didTapBack() {
-        
-    }
-    
-    func didDismiss() {
-        
-    }
 }
 
 extension DojahWidgetViewController: UITableViewConformable {

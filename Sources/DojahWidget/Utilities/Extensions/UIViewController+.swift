@@ -100,15 +100,15 @@ extension UIViewController {
         tabBarController?.tabBar.isHidden = !show
     }
     
-    func _popViewController(animated: Bool = true) {
+    func kpopViewController(animated: Bool = true) {
         navigationController?.popViewController(animated: animated)
     }
     
-    func _popToRootViewController(animated: Bool = true) {
+    func kpopToRootViewController(animated: Bool = true) {
         navigationController?.popToRootViewController(animated: animated)
     }
     
-    func _pushViewController(_ viewcontroller: UIViewController, animated: Bool = true) {
+    func kpushViewController(_ viewcontroller: UIViewController, animated: Bool = true) {
         navigationController?.pushViewController(viewcontroller, animated: animated)
     }
     

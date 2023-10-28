@@ -8,6 +8,8 @@
 import UIKit
 
 public class DJBaseViewController: UIViewController {
+    
+    let navView = DJNavBarView()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,5 +17,26 @@ public class DJBaseViewController: UIViewController {
             overrideUserInterfaceStyle = .light
         }
     }
+    
+    private func configureNavView() {
+        navView.delegate = self
+        navView.anchor(
+            top: safeAreaTopAnchor,
+            leading: safeAreaLeadingAnchor,
+            trailing: safeAreaTrailingAnchor,
+            padding: .kinit(topBottom: 10, leftRight: 16)
+        )
+    }
 
+}
+
+extension DJBaseViewController: DJNavBarViewDelegate {
+    func didTapBack() {
+        kpopViewController()
+    }
+    
+    func didDismiss() {
+        kpopViewController()
+    }
+    
 }
