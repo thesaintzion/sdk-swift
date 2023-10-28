@@ -10,7 +10,7 @@ import UIKit
 final class DJTextField: BaseView {
     fileprivate let titleLabel = UILabel(
         text: "Title Label",
-        font: .regular(14),
+        font: .light(13),
         numberOfLines: 0,
         color: .aLabel,
         alignment: .left
