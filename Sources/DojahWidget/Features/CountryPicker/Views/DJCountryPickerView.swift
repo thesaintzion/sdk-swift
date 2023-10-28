@@ -12,7 +12,7 @@ final class DJCountryPickerView: BaseView {
     private let titleLabel = UILabel(text: "Select a country", font: .primaryLight(13))
     private let flagImageView = UIImageView(image: .res(.ngFlag), height: 14, width: 19)
     private let valueLabel = UILabel(text: "Nigeria")
-    private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 12)
+    private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
     private lazy var valueStackView = HStackView(
         subviews: [flagImageView, valueLabel, arrowdownImageView],
         spacing: 10,
@@ -45,8 +45,15 @@ final class DJCountryPickerView: BaseView {
             $0.anchor(
                 leading: valueView.leadingAnchor,
                 trailing: valueView.trailingAnchor,
-                padding: .kinit(leftRight: 12)
+                padding: .kinit(leftRight: 15)
             )
+        }
+    }
+    
+    func updateInfo(country: Country) {
+        with(country) {
+            valueLabel.text = $0.name
+            flagImageView.image = $0.flag
         }
     }
 

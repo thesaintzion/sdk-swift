@@ -45,7 +45,21 @@ final class CountryPickerViewController: DJBaseViewController {
     
     override func addTapGestures() {
         termsLabel.didTap()
-        countryPickerView.valueView.didTap()
+        countryPickerView.valueView.didTap { [weak self] in
+            self?.showCountries()
+        }
+    }
+    
+    private func showCountries() {
+        let viewController = CountriesViewController()
+        viewController.delegate = self
+        present(viewController, animated: true)
     }
 
+}
+
+extension CountryPickerViewController: CountriesViewDelegate {
+    func didChooseCountry(_ country: Country) {
+        countryPickerView.updateInfo(country: country)
+    }
 }
