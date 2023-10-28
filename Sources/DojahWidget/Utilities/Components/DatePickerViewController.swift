@@ -30,6 +30,7 @@ final class DatePickerViewController: BottomPopupViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        backgroundColor = .aSystemBackground
         with(contentStackView) {
             addSubview($0)
             $0.fillSuperview(padding: .kinit(allEdges: 20))
@@ -44,7 +45,7 @@ final class DatePickerViewController: BottomPopupViewController {
         delegate?.didChooseDate(datePicker.dateString())
     }
     
-    override var popupHeight: CGFloat { 300 }
+    override var popupHeight: CGFloat { 500 }
     
     override var popupTopCornerRadius: CGFloat { 20 }
     
