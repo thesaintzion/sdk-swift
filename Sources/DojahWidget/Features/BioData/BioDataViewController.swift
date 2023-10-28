@@ -73,7 +73,7 @@ final class BioDataViewController: DJBaseViewController {
                 top: $0.ktopAnchor,
                 padding: .kinit(top: 20)
             )
-            fillFormLabel.fillSuperview(padding: .kinit(allEdges: 8))
+            fillFormLabel.fillSuperview(padding: .kinit(topBottom: 6, leftRight: 8))
             
             contentStackView.anchor(
                 top: fillFormView.bottomAnchor, 
