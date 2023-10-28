@@ -34,22 +34,24 @@ final class CountriesViewController: BottomPopupViewController {
         }
         backgroundColor = .aSystemBackground
         addSubviews(countriesLabel, countriesTableView)
+        
         countriesLabel.anchor(
             top: safeAreaTopAnchor,
             leading: safeAreaLeadingAnchor,
             trailing: safeAreaTrailingAnchor,
             padding: .kinit(topBottom: 15, leftRight: 16)
         )
+        
         countriesTableView.anchor(
-            top: safeAreaTopAnchor,
+            top: countriesLabel.bottomAnchor,
             leading: leadingAnchor,
             bottom: safeAreaBottomAnchor,
             trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 10, leftRight: 10)
+            padding: .kinit(topBottom: 10, leftRight: 15)
         )
     }
     
-    override var popupHeight: CGFloat { 200 }
+    override var popupHeight: CGFloat { 220 }
     
     override var popupTopCornerRadius: CGFloat { 20 }
     
