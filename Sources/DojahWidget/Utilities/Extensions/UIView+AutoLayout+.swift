@@ -157,6 +157,12 @@ extension UIView {
         widthAnchor.constraint(equalToConstant: constant).isActive = true
     }
     
+    func constraintSize(_ size: CGSize) {
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        widthAnchor.constraint(equalToConstant: size.width).isActive = true
+    }
+    
     func centerHorizontally(to constraint: NSLayoutXAxisAnchor) {
         centerXAnchor.constraint(equalTo: constraint).activate()
     }

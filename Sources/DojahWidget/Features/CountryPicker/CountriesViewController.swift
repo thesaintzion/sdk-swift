@@ -17,7 +17,7 @@ final class CountriesViewController: BottomPopupViewController {
     
     private let countriesLabel = UILabel(
         text: "Countries",
-        font: .bold(17),
+        font: .semibold(17),
         alignment: .center
     )
     private lazy var countriesTableView = UITableView(

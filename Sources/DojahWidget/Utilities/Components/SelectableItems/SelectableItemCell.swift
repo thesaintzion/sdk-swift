@@ -1,5 +1,5 @@
 //
-//  CountryCell.swift
+//  SelectableItemCell.swift
 //  
 //
 //  Created by Isaac Iniongun on 28/10/2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CountryCell: BaseTableViewCell {
+final class SelectableItemCell: BaseTableViewCell {
 
     private let iconImageView = UIImageView(
         image: .res(.ngFlag),
@@ -30,10 +30,10 @@ final class CountryCell: BaseTableViewCell {
         }
     }
     
-    func configure(country: Country) {
-        with(country) {
-            iconImageView.image = $0.flag
-            nameLabel.text = $0.name
+    func configure(item: SelectableItem) {
+        with(item) {
+            iconImageView.image = $0.icon
+            nameLabel.text = $0.title
         }
     }
 

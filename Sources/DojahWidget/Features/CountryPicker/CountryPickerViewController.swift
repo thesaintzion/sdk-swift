@@ -9,7 +9,12 @@ import UIKit
 
 final class CountryPickerViewController: DJBaseViewController {
 
-    private let countryPickerView = DJCountryPickerView()
+    private let countryPickerView = DJPickerView(
+        title: "Select a country",
+        value: "Nigeria",
+        leftIcon: .res(.ngFlag),
+        leftIconSize: .init(width: 19, height: 14)
+    )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.showBioData()
     }

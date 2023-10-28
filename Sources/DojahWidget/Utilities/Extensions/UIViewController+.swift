@@ -140,4 +140,19 @@ extension UIViewController {
         backgroundColor = color
     }
     
+    func showSelectableItemsViewController(
+        title: String,
+        items: [SelectableItem],
+        height: CGFloat,
+        delegate: SelectableItemsViewDelegate? = nil
+    ) {
+        let viewController = SelectableItemsViewController(
+            title: title,
+            items: items,
+            height: height,
+            delegate: delegate
+        )
+        present(viewController, animated: true)
+    }
+    
 }

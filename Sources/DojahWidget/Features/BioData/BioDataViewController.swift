@@ -75,7 +75,7 @@ final class BioDataViewController: DJBaseViewController {
     }
     
     private func showGovtID() {
-        
+        present(GovtIDViewController(), animated: true)
     }
     
     override func addTapGestures() {
