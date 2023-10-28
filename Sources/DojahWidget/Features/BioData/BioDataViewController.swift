@@ -20,7 +20,7 @@ final class BioDataViewController: DJBaseViewController {
     private lazy var fillFormView = UIView(
         subviews: [fillFormLabel],
         backgroundColor: .djLightGreen,
-        radius: 12
+        radius: 15
     )
     private let firstNameTextField = DJTextField(
         title: "First name",
