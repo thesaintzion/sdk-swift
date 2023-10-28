@@ -47,7 +47,7 @@ final class CountriesViewController: BottomPopupViewController {
             leading: leadingAnchor,
             bottom: safeAreaBottomAnchor,
             trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 10, leftRight: 15)
+            padding: .kinit(topBottom: 10, leftRight: 20)
         )
     }
     
