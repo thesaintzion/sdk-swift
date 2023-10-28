@@ -9,19 +9,6 @@ import UIKit
 
 final class BioDataViewController: DJBaseViewController {
 
-    /*private let fillFormLabel = IconUILabel(
-        text: "Fill the form as it appears on your valid ID",
-        icon: .res(.greenInfoCircle),
-        position: .left,
-        iconSize: 20,
-        iconPadding: 2,
-        textColor: .djGreen
-    )
-    private lazy var fillFormView = UIView(
-        subviews: [fillFormLabel],
-        backgroundColor: .djLightGreen,
-        radius: 15
-    )*/
     private let fillFormView = FillFormView()
     private let firstNameTextField = DJTextField(
         title: "First name",
@@ -44,12 +31,13 @@ final class BioDataViewController: DJBaseViewController {
         editable: false,
         rightIcon: .res(.calendar)
     )
+    private let datePicker = UIDatePicker(dateMode: .date)
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.showGovtID()
     }
     private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
-        subviews: [firstNameTextField, lastNameTextField, middleNameTextField, dobTextField, continueButton, termsView],
+        subviews: [firstNameTextField, lastNameTextField, middleNameTextField, dobTextField, datePicker, continueButton, termsView],
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])
@@ -76,7 +64,6 @@ final class BioDataViewController: DJBaseViewController {
                 top: $0.ktopAnchor,
                 padding: .kinit(top: 40)
             )
-            //fillFormLabel.fillSuperview(padding: .kinit(topBottom: 6, leftRight: 8))
             
             contentStackView.anchor(
                 top: fillFormView.bottomAnchor, 
@@ -85,7 +72,12 @@ final class BioDataViewController: DJBaseViewController {
                 trailing: $0.ktrailingAnchor,
                 padding: .kinit(top: 50, bottom: 20)
             )
-            
+        }
+        contentStackView.setCustomSpacing(4, after: dobTextField)
+        with(datePicker) {
+            $0.showView(false)
+            $0.addTarget(self, action: #selector(dateDidChanged), for: .valueChanged)
+            $0.maximumDate = Date()
         }
     }
     
@@ -95,8 +87,16 @@ final class BioDataViewController: DJBaseViewController {
     
     override func addTapGestures() {
         dobTextField.textField.didTap { [weak self] in
-            
+            self?.didTapDOBTextField()
         }
+    }
+    
+    private func didTapDOBTextField() {
+        datePicker.isHidden.toggle()
+    }
+    
+    @objc private func dateDidChanged() {
+        dobTextField.text = datePicker.dateString()
     }
 
 }
