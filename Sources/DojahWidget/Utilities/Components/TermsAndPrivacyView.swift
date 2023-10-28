@@ -19,6 +19,7 @@ final class TermsAndPrivacyView: BaseView {
     private lazy var termsButton = DJButton(
         title: "Terms of Use",
         font: .regular(15),
+        backgroundColor: .clear,
         textColor: .primary
     ) { [weak self] in
         self?.delegate?.didTapTerms()
@@ -32,6 +33,7 @@ final class TermsAndPrivacyView: BaseView {
     private lazy var privacyButton = DJButton(
         title: "Privacy Policy",
         font: .regular(15),
+        backgroundColor: .clear,
         textColor: .primary
     ) { [weak self] in
         self?.delegate?.didTapPrivacy()
