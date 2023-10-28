@@ -71,6 +71,9 @@ final class DJPickerView: BaseView {
             $0.image = config.icon
             $0.contentMode = config.contentMode
             $0.constraintSize(config.size)
+            if config.size == .zero {
+                valueStackView.setCustomSpacing(0, after: leftIconImageView)
+            }
         }
     }
     
