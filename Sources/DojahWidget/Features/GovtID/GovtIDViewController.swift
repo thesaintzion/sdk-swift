@@ -52,6 +52,7 @@ final class GovtIDViewController: DJBaseViewController {
                 trailing: $0.ktrailingAnchor,
                 padding: .kinit(top: 50, bottom: 20)
             )
+            contentStackView.setCustomSpacing(40, after: verificationMethodView)
         }
         
         govtIDNumberTextField.showView(false)

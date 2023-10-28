@@ -18,7 +18,7 @@ final class SelectableItemsViewController: BottomPopupViewController {
     
     private let titleLabel = UILabel(
         text: "",
-        font: .semibold(17),
+        font: .medium(17),
         alignment: .center
     )
     private lazy var itemsTableView = UITableView(
