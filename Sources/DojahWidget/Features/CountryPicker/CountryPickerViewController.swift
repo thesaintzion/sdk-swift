@@ -20,7 +20,7 @@ final class CountryPickerViewController: DJBaseViewController {
         .text("and ", attributes: [.textColor(.aLabel), .font(.primaryRegular(15))])
         .text("Privacy Policy", attributes: [.textColor(.primary), .font(.primaryRegular(15))])
         .attributedString
-    private lazy var termsLabel = UILabel(attributedText: termsAttrText)
+    private lazy var termsLabel = UILabel(attributedText: termsAttrText, numberOfLines: 0)
     private lazy var contentStackView = VStackView(
         subviews: [countryPickerView, continueButton, termsLabel],
         spacing: 20
