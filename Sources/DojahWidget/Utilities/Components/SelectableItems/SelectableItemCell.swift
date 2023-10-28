@@ -9,12 +9,7 @@ import UIKit
 
 final class SelectableItemCell: BaseTableViewCell {
 
-    private let iconImageView = UIImageView(
-        image: .res(.ngFlag),
-        contentMode: .scaleAspectFill,
-        height: 14,
-        width: 19
-    )
+    private let iconImageView = UIImageView()
     private let nameLabel = UILabel(text: "")
     private lazy var contentStackView = HStackView(
         subviews: [iconImageView, nameLabel],
@@ -32,7 +27,9 @@ final class SelectableItemCell: BaseTableViewCell {
     
     func configure(item: SelectableItem) {
         with(item) {
-            iconImageView.image = $0.icon
+            iconImageView.image = $0.iconConfig.icon
+            iconImageView.contentMode = $0.iconConfig.contentMode
+            iconImageView.constraintSize($0.iconConfig.size)
             nameLabel.text = $0.title
         }
     }

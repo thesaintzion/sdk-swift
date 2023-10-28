@@ -11,7 +11,7 @@ final class GovtIDViewController: DJBaseViewController {
 
     private let fillFormView = FillFormView()
     private let govtIDView = DJPickerView(title: "Government Identification")
-    private let govtIDNumberTextField = DJTextField(title: "")
+    private let govtIDNumberTextField = DJTextField(title: "Govt. ID Number")
     private let verificationMethodView = DJPickerView(title: "Verify with")
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.didTapContinueButton()
@@ -84,7 +84,7 @@ final class GovtIDViewController: DJBaseViewController {
         showSelectableItemsViewController(
             title: "Choose Verification Method",
             items: GovtIDVerificationMethod.allCases,
-            height: 220,
+            height: 300,
             delegate: self
         )
     }

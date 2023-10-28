@@ -28,5 +28,5 @@ enum GovtID: CaseIterable, SelectableItem {
         }
     }
     
-    var icon: UIImage? { nil }
+    var iconConfig: SelectableItemIconConfig { .init() }
 }
