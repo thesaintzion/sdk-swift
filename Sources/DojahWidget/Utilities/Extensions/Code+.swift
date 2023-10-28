@@ -282,3 +282,8 @@ func log(message: String, type: LogType = .debug) {
         OSLogger.error(message)
     }
 }
+
+var inLightMode: Bool {
+    guard let currentWindow = UIApplication.shared.windows.first else { return false }
+    return currentWindow.traitCollection.userInterfaceStyle == .light
+}

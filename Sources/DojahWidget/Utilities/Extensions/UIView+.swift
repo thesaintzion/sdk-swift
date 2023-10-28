@@ -239,7 +239,7 @@ extension UIView {
         set { frame.origin.y = newValue }
     }
     
-    func addClearBackground() {
+    func clearBackground() {
         backgroundColor = .clear
     }
     
@@ -292,7 +292,7 @@ extension UIView {
 
 extension Array where Element == UIView {
     func addClearBackground() {
-        forEach { $0.addClearBackground() }
+        forEach { $0.clearBackground() }
     }
     
     func showViews(_ show: Bool = true) {

@@ -13,7 +13,7 @@ extension UILabel {
         font: UIFont = .primaryRegular(15),
         numberOfLines: Int = 1,
         color: UIColor = .aLabel,
-        alignment: NSTextAlignment = .center,
+        alignment: NSTextAlignment = .left,
         adjustsFontSizeToFitWidth: Bool = true,
         underlined: Bool = false,
         huggingPriority: UILayoutPriority? = nil,

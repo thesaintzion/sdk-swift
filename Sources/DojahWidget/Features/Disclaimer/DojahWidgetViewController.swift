@@ -9,7 +9,6 @@ import UIKit
 
 public class DojahWidgetViewController: DJBaseViewController {
     
-    //private let navView = DJNavBarView()
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
     private let disclaimerTitleLabel = UILabel(
         text: "Please note the following",
@@ -31,12 +30,11 @@ public class DojahWidgetViewController: DJBaseViewController {
         backgroundColor: .primaryGrey,
         radius: 5
     )
-    private lazy var continueButton = DJButton(title: "Continue")
+    private let continueButton = DJButton(title: "Continue")
     private lazy var contentStackView = VStackView(
         subviews: [circleImageView, disclaimerView, continueButton],
         spacing: 30
     )
-    private let poweredView = DJPoweredView()
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,15 +48,7 @@ public class DojahWidgetViewController: DJBaseViewController {
     
     private func setupUI() {
         backgroundColor = .aSystemBackground
-        addSubviews(navView, contentStackView, poweredView)
-        
-//        navView.anchor(
-//            top: safeAreaTopAnchor,
-//            leading: safeAreaLeadingAnchor,
-//            trailing: safeAreaTrailingAnchor,
-//            padding: .kinit(topBottom: 10, leftRight: 16)
-//        )
-//        navView.delegate = self
+        addSubviews(navView, contentStackView)
         
         contentStackView.anchor(
             top: navView.bottomAnchor,
@@ -67,25 +57,22 @@ public class DojahWidgetViewController: DJBaseViewController {
             padding: .kinit(topBottom: 60, leftRight: 16)
         )
         
-        with(poweredView) {
-            $0.centerHorizontallyInSuperview()
-            $0.anchor(
-                bottom: safeAreaBottomAnchor,
-                padding: .kinit(bottom: 10)
-            )
-        }
-        
         disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 20))
         disclaimerItemsTableView.constraintHeight(170)
-        disclaimerItemsTableView.addClearBackground()
+        disclaimerItemsTableView.clearBackground()
         
         addTapGestures()
     }
     
-    private func addTapGestures() {
+    internal override func addTapGestures() {
         continueButton.tapAction = { [weak self] in
-            
+            self?.showCountryPicker()
         }
+    }
+    
+    private func showCountryPicker() {
+        let viewController = CountryPickerViewController()
+        kpushViewController(viewController)
     }
 
 }

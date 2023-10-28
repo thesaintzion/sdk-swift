@@ -10,6 +10,7 @@ import UIKit
 public class DJBaseViewController: UIViewController {
     
     let navView = DJNavBarView()
+    private let poweredView = DJPoweredView()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +18,8 @@ public class DJBaseViewController: UIViewController {
             overrideUserInterfaceStyle = .light
         }
         setupNavView()
+        setupPoweredView()
+        addTapGestures()
     }
     
     private func setupNavView() {
@@ -27,10 +30,23 @@ public class DJBaseViewController: UIViewController {
                 top: safeAreaTopAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
-                padding: .kinit(topBottom: 10, leftRight: 16)
+                padding: .kinit(top: 10, left: 10, right: 16)
             )
         }
     }
+    
+    private func setupPoweredView() {
+        with(poweredView) {
+            addSubview($0)
+            $0.centerXInSuperview()
+            $0.anchor(
+                bottom: safeAreaBottomAnchor,
+                padding: .kinit(bottom: 10)
+            )
+        }
+    }
+    
+    func addTapGestures() {}
 
 }
 

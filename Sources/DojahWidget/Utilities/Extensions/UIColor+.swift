@@ -26,13 +26,9 @@ extension UIColor {
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
     
-    @nonobjc class var primary: UIColor{
-        return UIColor("#5E3EEB")
-    }
+    static var primary: UIColor { UIColor("#5E3EEB") }
     
-    @nonobjc class var primaryGrey: UIColor {
-        return UIColor("#F9F9F9")
-    }
+    static var primaryGrey: UIColor { UIColor("#F9F9F9") }
     
     static var djGreen: UIColor { UIColor("#4A878D") }
     
@@ -41,6 +37,8 @@ extension UIColor {
     static var djRed: UIColor { UIColor("#A13E3F") }
     
     static var djLightRed: UIColor { UIColor("#FCDFDF") }
+    
+    static var djBorder: UIColor { UIColor("#CECED2") }
     
     static var aLabel: UIColor {
         if #available(iOS 13, *) {
