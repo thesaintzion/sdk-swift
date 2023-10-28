@@ -9,7 +9,7 @@ import UIKit
 
 final class BioDataViewController: DJBaseViewController {
 
-    private let fillFormLabel = IconUILabel(
+    /*private let fillFormLabel = IconUILabel(
         text: "Fill the form as it appears on your valid ID",
         icon: .res(.greenInfoCircle),
         position: .left,
@@ -21,7 +21,8 @@ final class BioDataViewController: DJBaseViewController {
         subviews: [fillFormLabel],
         backgroundColor: .djLightGreen,
         radius: 15
-    )
+    )*/
+    private let fillFormView = FillFormView()
     private let firstNameTextField = DJTextField(
         title: "First name",
         placeholder: "First name",
@@ -73,16 +74,16 @@ final class BioDataViewController: DJBaseViewController {
             fillFormView.centerXInSuperview()
             fillFormView.anchor(
                 top: $0.ktopAnchor,
-                padding: .kinit(top: 30)
+                padding: .kinit(top: 40)
             )
-            fillFormLabel.fillSuperview(padding: .kinit(topBottom: 6, leftRight: 8))
+            //fillFormLabel.fillSuperview(padding: .kinit(topBottom: 6, leftRight: 8))
             
             contentStackView.anchor(
                 top: fillFormView.bottomAnchor, 
                 leading: $0.kleadingAnchor,
                 bottom: $0.kbottomAnchor,
                 trailing: $0.ktrailingAnchor,
-                padding: .kinit(top: 40, bottom: 20)
+                padding: .kinit(top: 50, bottom: 20)
             )
             
         }
