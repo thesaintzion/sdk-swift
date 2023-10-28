@@ -29,6 +29,9 @@ final class CountriesViewController: BottomPopupViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        }
         addSubviews(countriesLabel, countriesTableView)
         countriesLabel.anchor(
             top: safeAreaTopAnchor,
@@ -45,7 +48,7 @@ final class CountriesViewController: BottomPopupViewController {
         )
     }
     
-    override var popupHeight: CGFloat { 300 }
+    override var popupHeight: CGFloat { 200 }
     
     override var popupTopCornerRadius: CGFloat { 20 }
     
