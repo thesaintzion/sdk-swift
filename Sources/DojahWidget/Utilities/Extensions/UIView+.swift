@@ -295,6 +295,7 @@ extension UIView {
     ) {
         let borderLayer = CAShapeLayer()
         borderLayer.strokeColor = (strokeColor ?? borderColor ?? .primary).cgColor
+        borderLayer.lineWidth = 1
         borderLayer.lineDashPattern = dashPattern // Adjust the values to control the dash pattern
         borderLayer.frame = bounds
         borderLayer.fillColor = nil

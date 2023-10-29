@@ -30,7 +30,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         subviews: [clickHereLabel],
         height: 200,
         backgroundColor: .primaryGrey,
-        borderWidth: 1,
+        //borderWidth: 1,
         borderColor: .primary,
         radius: 5
     )
