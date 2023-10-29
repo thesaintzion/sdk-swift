@@ -18,7 +18,7 @@ class DJButton: UIButton {
     convenience init(
         title: String? = nil,
         attributedTitle: NSAttributedString? = nil,
-        font: UIFont = .semibold(15),
+        font: UIFont = .medium(15),
         backgroundColor: UIColor = .primary,
         textColor: UIColor = .white,
         borderWidth: CGFloat? = nil,
