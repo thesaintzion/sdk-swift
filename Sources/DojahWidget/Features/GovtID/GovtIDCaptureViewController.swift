@@ -26,7 +26,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         numberOfLines: 0, 
         alignment: .center
     )
-    private lazy var clickHereView = UIView(
+    private lazy var clickHereView = DottedBorderView(
         subviews: [clickHereLabel],
         height: 200,
         backgroundColor: .primaryGrey,
