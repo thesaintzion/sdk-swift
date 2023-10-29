@@ -40,6 +40,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     }
     private lazy var secondaryButton = DJButton(
         title: "Capture instead",
+        font: .medium(15),
         backgroundColor: .primaryGrey,
         textColor: .aLabel,
         borderWidth: 1,
@@ -60,7 +61,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        //clickHereView.addDottedBorder()
+        clickHereView.addDottedBorder()
     }
     
     private func setupUI() {
@@ -86,7 +87,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         
         idImageView.showView(false)
         clickHereLabel.centerInSuperview()
-        clickHereView.addDottedBorder()
+//        clickHereView.addDottedBorder()
     }
     
     override func addTapGestures() {
