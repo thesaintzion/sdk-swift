@@ -30,7 +30,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         subviews: [clickHereLabel],
         height: 200,
         backgroundColor: .primaryGrey,
-        //borderWidth: 1,
+        borderWidth: 1,
         borderColor: .primary,
         radius: 5
     )
@@ -64,6 +64,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         clickHereView.addDottedBorder()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        clickHereView.addDottedBorder()
+    }
+    
     private func setupUI() {
         with(contentScrollView) {
             addSubview($0)
@@ -87,7 +92,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         
         idImageView.showView(false)
         clickHereLabel.centerInSuperview()
-//        clickHereView.addDottedBorder()
+        clickHereView.addDottedBorder()
     }
     
     override func addTapGestures() {
