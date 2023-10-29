@@ -31,7 +31,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         height: 200,
         backgroundColor: .primaryGrey
     )
-    private let idImageView = UIImageView(height: 200, cornerRadius: 5)
+    private let idImageView = UIImageView(
+        contentMode: .scaleAspectFill,
+        height: 250,
+        cornerRadius: 8
+    )
     private lazy var primaryButton = DJButton(title: "Upload") { [weak self] in
         self?.didTapPrimaryButton()
     }
@@ -50,6 +54,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
+    private let attachmentManager = AttachmentManager.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,12 +84,27 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         
         idImageView.showView(false)
         clickHereLabel.centerInSuperview()
+        
+        attachmentManager.imagePickedHandler = { [weak self] uiimage, imageURL, sourceType in
+            self?.didPickImage(uiimage, at: imageURL, using: sourceType)
+        }
     }
     
     override func addTapGestures() {
         clickHereView.didTap { [weak self] in
-            
+            guard let self else { return }
+            self.attachmentManager.openPhotoLibrary(on: self)
         }
+    }
+    
+    private func didPickImage(
+        _ uiimage: UIImage,
+        at imageURL: URL?,
+        using sourceType: UIImagePickerController.SourceType
+    ) {
+        idImageView.image = uiimage
+        idImageView.showView()
+        clickHereView.showView(false)
     }
     
     private func didTapPrimaryButton() {
@@ -92,7 +112,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     }
     
     private func didTapSecondaryButton() {
-        
+        attachmentManager.openCamera(on: self)
     }
-
+    
 }
