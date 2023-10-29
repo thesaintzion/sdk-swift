@@ -302,6 +302,24 @@ extension UIView {
         borderLayer.path = UIBezierPath(rect: bounds).cgPath
         layer.addSublayer(borderLayer)
     }
+    
+    func addDashedLines(color: UIColor, dashPattern: [NSNumber] = [2,5]) {
+        layer.borderWidth = 0
+        layer.borderColor = nil
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.name = "dashedLine"
+        let shapeRect = frame
+        shapeLayer.bounds = shapeRect
+        shapeLayer.position = CGPoint(x: frame.width/2, y: frame.height/2)
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.lineWidth = 1
+        shapeLayer.strokeColor = color.cgColor
+        shapeLayer.lineJoin = CAShapeLayerLineJoin.round
+        shapeLayer.lineDashPattern = dashPattern
+        shapeLayer.path = UIBezierPath(roundedRect: shapeRect, cornerRadius: 5).cgPath
+        
+        layer.addSublayer(shapeLayer)
+    }
 }
 
 extension Array where Element == UIView {
