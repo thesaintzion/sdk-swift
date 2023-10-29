@@ -59,16 +59,6 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         setupUI()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        clickHereView.addDashedLines(color: .primary)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        clickHereView.addDashedLines(color: .primary)
-    }
-    
     private func setupUI() {
         with(contentScrollView) {
             addSubview($0)
@@ -92,7 +82,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         
         idImageView.showView(false)
         clickHereLabel.centerInSuperview()
-        clickHereView.addDashedLines(color: .primary)
+        clickHereView.addDottedBorder()
     }
     
     override func addTapGestures() {
