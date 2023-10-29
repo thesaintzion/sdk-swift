@@ -26,14 +26,15 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         numberOfLines: 0, 
         alignment: .center
     )
-    private lazy var clickHereView = DottedBorderView(
-        subviews: [clickHereLabel],
-        height: 200,
-        backgroundColor: .primaryGrey,
-        borderWidth: 1,
-        borderColor: .primary,
-        radius: 5
-    )
+    private let clickHereView = DottedBorderView().withHeight(200)
+//    private lazy var clickHereView = DottedBorderView(
+//        subviews: [clickHereLabel],
+//        height: 200,
+//        backgroundColor: .primaryGrey,
+//        borderWidth: 1,
+//        borderColor: .primary,
+//        radius: 5
+//    )
     private let idImageView = UIImageView(height: 200, cornerRadius: 5)
     private lazy var primaryButton = DJButton(title: "Upload") { [weak self] in
         self?.didTapPrimaryButton()
@@ -81,8 +82,9 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         }
         
         idImageView.showView(false)
+        clickHereView.addSubview(clickHereLabel)
         clickHereLabel.centerInSuperview()
-        clickHereView.addDottedBorder()
+        //clickHereView.addDottedBorder()
     }
     
     override func addTapGestures() {
