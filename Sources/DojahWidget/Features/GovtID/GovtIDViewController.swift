@@ -9,7 +9,7 @@ import UIKit
 
 final class GovtIDViewController: DJBaseViewController {
 
-    private let fillFormView = FillFormView()
+    private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private let govtIDView = DJPickerView(title: "Government Identification")
     private let govtIDNumberTextField = DJTextField(title: "Govt. ID Number")
     private let verificationMethodView = DJPickerView(title: "Verify with")
@@ -21,6 +21,8 @@ final class GovtIDViewController: DJBaseViewController {
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])
+    private var govtID: GovtID?
+    private var govtIDVerificationMethod: GovtIDVerificationMethod?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,7 +71,8 @@ final class GovtIDViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        kpushViewController(GovtIDCaptureViewController())
+        guard let govtIDVerificationMethod else { return }
+        kpushViewController(GovtIDCaptureViewController(govtIDVerificationMethod: govtIDVerificationMethod))
     }
     
     private func didTapGovtIDView() {
@@ -95,6 +98,7 @@ final class GovtIDViewController: DJBaseViewController {
 extension GovtIDViewController: SelectableItemsViewDelegate {
     func didChooseItem(_ item: SelectableItem) {
         if let govtID = item as? GovtID {
+            self.govtID = govtID
             govtIDView.updateValue(govtID.title)
             with(govtIDNumberTextField) {
                 $0.textField.placeholder = govtID.numberTitle
@@ -104,6 +108,7 @@ extension GovtIDViewController: SelectableItemsViewDelegate {
         }
         
         if let method = item as? GovtIDVerificationMethod {
+            govtIDVerificationMethod = method
             verificationMethodView.updateValue(method.title)
         }
     }

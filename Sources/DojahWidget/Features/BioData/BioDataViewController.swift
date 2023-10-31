@@ -9,7 +9,7 @@ import UIKit
 
 final class BioDataViewController: DJBaseViewController {
 
-    private let fillFormView = FillFormView()
+    private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private let firstNameTextField = DJTextField(
         title: "First name",
         placeholder: "First name",

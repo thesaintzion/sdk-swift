@@ -9,7 +9,7 @@ import UIKit
 
 final class GovtIDCaptureViewController: DJBaseViewController {
     
-    private let viewState: GovtIDCaptureViewState = .uploadFront
+    private var viewState: GovtIDCaptureViewState = .captureFront
     private lazy var titleLabel = UILabel(
         text: viewState.title,
         font: .medium(16),
@@ -32,15 +32,22 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         backgroundColor: .primaryGrey
     )
     private let idImageView = UIImageView(
+        image: .res(.driversLicense),
         contentMode: .scaleAspectFill,
         height: 250,
         cornerRadius: 8
     )
-    private lazy var primaryButton = DJButton(title: "Upload") { [weak self] in
+    private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.idCaptureDisclaimerItems)
+    private let hintView = IconInfoView(
+        text: "Make sure your International Passport is properly placed, and hold it still for a few seconds",
+        textAlignment: .center,
+        numberOfLines: 0
+    )
+    private lazy var primaryButton = DJButton(title: viewState.primaryButtonTitle) { [weak self] in
         self?.didTapPrimaryButton()
     }
     private lazy var secondaryButton = DJButton(
-        title: "Capture instead",
+        title: viewState.secondaryButtonTitle,
         font: .medium(15),
         backgroundColor: .primaryGrey,
         textColor: .aLabel,
@@ -50,11 +57,22 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         self?.didTapSecondaryButton()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [titleLabel, clickHereView, idImageView, primaryButton, secondaryButton],
+        subviews: [titleLabel, clickHereView, idImageView, hintView, disclaimerItemsView, primaryButton, secondaryButton],
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     private let attachmentManager = AttachmentManager.shared
+    private let govtIDVerificationMethod: GovtIDVerificationMethod
+    
+    init(govtIDVerificationMethod: GovtIDVerificationMethod) {
+        self.govtIDVerificationMethod = govtIDVerificationMethod
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,7 +100,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             )
         }
         
-        idImageView.showView(false)
+        [clickHereView, disclaimerItemsView].showViews(false)
         clickHereLabel.centerInSuperview()
         
         attachmentManager.imagePickedHandler = { [weak self] uiimage, imageURL, sourceType in
@@ -103,16 +121,81 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         using sourceType: UIImagePickerController.SourceType
     ) {
         idImageView.image = uiimage
-        idImageView.showView()
-        clickHereView.showView(false)
+        disclaimerItemsView.showView()
+        updateViewState()
+    }
+    
+    private func updateViewState() {
+        switch viewState {
+        case .uploadFront:
+            break
+        case .uploadBack:
+            break
+        case .captureFront:
+            viewState = .previewFront
+        case .captureBack:
+            break
+        case .previewFront:
+            break
+        case .previewBack:
+            break
+        }
+        updateUI()
+    }
+    
+    private func updateUI() {
+        titleLabel.text = viewState.title
+        primaryButton.title = viewState.primaryButtonTitle
+        secondaryButton.title = viewState.secondaryButtonTitle
     }
     
     private func didTapPrimaryButton() {
-        
+        switch viewState {
+        case .uploadFront:
+            break
+        case .uploadBack:
+            break
+        case .captureFront:
+            attachmentManager.openCamera(on: self)
+        case .captureBack:
+            break
+        case .previewFront:
+            proceed()
+        case .previewBack:
+            break
+        }
     }
     
     private func didTapSecondaryButton() {
-        attachmentManager.openCamera(on: self)
+        switch viewState {
+        case .uploadFront:
+            break
+        case .uploadBack:
+            break
+        case .captureFront:
+            attachmentManager.openPhotoLibrary(on: self)
+        case .captureBack:
+            break
+        case .previewFront:
+            break
+        case .previewBack:
+            break
+        }
+    }
+    
+    private func proceed() {
+        switch govtIDVerificationMethod {
+        case .selfie:
+            break
+        case .phoneNumberOTP:
+            break
+        case .emailOTP:
+            break
+        case .videoKYC:
+            break
+        case .homeAddress:
+            break
+        }
     }
     
 }

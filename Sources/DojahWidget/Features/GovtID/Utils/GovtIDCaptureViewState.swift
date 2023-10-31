@@ -28,4 +28,38 @@ enum GovtIDCaptureViewState {
             return "Preview the front of your ID"
         }
     }
+    
+    var primaryButtonTitle: String {
+        switch self {
+        case .uploadFront:
+            return ""
+        case .uploadBack:
+            return ""
+        case .captureFront:
+            return "Capture"
+        case .captureBack:
+            return ""
+        case .previewFront:
+            return "Continue"
+        case .previewBack:
+            return ""
+        }
+    }
+    
+    var secondaryButtonTitle: String {
+        switch self {
+        case .uploadFront:
+            return ""
+        case .uploadBack:
+            return ""
+        case .captureFront:
+            return "Upload instead"
+        case .captureBack:
+            return ""
+        case .previewFront:
+            return "Retake"
+        case .previewBack:
+            return ""
+        }
+    }
 }

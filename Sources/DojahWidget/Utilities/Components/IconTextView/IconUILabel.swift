@@ -19,7 +19,8 @@ class IconUILabel: UILabel {
         iconSize: Double = 18,
         iconPadding: Int = 3,
         textColor: UIColor = .aLabel,
-        alignment: NSTextAlignment = .left
+        alignment: NSTextAlignment = .left,
+        numberOfLines: Int = 1
     ) {
         self.init(frame: .zero)
         
@@ -52,6 +53,7 @@ class IconUILabel: UILabel {
         }
         textAlignment = alignment
         attributedText = textAttrs
+        self.numberOfLines = numberOfLines
     }
 
 }
