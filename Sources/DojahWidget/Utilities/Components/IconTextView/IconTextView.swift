@@ -31,7 +31,7 @@ class IconTextView: BaseView {
         textAlignment: NSTextAlignment = .left,
         contentDistribution: UIStackView.Distribution = .fill,
         contentAlignment: UIStackView.Alignment = .fill,
-        contentSpacing: CGFloat = 8
+        contentSpacing: CGFloat = 4
     ) {
         self.init(frame: .zero)
         clearBackground()
