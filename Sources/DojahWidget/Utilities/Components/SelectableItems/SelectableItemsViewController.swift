@@ -25,7 +25,7 @@ final class SelectableItemsViewController: BottomPopupViewController {
         cells: [SelectableItemCell.self],
         delegate: self,
         datasource: self,
-        scrollable: false
+        scrollable: true
     )
     
     init(

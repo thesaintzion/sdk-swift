@@ -79,7 +79,7 @@ final class GovtIDViewController: DJBaseViewController {
         showSelectableItemsViewController(
             title: "Choose Government Identification",
             items: GovtID.allCases,
-            height: 180,
+            height: 260,
             delegate: self
         )
     }

@@ -8,7 +8,7 @@
 import UIKit
 
 enum GovtID: CaseIterable, SelectableItem {
-    case bvn, driversLicense
+    case bvn, driversLicense, cac, otherDoc
     
     var title: String {
         switch self {
@@ -16,6 +16,10 @@ enum GovtID: CaseIterable, SelectableItem {
             return "BVN Verification"
         case .driversLicense:
             return "Driver’s License"
+        case .cac:
+            return "CAC"
+        case .otherDoc:
+            return "Other Doc"
         }
     }
     
@@ -25,6 +29,10 @@ enum GovtID: CaseIterable, SelectableItem {
             return "BVN Number"
         case .driversLicense:
             return "Driver’s License Number"
+        case .cac:
+            return "CAC Number"
+        case .otherDoc:
+            return "Document Number"
         }
     }
     
