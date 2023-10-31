@@ -84,7 +84,7 @@ final class VerifyOTPViewController: DJBaseViewController {
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
-                padding: .kinit(topBottom: 50, leftRight: 20)
+                padding: .kinit(topBottom: 80, leftRight: 20)
             )
         }
     }
@@ -94,7 +94,12 @@ final class VerifyOTPViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        
+        showFeedbackController(
+            feedbackType: .success,
+            message: "Your phone number has been successfully verified, you will now be redirected."
+        ) { [weak self] in
+            self?.popToViewController(ofClass: DojahWidgetViewController.self)
+        }
     }
 
 }

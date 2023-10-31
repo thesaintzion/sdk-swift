@@ -155,4 +155,17 @@ extension UIViewController {
         present(viewController, animated: true)
     }
     
+    func showFeedbackController(
+        feedbackType: FeedbackType,
+        message: String,
+        doneAction: NoParamHandler? = nil
+    ) {
+        let controller = FeedbackViewController(
+            feedbackType: feedbackType,
+            message: message,
+            doneAction: doneAction
+        )
+        kpushViewController(controller)
+    }
+    
 }
