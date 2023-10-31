@@ -196,7 +196,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             let viewModel = OTPVerificationViewModel(verificationMethod: verificationMethod)
             kpushViewController(OTPVerificationViewController(viewModel: viewModel))
         case .homeAddress:
-            break
+            kpushViewController(HomeAddressViewController())
         }
     }
     
