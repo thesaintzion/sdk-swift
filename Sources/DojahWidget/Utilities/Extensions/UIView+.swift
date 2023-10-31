@@ -21,8 +21,8 @@ extension UIView {
         UIView(width: width, backgroundColor: .clear)
     }
     
-    static func separatorLine(_ color: UIColor = .aSeparator) -> UIView {
-        UIView(height: 1, backgroundColor: color)
+    static func separatorLine(color: UIColor = .aSeparator, height: CGFloat = 1, width: CGFloat = 1) -> UIView {
+        UIView(height: height, width: width, backgroundColor: color)
     }
     
     convenience init(

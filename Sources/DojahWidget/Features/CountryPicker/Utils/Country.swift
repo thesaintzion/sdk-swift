@@ -41,4 +41,15 @@ enum Country: CaseIterable, SelectableItem {
             contentMode: .scaleAspectFill
         )
     }
+    
+    var phoneCode: String {
+        switch self {
+        case .nigeria:
+            return "+234"
+        case .ghana:
+            return "+233"
+        case .kenya:
+            return "+254"
+        }
+    }
 }

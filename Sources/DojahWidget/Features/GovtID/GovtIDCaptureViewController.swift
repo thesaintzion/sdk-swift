@@ -62,10 +62,10 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     private let attachmentManager = AttachmentManager.shared
-    private let govtIDVerificationMethod: GovtIDVerificationMethod
+    private let verificationMethod: GovtIDVerificationMethod
     
     init(govtIDVerificationMethod: GovtIDVerificationMethod) {
-        self.govtIDVerificationMethod = govtIDVerificationMethod
+        self.verificationMethod = govtIDVerificationMethod
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -184,13 +184,12 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     }
     
     private func proceed() {
-        switch govtIDVerificationMethod {
+        switch verificationMethod {
         case .selfie:
             break
-        case .phoneNumberOTP:
-            break
-        case .emailOTP:
-            break
+        case .phoneNumberOTP, .emailOTP:
+            let viewModel = OTPVerificationViewModel(verificationMethod: verificationMethod)
+            kpushViewController(OTPVerificationViewController(viewModel: viewModel))
         case .videoKYC:
             break
         case .homeAddress:

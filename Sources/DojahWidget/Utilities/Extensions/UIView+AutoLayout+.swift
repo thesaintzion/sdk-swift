@@ -170,6 +170,14 @@ extension UIView {
     func centerVertically(to constraint: NSLayoutYAxisAnchor) {
         centerYAnchor.constraint(equalTo: constraint).activate()
     }
+    
+    func heightEquals(_ view: UIView) {
+        heightAnchor.constraint(equalTo: view.heightAnchor).activate()
+    }
+    
+    func widthEquals(_ view: UIView) {
+        widthAnchor.constraint(equalTo: view.widthAnchor).activate()
+    }
 }
 
 struct AnchoredConstraints {
