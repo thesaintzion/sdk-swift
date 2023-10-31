@@ -15,14 +15,9 @@ public class DojahWidgetViewController: DJBaseViewController {
         font: .medium(15),
         alignment: .left
     )
-    private lazy var disclaimerItemsTableView = UITableView(
-        cells: [DisclaimerCell.self],
-        delegate: self,
-        datasource: self,
-        scrollable: false
-    )
+    private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.disclaimerItems)
     private lazy var disclaimerStackView = VStackView(
-        subviews: [disclaimerTitleLabel, disclaimerItemsTableView],
+        subviews: [disclaimerTitleLabel, disclaimerItemsView],
         spacing: 10
     )
     private lazy var disclaimerView = UIView(
@@ -57,8 +52,6 @@ public class DojahWidgetViewController: DJBaseViewController {
         )
         
         disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 20))
-        disclaimerItemsTableView.constraintHeight(170)
-        disclaimerItemsTableView.clearBackground()
         
         addTapGestures()
     }
@@ -74,18 +67,4 @@ public class DojahWidgetViewController: DJBaseViewController {
         kpushViewController(viewController)
     }
 
-}
-
-extension DojahWidgetViewController: UITableViewConformable {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        DJConstants.disclaimerItems.count
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let infoText = DJConstants.disclaimerItems[indexPath.row]
-        let cell = tableView.deque(cell: DisclaimerCell.self, at: indexPath)
-        cell.selectionStyle = .none
-        cell.infoLabel.text = infoText
-        return cell
-    }
 }

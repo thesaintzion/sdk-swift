@@ -8,25 +8,27 @@
 import Foundation
 import UIKit
 
-typealias NoParamHandler = (() -> Void)
+typealias NoParamHandler = () -> Void
 
-typealias StringParamHandler = ((String) -> Void)
+typealias ParamHandler<T> = (T) -> Void
 
-typealias DoubleParamHandler = ((Double) -> Void)
+typealias StringParamHandler = (String) -> Void
 
-typealias IntParamHandler = ((Double) -> Void)
+typealias DoubleParamHandler = (Double) -> Void
 
-typealias DoubleStringParamHandler = ((String, String) -> Void)
+typealias IntParamHandler = (Double) -> Void
 
-typealias TripleStringParamHandler = ((String, String, String) -> Void)
+typealias DoubleStringParamHandler = (String, String) -> Void
 
-typealias StringIntParamHandler = ((String, Int) -> Void)
+typealias TripleStringParamHandler = (String, String, String) -> Void
 
-typealias IntStringParamHandler = ((Int, String) -> Void)
+typealias StringIntParamHandler = (String, Int) -> Void
 
-typealias NumericParamHandler = ((any Numeric) -> Void)
+typealias IntStringParamHandler = (Int, String) -> Void
 
-typealias ErrorParamHandler = ((Error) -> Void)
+typealias NumericParamHandler = (any Numeric) -> Void
+
+typealias ErrorParamHandler = (Error) -> Void
 
 typealias UITableViewConformable = UITableViewDelegate & UITableViewDataSource
 
