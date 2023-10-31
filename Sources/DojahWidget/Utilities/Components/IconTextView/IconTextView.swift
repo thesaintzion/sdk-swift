@@ -19,7 +19,7 @@ class IconTextView: BaseView {
     convenience init(
         text: String = "",
         font: UIFont = .regular(15),
-        placeholderIcon: UIImage? = nil,
+        icon: UIImage? = nil,
         iconURL: String? = nil,
         iconTint: UIColor? = nil,
         iconTextAlignment: IconTextAlignment = .iconLeft,
@@ -29,11 +29,12 @@ class IconTextView: BaseView {
         textColor: UIColor = .aLabel,
         numberOfLines: Int = 0,
         textAlignment: NSTextAlignment = .left,
-        contentStackDistribution: UIStackView.Distribution = .fill,
-        contentStackAlignment: UIStackView.Alignment = .fill,
+        contentDistribution: UIStackView.Distribution = .fill,
+        contentAlignment: UIStackView.Alignment = .fill,
         contentSpacing: CGFloat = 8
     ) {
         self.init(frame: .zero)
+        clearBackground()
         
         with(textLabel) {
             $0.text = text
@@ -53,7 +54,7 @@ class IconTextView: BaseView {
             if let iconWidth = iconWidth {
                 $0.constraintWidth(iconWidth)
             }
-            $0.image = placeholderIcon
+            $0.image = icon
             $0.contentMode = .scaleAspectFit
             if let iconTint = iconTint {
                 $0.tintColor = iconTint
@@ -67,29 +68,29 @@ class IconTextView: BaseView {
             contentStackView = HStackView(
                 subviews: [textLabel, iconImageView],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         case .iconLeft:
             contentStackView = HStackView(
                 subviews: [iconImageView, textLabel],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         case .iconTop:
             contentStackView = VStackView(
                 subviews: [iconImageView, textLabel],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         case .iconBottom:
             contentStackView = VStackView(
                 subviews: [textLabel, iconImageView],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         }
         
@@ -97,23 +98,24 @@ class IconTextView: BaseView {
         contentStackView.fillSuperview()
         
         if let iconURL = iconURL {
-            iconImageView.setImageFromURL(url: iconURL, placeholderImage: placeholderIcon)
+            iconImageView.setImageFromURL(url: iconURL, placeholderImage: icon)
         }
     }
     
     convenience init(
         attributedText: NSAttributedString,
-        placeholderIcon: UIImage? = nil,
+        icon: UIImage? = nil,
         iconURL: String? = nil,
         iconTextAlignment: IconTextAlignment = .iconLeft,
         iconSize: CGFloat = 18,
         numberOfLines: Int = 0,
         textAlignment: NSTextAlignment = .left,
-        contentStackDistribution: UIStackView.Distribution = .fill,
-        contentStackAlignment: UIStackView.Alignment = .fill,
+        contentDistribution: UIStackView.Distribution = .fill,
+        contentAlignment: UIStackView.Alignment = .fill,
         contentSpacing: CGFloat = 8
     ) {
         self.init(frame: .zero)
+        clearBackground()
         
         with(textLabel) {
             $0.attributedText = attributedText
@@ -123,7 +125,7 @@ class IconTextView: BaseView {
         
         with(iconImageView) {
             $0.constraintSize(iconSize)
-            $0.image = placeholderIcon
+            $0.image = icon
         }
         
         var contentStackView: UIStackView
@@ -133,29 +135,29 @@ class IconTextView: BaseView {
             contentStackView = HStackView(
                 subviews: [textLabel, iconImageView],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         case .iconLeft:
             contentStackView = HStackView(
                 subviews: [iconImageView, textLabel],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         case .iconTop:
             contentStackView = VStackView(
                 subviews: [iconImageView, textLabel],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         case .iconBottom:
             contentStackView = VStackView(
                 subviews: [textLabel, iconImageView],
                 spacing: contentSpacing,
-                distribution: contentStackDistribution,
-                alignment: contentStackAlignment
+                distribution: contentDistribution,
+                alignment: contentAlignment
             )
         }
         
@@ -163,7 +165,7 @@ class IconTextView: BaseView {
         contentStackView.fillSuperview()
         
         if let iconURL = iconURL {
-            iconImageView.setImageFromURL(url: iconURL, placeholderImage: placeholderIcon)
+            iconImageView.setImageFromURL(url: iconURL, placeholderImage: icon)
         }
     }
     

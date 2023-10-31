@@ -302,6 +302,24 @@ extension UIView {
         borderLayer.path = UIBezierPath(rect: bounds).cgPath
         layer.addSublayer(borderLayer)
     }
+    
+    @discardableResult
+    func withHStackCentering() -> HStackView {
+        let leftSpacerView = UIView.vspacer()
+        let rightSpacerView = UIView.vspacer()
+        let hStackView = HStackView(subviews: [leftSpacerView, self, rightSpacerView], alignment: .center)
+        leftSpacerView.widthEquals(rightSpacerView)
+        return hStackView
+    }
+    
+    @discardableResult
+    func withVStackCentering() -> VStackView {
+        let leftSpacerView = UIView.vspacer()
+        let rightSpacerView = UIView.vspacer()
+        let hStackView = VStackView(subviews: [leftSpacerView, self, rightSpacerView], alignment: .center)
+        leftSpacerView.widthEquals(rightSpacerView)
+        return hStackView
+    }
 }
 
 extension Array where Element == UIView {

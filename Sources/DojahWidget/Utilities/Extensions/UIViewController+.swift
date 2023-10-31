@@ -156,7 +156,7 @@ extension UIViewController {
     }
     
     func showFeedbackController(
-        feedbackType: FeedbackType,
+        feedbackType: FeedbackType = .success,
         message: String,
         doneAction: NoParamHandler? = nil
     ) {

@@ -38,10 +38,14 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         cornerRadius: 8
     )
     private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.idCaptureDisclaimerItems)
-    private let hintView = IconInfoView(
+    private let hintView = PillIconTextView(
         text: "Make sure your International Passport is properly placed, and hold it still for a few seconds",
+        icon: .res(.greenInfoCircle),
+        iconSize: 18,
+        textColor: .djGreen,
         textAlignment: .center,
-        numberOfLines: 0
+        contentSpacing: 4,
+        bgColor: .djLightGreen
     )
     private lazy var primaryButton = DJButton(title: viewState.primaryButtonTitle) { [weak self] in
         self?.didTapPrimaryButton()
@@ -185,13 +189,12 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     
     private func proceed() {
         switch verificationMethod {
-        case .selfie:
-            break
+        case .selfie, .videoKYC:
+            let viewModel = SelfieVideoKYCViewModel(verificationMethod: verificationMethod)
+            kpushViewController(SelfieVideoKYCViewController(viewModel: viewModel))
         case .phoneNumberOTP, .emailOTP:
             let viewModel = OTPVerificationViewModel(verificationMethod: verificationMethod)
             kpushViewController(OTPVerificationViewController(viewModel: viewModel))
-        case .videoKYC:
-            break
         case .homeAddress:
             break
         }
