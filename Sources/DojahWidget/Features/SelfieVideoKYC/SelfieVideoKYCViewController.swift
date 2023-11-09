@@ -40,11 +40,12 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     )
     private let bottomHintView = PillIconTextView(
         text: "Please make sure you are in a well lit environment",
+        font: .light(13),
         icon: .res(.redInfoCircle),
         iconSize: 18,
-        textColor: .djRed, 
-        textAlignment: .center,
-        bgColor: .djLightRed
+        textColor: .djRed,
+        bgColor: .djLightRed,
+        cornerRadius: 15
     )
     private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.selfieCaptureDisclaimerItems)
     private lazy var primaryButton = DJButton(title: "Capture") { [weak self] in

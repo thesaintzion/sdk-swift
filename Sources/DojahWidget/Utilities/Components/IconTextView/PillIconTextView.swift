@@ -21,10 +21,10 @@ final class PillIconTextView: BaseView {
         iconWidth: CGFloat? = nil,
         textColor: UIColor = .aLabel,
         numberOfLines: Int = 0,
-        textAlignment: NSTextAlignment = .left,
+        textAlignment: NSTextAlignment = .center,
         contentDistribution: UIStackView.Distribution = .fill,
-        contentAlignment: UIStackView.Alignment = .fill,
-        contentSpacing: CGFloat = 4,
+        contentAlignment: UIStackView.Alignment = .center,
+        contentSpacing: CGFloat = 5,
         bgColor: UIColor = .djLightGreen,
         cornerRadius: CGFloat = 12
     ) {
