@@ -31,6 +31,7 @@ final class DJTextField: BaseView {
         borderColor: .djBorder,
         radius: 5
     )
+    let leftIconImageView = UIImageView()
     fileprivate let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
     fileprivate let pickerManager = PickerManager()
     fileprivate let pickerView = UIPickerView()
@@ -67,7 +68,6 @@ final class DJTextField: BaseView {
         backgroundColor = .clear
         titleLabel.text = title
         with(textField) {
-            $0.backgroundColor = .primaryGrey
             $0.keyboardType = keyboardType
             $0.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
@@ -100,11 +100,12 @@ final class DJTextField: BaseView {
     convenience init(
         title: String,
         valueText: String? = nil,
-        placeholder: String = "Choose",
+        placeholder: String = "Select",
         height: CGFloat? = 80,
         items: [String],
         validationType: ValidationType? = nil,
         maxLength: Int? = nil,
+        leftIconConfig: IconConfig? = nil,
         itemSelectionHandler: IntStringParamHandler? = nil
     ) {
         self.init(frame: .zero)
@@ -113,7 +114,6 @@ final class DJTextField: BaseView {
         self.validationType = validationType
         self.maxLength = maxLength
         with(textField) {
-            $0.backgroundColor = .clear
             $0.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
                 attributes: [
@@ -132,13 +132,16 @@ final class DJTextField: BaseView {
         pickerManager.items = items
         pickerManager.selectedItem = { [weak self] index in
             self?.textField.text = items[index]
+            self?.textField.resignFirstResponder()
             itemSelectionHandler?(index, items[index])
         }
         pickerView.delegate = pickerManager
         pickerView.dataSource = pickerManager
         textField.inputView = pickerView
         addDropDownChevron()
-        
+        if let leftIconConfig {
+            addLeftIcon(iconConfig: leftIconConfig)
+        }
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -195,7 +198,7 @@ final class DJTextField: BaseView {
             )
             $0.constraintHeight(50)
             $0.viewCornerRadius = 5
-            $0.viewBorderWidth = 1
+            $0.viewBorderWidth = 0.7
             $0.borderColor = .djBorder
             $0.backgroundColor = .primaryGrey
             $0.clipsToBounds = true
@@ -215,8 +218,8 @@ final class DJTextField: BaseView {
     fileprivate func addDropDownChevron() {
         let dropButton = UIButton(type: .system)
         dropButton.frame = CGRect(x: 0, y: 5, width: frame.height, height: frame.height)
-        dropButton.setImage(UIImage(), for: .normal)
-        dropButton.tintColor = .primary
+        dropButton.setImage(.res(.chevronDown), for: .normal)
+        dropButton.tintColor = .aLabel
         dropButton.contentEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 10)
         dropButton.addTarget(self, action: #selector(dropdownButtonSelected), for: .touchUpInside)
         textField.rightView =  HStackView(subviews: [dropButton, UIView.hspacer(5)], alignment: .center)
@@ -231,6 +234,20 @@ final class DJTextField: BaseView {
         iconButton.contentEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 10)
         textField.rightView =  HStackView(subviews: [iconButton, UIView.hspacer(5)], alignment: .center)
         textField.rightViewMode = .always
+    }
+    
+    private func addLeftIcon(iconConfig: IconConfig) {
+        with(leftIconImageView) {
+            $0.image = iconConfig.icon
+            $0.constraintSize(iconConfig.size)
+            $0.contentMode = iconConfig.contentMode
+        }
+        textField.leftView =  HStackView(
+            subviews: [UIView.hspacer(10), leftIconImageView, UIView.hspacer(10)],
+            alignment: .center
+        )
+        textField.padding = .kinit(left: 35, right: 15)
+        textField.leftViewMode = .always
     }
     
     @objc fileprivate func dropdownButtonSelected() {
@@ -336,7 +353,11 @@ extension DJTextField: UITextFieldDelegate {
 }
 
 class TextField: UITextField {
-    var padding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+    var padding: UIEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15) {
+        didSet {
+            setNeedsLayout()
+        }
+    }
 
     override open func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)

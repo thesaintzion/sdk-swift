@@ -22,7 +22,7 @@ final class DJPickerView: BaseView {
         subviews: [valueStackView],
         height: 50,
         backgroundColor: .primaryGrey,
-        borderWidth: 1,
+        borderWidth: 0.7,
         borderColor: .djBorder,
         radius: 5
     )
@@ -86,7 +86,7 @@ final class DJPickerView: BaseView {
     
     func updateValue(_ value: String) {
         with(valueLabel) {
-            $0.text = value.isEmpty ? "Choose" : value
+            $0.text = value.isEmpty ? "Select" : value
             $0.textColor = value.isEmpty ? .aSecondaryLabel : .aLabel
         }
     }

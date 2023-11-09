@@ -19,6 +19,13 @@ final class CountryPickerViewController: DJBaseViewController {
         value: "Nigeria",
         leftIconConfig: iconConfig
     )
+    private lazy var countryPickerTextfield = DJTextField(
+        title: "Select a country",
+        placeholder: "Select",
+        items: Country.allCases.map { $0.name },
+        leftIconConfig: iconConfig,
+        itemSelectionHandler: didChooseCountry
+    )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.showBioData()
     }
@@ -58,6 +65,14 @@ final class CountryPickerViewController: DJBaseViewController {
             height: 220,
             delegate: self
         )
+    }
+    
+    private func didChooseCountry(index: Int, name: String) {
+        guard let country = Country(rawValue: index) else { return }
+        with(countryPickerTextfield) {
+            $0.text = country.name
+            $0.leftIconImageView.image = country.flag
+        }
     }
 
 }

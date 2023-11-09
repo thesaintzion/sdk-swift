@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum Country: CaseIterable, SelectableItem {
+enum Country: Int, CaseIterable, SelectableItem {
     case nigeria, ghana, kenya
     
     var name: String {
