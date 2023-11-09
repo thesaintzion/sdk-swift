@@ -72,7 +72,7 @@ final class GovtIDViewController: DJBaseViewController {
     
     private func didTapContinueButton() {
         guard let govtIDVerificationMethod else { return }
-        kpushViewController(GovtIDCaptureViewController(govtIDVerificationMethod: govtIDVerificationMethod))
+        kpushViewController(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
     }
     
     private func didTapGovtIDView() {

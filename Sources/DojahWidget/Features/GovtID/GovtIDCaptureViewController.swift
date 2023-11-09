@@ -68,8 +68,8 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     private let attachmentManager = AttachmentManager.shared
     private let verificationMethod: GovtIDVerificationMethod
     
-    init(govtIDVerificationMethod: GovtIDVerificationMethod) {
-        self.verificationMethod = govtIDVerificationMethod
+    init(verificationMethod: GovtIDVerificationMethod) {
+        self.verificationMethod = verificationMethod
         super.init(nibName: nil, bundle: nil)
     }
     
