@@ -10,9 +10,17 @@ import UIKit
 final class GovtIDViewController: DJBaseViewController {
 
     private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
-    private let govtIDView = DJPickerView(title: "Government Identification")
+    private lazy var govtIDView = DJPickerView(
+        title: "Government Identification",
+        items: GovtID.allCases.titles,
+        itemSelectionHandler: didChooseGovtID
+    )
     private let govtIDNumberTextField = DJTextField(title: "Govt. ID Number")
-    private let verificationMethodView = DJPickerView(title: "Verify with")
+    private lazy var verificationMethodView = DJPickerView(
+        title: "Verify with",
+        items: GovtIDVerificationMethod.allCases.titles,
+        itemSelectionHandler: didChooseGovtVerificationMethod
+    )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.didTapContinueButton()
     }
@@ -60,56 +68,26 @@ final class GovtIDViewController: DJBaseViewController {
         govtIDNumberTextField.showView(false)
     }
     
-    override func addTapGestures() {
-        govtIDView.valueView.didTap { [weak self] in
-            self?.didTapGovtIDView()
-        }
-        
-        verificationMethodView.valueView.didTap { [weak self] in
-            self?.didTapVerificationMethodView()
-        }
-    }
-    
     private func didTapContinueButton() {
         guard let govtIDVerificationMethod else { return }
         kpushViewController(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
     }
     
-    private func didTapGovtIDView() {
-        showSelectableItemsViewController(
-            title: "Choose Government Identification",
-            items: GovtID.allCases,
-            height: 260,
-            delegate: self
-        )
+    private func didChooseGovtID(name: String, index: Int) {
+        guard let govtId = GovtID(rawValue: index) else { return }
+        govtID = govtId
+        govtIDView.updateValue(govtId.title)
+        with(govtIDNumberTextField) {
+            $0.textField.placeholder = govtId.numberTitle
+            $0.title = govtId.numberTitle
+            $0.showView()
+        }
     }
     
-    private func didTapVerificationMethodView() {
-        showSelectableItemsViewController(
-            title: "Choose Verification Method",
-            items: GovtIDVerificationMethod.allCases,
-            height: 300,
-            delegate: self
-        )
+    private func didChooseGovtVerificationMethod(name: String, index: Int) {
+        guard let method = GovtIDVerificationMethod(rawValue: index) else { return }
+        govtIDVerificationMethod = method
+        verificationMethodView.updateValue(method.title)
     }
 
-}
-
-extension GovtIDViewController: SelectableItemsViewDelegate {
-    func didChooseItem(_ item: SelectableItem) {
-        if let govtID = item as? GovtID {
-            self.govtID = govtID
-            govtIDView.updateValue(govtID.title)
-            with(govtIDNumberTextField) {
-                $0.textField.placeholder = govtID.numberTitle
-                $0.title = govtID.numberTitle
-                $0.showView()
-            }
-        }
-        
-        if let method = item as? GovtIDVerificationMethod {
-            govtIDVerificationMethod = method
-            verificationMethodView.updateValue(method.title)
-        }
-    }
 }

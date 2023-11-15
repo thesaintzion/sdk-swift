@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum GovtIDVerificationMethod: CaseIterable, SelectableItem {
+enum GovtIDVerificationMethod: Int, CaseIterable, SelectableItem {
     case selfie, phoneNumberOTP, emailOTP, videoKYC //, homeAddress
     
     var title: String {
@@ -26,4 +26,10 @@ enum GovtIDVerificationMethod: CaseIterable, SelectableItem {
     }
     
     var iconConfig: IconConfig { .init() }
+}
+
+extension [GovtIDVerificationMethod] {
+    var titles: [String] {
+        map { $0.title }
+    }
 }

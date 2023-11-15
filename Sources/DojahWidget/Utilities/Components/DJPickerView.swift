@@ -29,7 +29,7 @@ final class DJPickerView: BaseView {
     private lazy var dropdownView: DropDown = {
         with(DropDown()) {
             $0.dataSource = selectionItems
-            $0.textFont = .regular(16)
+            $0.textFont = .regular(15)
             $0.direction = .bottom
             $0.selectionAction = { [weak self] index, value in
                 self?.valueLabel.text = value

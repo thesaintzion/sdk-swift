@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum GovtID: CaseIterable, SelectableItem {
+enum GovtID: Int, CaseIterable, SelectableItem {
     case bvn, driversLicense, cac, otherDoc
     
     var title: String {
@@ -37,4 +37,10 @@ enum GovtID: CaseIterable, SelectableItem {
     }
     
     var iconConfig: IconConfig { .init() }
+}
+
+extension [GovtID] {
+    var titles: [String] {
+        map { $0.title }
+    }
 }
