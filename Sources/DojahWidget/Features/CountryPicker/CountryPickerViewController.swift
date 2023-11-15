@@ -17,13 +17,8 @@ final class CountryPickerViewController: DJBaseViewController {
     private lazy var countryPickerView = DJPickerView(
         title: "Select a country",
         value: "Nigeria",
-        leftIconConfig: iconConfig
-    )
-    private lazy var countryPickerTextfield = DJTextField(
-        title: "Select a country",
-        placeholder: "Select",
-        items: Country.allCases.map { $0.name },
         leftIconConfig: iconConfig,
+        items: Country.allCases.names,
         itemSelectionHandler: didChooseCountry
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
@@ -52,27 +47,9 @@ final class CountryPickerViewController: DJBaseViewController {
         kpushViewController(BioDataViewController())
     }
     
-    override func addTapGestures() {
-        countryPickerView.valueView.didTap { [weak self] in
-            self?.showCountries()
-        }
-    }
-    
-    private func showCountries() {
-        showSelectableItemsViewController(
-            title: "Choose Country",
-            items: Country.allCases,
-            height: 220,
-            delegate: self
-        )
-    }
-    
-    private func didChooseCountry(index: Int, name: String) {
+    private func didChooseCountry(name: String, index: Int) {
         guard let country = Country(rawValue: index) else { return }
-        with(countryPickerTextfield) {
-            $0.text = country.name
-            $0.leftIconImageView.image = country.flag
-        }
+        countryPickerView.updateInfo(country: country)
     }
 
 }
@@ -84,13 +61,5 @@ extension CountryPickerViewController: TermsAndPrivacyViewDelegate {
     
     func didTapPrivacy() {
         
-    }
-}
-
-extension CountryPickerViewController: SelectableItemsViewDelegate {
-    func didChooseItem(_ item: SelectableItem) {
-        if let country = item as? Country {
-            countryPickerView.updateInfo(country: country)
-        }
     }
 }

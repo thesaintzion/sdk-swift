@@ -26,6 +26,24 @@ final class DJPickerView: BaseView {
         borderColor: .djBorder,
         radius: 5
     )
+    private lazy var dropdownView: DropDown = {
+        with(DropDown()) {
+            $0.dataSource = selectionItems
+            $0.textFont = .regular(16)
+            $0.direction = .bottom
+            $0.selectionAction = { [weak self] index, value in
+                self?.valueLabel.text = value
+                self?.itemSelectionHandler?(value, index)
+            }
+        }
+    }()
+    var selectionItems = [String]() {
+        didSet {
+            dropdownView.dataSource = selectionItems
+        }
+    }
+    private var itemSelectionHandler: StringIntParamHandler?
+    
     private lazy var contentStackView = VStackView(
         subviews: [titleLabel, valueView],
         spacing: 6
@@ -34,12 +52,16 @@ final class DJPickerView: BaseView {
     init(
         title: String,
         value: String = "",
-        leftIconConfig: IconConfig = .init()
+        leftIconConfig: IconConfig = .init(),
+        items: [String] = [],
+        itemSelectionHandler: StringIntParamHandler? = nil
     ) {
         super.init(frame: .zero)
         titleLabel.text = title
         updateValue(value)
         updateLeftIcon(config: leftIconConfig)
+        selectionItems = items
+        self.itemSelectionHandler = itemSelectionHandler
     }
     
     @available(*, unavailable)
@@ -63,6 +85,20 @@ final class DJPickerView: BaseView {
                 trailing: valueView.trailingAnchor,
                 padding: .kinit(leftRight: 15)
             )
+        }
+        
+        valueView.didTap { [weak self] in
+            self?.showItems()
+        }
+    }
+    
+    private func showItems() {
+        guard selectionItems.isNotEmpty else { return }
+        with(dropdownView) {
+            $0.anchorView = valueView
+            $0.kwidth = valueView.width
+            $0.bottomOffset = CGPoint(x: 0, y:($0.anchorView?.plainView.bounds.height)!)
+            $0.show()
         }
     }
     

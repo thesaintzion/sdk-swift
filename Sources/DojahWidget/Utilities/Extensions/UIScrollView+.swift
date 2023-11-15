@@ -10,8 +10,8 @@ import UIKit
 extension UIScrollView {
     convenience init(
         children: [UIView],
-        showsVerticalScrollIndicator: Bool = false,
-        showsHorizontalScrollIndicator: Bool = false
+        showsVerticalScrollIndicator: Bool = true,
+        showsHorizontalScrollIndicator: Bool = true
     ) {
         self.init(frame: .zero)
         addSubviews(children)

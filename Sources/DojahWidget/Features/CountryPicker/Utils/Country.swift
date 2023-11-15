@@ -53,3 +53,9 @@ enum Country: Int, CaseIterable, SelectableItem {
         }
     }
 }
+
+extension [Country] {
+    var names: [String] {
+        map { $0.name }
+    }
+}
