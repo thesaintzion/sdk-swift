@@ -25,6 +25,17 @@ enum GovtIDVerificationMethod: Int, CaseIterable, SelectableItem {
         }
     }
     
+    var kycText: String {
+        switch self {
+        case .selfie:
+            return "Capture"
+        case .phoneNumberOTP, .emailOTP:
+            return ""
+        case .videoKYC:
+            return "Record"
+        }
+    }
+    
     var iconConfig: IconConfig { .init() }
 }
 

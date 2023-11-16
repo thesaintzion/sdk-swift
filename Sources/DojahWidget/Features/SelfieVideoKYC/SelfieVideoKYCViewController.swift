@@ -27,8 +27,8 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         font: .medium(17),
         alignment: .center
     )
-    private let topHintView = PillTextView(
-        text: "Place your face in the circle and click Record",
+    private lazy var topHintView = PillTextView(
+        text: "Place your face in the circle and click \(viewModel.verificationMethod.kycText)",
         textColor: .white,
         bgColor: .black
     )
@@ -48,7 +48,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         cornerRadius: 15
     )
     private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.selfieCaptureDisclaimerItems)
-    private lazy var primaryButton = DJButton(title: "Capture") { [weak self] in
+    private lazy var primaryButton = DJButton(title: "\(viewModel.verificationMethod.kycText)") { [weak self] in
         self?.didTapPrimaryButton()
     }
     private lazy var secondaryButton = DJButton(
@@ -133,11 +133,8 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         case .captureRecord:
             attachmentManager.openPhotoLibrary(on: self)
         case .preview:
-            showFeedbackController(
-                message: "Your identification has been successfully verified, you will now be redirected"
-            ) { [weak self] in
-                self?.popToViewController(ofClass: DojahWidgetViewController.self)
-            }
+            let controller = SelfieVideoKYCProcessingViewController(viewModel: viewModel)
+            kpushViewController(controller)
         }
     }
     

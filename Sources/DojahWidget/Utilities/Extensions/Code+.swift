@@ -270,19 +270,6 @@ extension NSObject {
     }
 }
 
-func log(message: String, type: LogType = .debug) {
-    switch type {
-    case .debug:
-        OSLogger.debug(message)
-    case .info:
-        OSLogger.info(message)
-    case .warning:
-        OSLogger.warning(message)
-    case .error:
-        OSLogger.error(message)
-    }
-}
-
 var inLightMode: Bool {
     guard let currentWindow = UIApplication.shared.windows.first else { return false }
     return currentWindow.traitCollection.userInterfaceStyle == .light

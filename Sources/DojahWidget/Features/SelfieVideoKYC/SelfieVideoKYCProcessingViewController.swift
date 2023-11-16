@@ -1,17 +1,17 @@
 //
-//  OTPVerificationViewController.swift
-//  
+//  SelfieVideoKYCProcessingViewController.swift
 //
-//  Created by Isaac Iniongun on 31/10/2023.
+//
+//  Created by Isaac Iniongun on 16/11/2023.
 //
 
 import UIKit
 
-final class OTPVerificationViewController: DJBaseViewController {
+final class SelfieVideoKYCProcessingViewController: DJBaseViewController {
+
+    private let viewModel: SelfieVideoKYCViewModel
     
-    private let viewModel: OTPVerificationViewModel
-    
-    init(viewModel: OTPVerificationViewModel) {
+    init(viewModel: SelfieVideoKYCViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -20,17 +20,20 @@ final class OTPVerificationViewController: DJBaseViewController {
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private let phoneNumberView = DJPhoneNumberView()
-    private let emailTextField = DJTextField(title: "Email address", placeholder: "Email address")
+    private let processingImageView = UIImageView(
+        image: .res(.processing),
+        contentMode: .scaleAspectFill,
+        size: 250,
+        cornerRadius: 125
+    )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.didTapContinueButton()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [phoneNumberView, emailTextField, continueButton],
+        subviews: [processingImageView.withHStackCentering(), continueButton],
         spacing: 40
     )
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -46,18 +49,14 @@ final class OTPVerificationViewController: DJBaseViewController {
                 padding: .kinit(leftRight: 20)
             )
         }
-        
-        phoneNumberView.showView(viewModel.isPhoneNumberVerification)
-        emailTextField.showView(!viewModel.isPhoneNumberVerification)
     }
     
     private func didTapContinueButton() {
-        if viewModel.isPhoneNumberVerification {
-            viewModel.verificationInfo = phoneNumberView.fullNumber
-        } else {
-            viewModel.verificationInfo = emailTextField.text
+        showFeedbackController(
+            message: "Your identification has been successfully verified, you will now be redirected"
+        ) { [weak self] in
+            self?.popToViewController(ofClass: DojahWidgetViewController.self)
         }
-        kpushViewController(VerifyOTPViewController(viewModel: viewModel))
     }
-
+    
 }

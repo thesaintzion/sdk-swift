@@ -8,7 +8,7 @@
 import Foundation
 
 final class SelfieVideoKYCViewModel {
-    private let verificationMethod: GovtIDVerificationMethod
+    let verificationMethod: GovtIDVerificationMethod
     
     init(verificationMethod: GovtIDVerificationMethod) {
         self.verificationMethod = verificationMethod

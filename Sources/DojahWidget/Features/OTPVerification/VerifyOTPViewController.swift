@@ -71,22 +71,60 @@ final class VerifyOTPViewController: DJBaseViewController {
         subviews: [attrLabel, otpView, resendCodeButton, continueButton],
         spacing: 20
     )
+    private let timerLimit: Int = 600
+    private var timer: Timer?
+    private var duration: Int = 0
+    private var remainingTime: String {
+        let mins = duration / 60 % 60
+        let seconds = duration % 60
+        let timeFormat = String(format: "%02i:%02i", mins, seconds)
+        return "Resend code in \(timeFormat)"
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        startCountdownTimer()
     }
     
     private func setupUI() {
         with(contentStackView) {
             addSubview($0)
+            $0.centerYInSuperview()
             $0.anchor(
-                top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
-                padding: .kinit(topBottom: 80, leftRight: 20)
+                padding: .kinit(leftRight: 20)
             )
         }
+    }
+    
+    private func startCountdownTimer() {
+        duration = timerLimit
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.duration -= 1
+            runOnMainThread {
+                UIView.performWithoutAnimation {
+                    self.resendCodeButton.title = self.remainingTime
+                    self.resendCodeButton.enable(false)
+                    self.resendCodeButton.layoutIfNeeded()
+                }
+            }
+            if self.duration <= 0 {
+                runOnMainThread {
+                    self.resendCodeButton.title = "Resend code"
+                    self.resendCodeButton.enable()
+                }
+                self.stopCountdownTimer()
+            }
+        }
+    }
+    
+    private func stopCountdownTimer() {
+        duration = 0
+        timer?.invalidate()
+        timer = nil
     }
     
     private func handleOTPCompleted(_ otp: String) {
@@ -99,6 +137,10 @@ final class VerifyOTPViewController: DJBaseViewController {
         ) { [weak self] in
             self?.popToViewController(ofClass: DojahWidgetViewController.self)
         }
+    }
+    
+    deinit {
+        stopCountdownTimer()
     }
 
 }

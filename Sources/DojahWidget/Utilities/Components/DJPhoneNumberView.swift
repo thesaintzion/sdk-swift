@@ -18,7 +18,7 @@ final class DJPhoneNumberView: BaseView {
     )
     private let codeLabel = UILabel(text: "+234", font: .regular(15)).withWidth(35)
     private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
-    lazy var flagStackView = HStackView(
+    private lazy var flagStackView = HStackView(
         subviews: [flagIconImageView, codeLabel, arrowdownImageView],
         spacing: 8,
         alignment: .center
@@ -42,6 +42,16 @@ final class DJPhoneNumberView: BaseView {
         subviews: [titleLabel, contentView],
         spacing: 5
     )
+    private lazy var dropdownView: DropDown = {
+        with(DropDown()) {
+            $0.dataSource = Country.allCases.names
+            $0.textFont = .regular(15)
+            $0.direction = .bottom
+            $0.selectionAction = { [weak self] index, _ in
+                self?.didChooseCountry(index: index)
+            }
+        }
+    }()
     
     var fullNumber: String {
         "\(codeLabel.text.orEmpty)\(textField.text.orEmpty)"
@@ -65,9 +75,23 @@ final class DJPhoneNumberView: BaseView {
             $0.placeholder = "000-000-0000"
             $0.font = .regular(15)
         }
+        
+        flagStackView.didTap { [weak self] in
+            self?.showCountries()
+        }
     }
     
-    func updateInfo(country: Country) {
+    private func showCountries() {
+        with(dropdownView) {
+            $0.anchorView = contentView
+            $0.kwidth = 112
+            $0.bottomOffset = CGPoint(x: 0, y:($0.anchorView?.plainView.bounds.height)!)
+            $0.show()
+        }
+    }
+    
+    private func didChooseCountry(index: Int) {
+        guard let country = Country(rawValue: index) else { return }
         with(country) {
             flagIconImageView.image = $0.flag
             codeLabel.text = $0.phoneCode
