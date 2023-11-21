@@ -60,13 +60,12 @@ final class DatePickerController: BottomPopupViewController {
     private var calendarView: CalendarView!
     private var selectedDay: Day?
     private var selectedYear = current(.year)
-    private var selectedDayInt = current(.day)
     private var selectedMonth = DJMonth(rawValue: current(.month)) ?? .jan
     private var monthYearDate: Date {
         let dateComps = DateComponents(
             year: selectedYear,
             month: selectedMonth.rawValue,
-            day: selectedDayInt // 10 is arbitrary, we're not really interested in the day!
+            day: selectedDay?.date?.current(.day) ?? current(.day)
         )
         return Calendar.current.date(from: dateComps) ?? Date()
     }
