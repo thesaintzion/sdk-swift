@@ -21,6 +21,10 @@ extension Date {
         default: return "th"
         }
     }
+    
+    func current(_ component: Calendar.Component) -> Int {
+        Calendar.current.component(component, from: self)
+    }
 
     func toString(
         format: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
@@ -54,7 +58,7 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    func dateOnlyString(format: String = "dd MMM yyyy") -> String {
+    func string(format: String = "dd MMM yyyy") -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.dateFormat = format

@@ -103,7 +103,7 @@ extension BioDataViewController: TermsAndPrivacyViewDelegate {
 }
 
 extension BioDataViewController: DatePickerViewDelegate {
-    func didChooseDate(_ date: String) {
-        dobTextField.text = date
+    func didChooseDate(_ date: Date) {
+        dobTextField.text = date.string(format: "dd/MM/yyyy")
     }
 }

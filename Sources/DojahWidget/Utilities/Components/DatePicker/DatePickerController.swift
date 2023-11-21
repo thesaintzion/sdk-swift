@@ -12,7 +12,7 @@ final class DatePickerController: BottomPopupViewController {
     
     weak var delegate: DatePickerViewDelegate?
     private let dateIconTextView = PillIconTextView(
-        text: "November 21, 2022".uppercased(),
+        text: Date().string(format: "MMMM dd, YYYY").uppercased(),
         font: .light(14),
         icon: .res(.calendar).withRenderingMode(.alwaysTemplate),
         iconTint: .primaryGrey,
@@ -24,6 +24,9 @@ final class DatePickerController: BottomPopupViewController {
     private lazy var monthPickerView = DJPickerView(
         title: "",
         value: "November",
+        bgColor: .white,
+        borderColor: .clear,
+        borderWidth: 0,
         items: DJConstants.monthNames,
         itemSelectionHandler: didChooseMonth
     )
@@ -31,14 +34,19 @@ final class DatePickerController: BottomPopupViewController {
     private lazy var dayPickerView = DJPickerView(
         title: "",
         value: current(.day).string,
-        items: DJConstants.monthDays.map { $0.string },
-        itemSelectionHandler: didChooseDay
+        bgColor: .white,
+        borderColor: .clear,
+        borderWidth: 0,
+        showDropdownIcon: false
     )
     
     private lazy var yearPickerView = DJPickerView(
         title: "",
         value: current(.year).string,
-        items: DJConstants.years.map { String($0) },
+        bgColor: .white,
+        borderColor: .clear,
+        borderWidth: 0,
+        items: DJConstants.years.map { $0.string },
         itemSelectionHandler: didChooseYear
     )
     
@@ -50,12 +58,19 @@ final class DatePickerController: BottomPopupViewController {
     private var calendarView: CalendarView!
     private var selectedDay: Day?
     private var selectedYear = current(.year)
-    var minDate: Date?
-    var maxDate: Date?
+    private var selectedMonth = DJMonth(rawValue: current(.month)) ?? .jan
+    private var monthYearDate: Date {
+        let dateComps = DateComponents(
+            year: selectedYear,
+            month: selectedMonth.rawValue,
+            day: 10 // 10 is arbitrary, we're not really interested in the day!
+        )
+        return Calendar.current.date(from: dateComps) ?? Date()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        backgroundColor = .aSystemBackground
+        backgroundColor = .primaryGrey
         setUserInterfaceStyle()
         with(topStackView) {
             addSubview($0)
@@ -69,32 +84,35 @@ final class DatePickerController: BottomPopupViewController {
         setupCalendarView()
     }
     
-    override var popupHeight: CGFloat { 520 }
+    override var popupHeight: CGFloat { 535 }
     
     override var popupTopCornerRadius: CGFloat { 20 }
     
     private func didChooseMonth(name: String, index: Int) {
-        
-    }
-    
-    private func didChooseDay(text: String, index: Int) {
-        
+        guard let month = DJMonth(rawValue: index + 1) else { return }
+        selectedMonth = month
+        refreshCalendarView()
     }
     
     private func didChooseYear(text: String, index: Int) {
-        
+        guard let year = text.int else { return }
+        selectedYear = year
+        refreshCalendarView()
     }
     
     private func setupCalendarView() {
         calendarView = CalendarView(initialContent: makeCalendarViewContent())
         calendarView.daySelectionHandler = { [weak self] day in
-            guard let self else { return }
-            self.selectedDay = day
-            //self.selectedDateLabel.text = day.date?.dateOnlyString()
-            self.calendarView?.setContent(self.makeCalendarViewContent())
+            self?.didChooseDay(day)
         }
         
-        with(calendarView!) {
+        let calendarContentView = UIView(
+            subviews: [calendarView],
+            backgroundColor: .white,
+            radius: 5
+        )
+        
+        with(calendarContentView) {
             addSubview($0)
             
             $0.anchor(
@@ -105,35 +123,67 @@ final class DatePickerController: BottomPopupViewController {
                 padding: .kinit(
                     top: 10,
                     left: 15,
-                    bottom: 10,
+                    bottom: 5,
                     right: 15
                 )
             )
         }
+        
+        calendarView.fillSuperview(padding: .kinit(bottom: 15))
+    }
+    
+    private func didChooseDay(_ day: Day) {
+        guard let date = day.date else { return }
+        selectedDay = day
+        delegate?.didChooseDate(date)
+        dateIconTextView.text = date.string(format: "MMMM dd, YYYY")
+        dayPickerView.updateValue(date.current(.day).string)
+        calendarView.setContent(makeCalendarViewContent())
+        runAfter(0.25) { [weak self] in
+            self?.dismissViewController()
+        }
+    }
+    
+    private func refreshCalendarView() {
+        calendarView.setContent(makeCalendarViewContent())
     }
     
     private func makeCalendarViewContent() -> CalendarViewContent {
         let calendar = Calendar.current
-        let startDate = Date().startOfMonth
-        let endDate = Date().endOfMonth
-        return CalendarViewContent(calendar: calendar, visibleDateRange: startDate...endDate, monthsLayout: .vertical(options: VerticalMonthsLayoutOptions()))
-            .dayItemProvider { day in
-                
-                var invariantViewProperties = DateTimeDayLabel.InvariantViewProperties(font: .regular(18), textColor: .aLabel, backgroundColor: .clear)
-                
-                if day == self.selectedDay {
-                    invariantViewProperties.textColor = .white
-                    invariantViewProperties.backgroundColor = .primary
-                }
-                
-                return CalendarItemModel<DateTimeDayLabel>(invariantViewProperties: invariantViewProperties, viewModel: .init(day: day))
+        let startDate = monthYearDate.startOfMonth
+        let endDate = monthYearDate.endOfMonth
+        return CalendarViewContent(
+            calendar: calendar,
+            visibleDateRange: startDate...endDate,
+            monthsLayout: .vertical(options: VerticalMonthsLayoutOptions())
+        )
+        .dayItemProvider { day in
+            
+            var invariantViewProperties = DateDayLabel.InvariantViewProperties(
+                font: .regular(18),
+                textColor: .aLabel,
+                backgroundColor: .clear
+            )
+            
+            if day == self.selectedDay {
+                invariantViewProperties.textColor = .white
+                invariantViewProperties.backgroundColor = .primary
             }
-            .monthHeaderItemProvider { month in
-                CalendarItemModel<EmptyMonthHeaderView>(invariantViewProperties: .init(), viewModel: .init())
-            }
-            .interMonthSpacing(24)
-            .verticalDayMargin(8)
-            .horizontalDayMargin(8)
+            
+            return CalendarItemModel<DateDayLabel>(
+                invariantViewProperties: invariantViewProperties,
+                viewModel: .init(day: day)
+            )
+        }
+        .monthHeaderItemProvider { month in
+            CalendarItemModel<EmptyMonthHeaderView>(
+                invariantViewProperties: .init(),
+                viewModel: .init()
+            )
+        }
+        .interMonthSpacing(24)
+        .verticalDayMargin(8)
+        .horizontalDayMargin(8)
     }
 
 }

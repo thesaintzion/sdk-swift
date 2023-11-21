@@ -53,15 +53,25 @@ final class DJPickerView: BaseView {
         title: String,
         value: String = "",
         leftIconConfig: IconConfig = .init(),
+        bgColor: UIColor = .primaryGrey,
+        borderColor: UIColor = .djBorder,
+        borderWidth: CGFloat = 0.7,
+        showDropdownIcon: Bool = true,
         items: [String] = [],
         itemSelectionHandler: StringIntParamHandler? = nil
     ) {
+        selectionItems = items
         super.init(frame: .zero)
         titleLabel.text = title
         updateValue(value)
         updateLeftIcon(config: leftIconConfig)
-        selectionItems = items
         self.itemSelectionHandler = itemSelectionHandler
+        arrowdownImageView.showView(showDropdownIcon)
+        with(valueView) {
+            $0.backgroundColor = bgColor
+            $0.viewBorderWidth = borderWidth
+            $0.borderColor = borderColor
+        }
     }
     
     @available(*, unavailable)
@@ -87,8 +97,10 @@ final class DJPickerView: BaseView {
             )
         }
         
-        valueView.didTap { [weak self] in
-            self?.showItems()
+        if selectionItems.isNotEmpty {
+            valueView.didTap { [weak self] in
+                self?.showItems()
+            }
         }
     }
     

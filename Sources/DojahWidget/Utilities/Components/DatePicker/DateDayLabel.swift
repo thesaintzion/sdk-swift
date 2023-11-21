@@ -1,5 +1,5 @@
 //
-//  DateTimeDayLabel.swift
+//  DateDayLabel.swift
 //
 //
 //  Created by Isaac Iniongun on 20/11/2023.
@@ -8,7 +8,7 @@
 import HorizonCalendar
 import UIKit
 
-struct DateTimeDayLabel: CalendarItemViewRepresentable {
+struct DateDayLabel: CalendarItemViewRepresentable {
     
     /// Properties that are set once when we initialize the view.
     struct InvariantViewProperties: Hashable {
@@ -43,19 +43,6 @@ struct DateTimeDayLabel: CalendarItemViewRepresentable {
         view.text = "\(viewModel.day.day)"
     }
     
-}
-
-struct EmptyMonthHeaderView: CalendarItemViewRepresentable {
-    struct InvariantViewProperties: Hashable {}
-    
-    struct ViewModel: Equatable {}
-    
-    static func makeView(withInvariantViewProperties invariantViewProperties: InvariantViewProperties)
-    -> UILabel {
-        UILabel()
-    }
-    
-    static func setViewModel(_ viewModel: ViewModel, on view: UILabel) {}
 }
 
 extension Day {
