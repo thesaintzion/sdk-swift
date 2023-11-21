@@ -11,8 +11,9 @@ import HorizonCalendar
 final class DatePickerController: BottomPopupViewController {
     
     weak var delegate: DatePickerViewDelegate?
-    private let dateIconTextView = PillIconTextView(
-        text: Date().string(format: "MMMM dd, YYYY").uppercased(),
+    private let dateFormat = "MMMM dd, YYYY"
+    private lazy var dateIconTextView = PillIconTextView(
+        text: Date().string(format: dateFormat).uppercased(),
         font: .light(14),
         icon: .res(.calendar).withRenderingMode(.alwaysTemplate),
         iconTint: .primaryGrey,
@@ -21,6 +22,7 @@ final class DatePickerController: BottomPopupViewController {
         bgColor: .primary,
         cornerRadius: 5
     )
+    
     private lazy var monthPickerView = DJPickerView(
         title: "",
         value: selectedMonth.name,
@@ -58,12 +60,13 @@ final class DatePickerController: BottomPopupViewController {
     private var calendarView: CalendarView!
     private var selectedDay: Day?
     private var selectedYear = current(.year)
+    private var selectedDayInt = current(.day)
     private var selectedMonth = DJMonth(rawValue: current(.month)) ?? .jan
     private var monthYearDate: Date {
         let dateComps = DateComponents(
             year: selectedYear,
             month: selectedMonth.rawValue,
-            day: 10 // 10 is arbitrary, we're not really interested in the day!
+            day: selectedDayInt // 10 is arbitrary, we're not really interested in the day!
         )
         return Calendar.current.date(from: dateComps) ?? Date()
     }
@@ -136,7 +139,7 @@ final class DatePickerController: BottomPopupViewController {
         guard let date = day.date else { return }
         selectedDay = day
         delegate?.didChooseDate(date)
-        dateIconTextView.text = date.string(format: "MMMM dd, YYYY")
+        dateIconTextView.text = date.string(format: dateFormat)
         dayPickerView.updateValue(date.current(.day).string)
         calendarView.setContent(makeCalendarViewContent())
         runAfter(0.25) { [weak self] in
@@ -145,6 +148,7 @@ final class DatePickerController: BottomPopupViewController {
     }
     
     private func refreshCalendarView() {
+        dateIconTextView.text = monthYearDate.string(format: dateFormat)
         calendarView.setContent(makeCalendarViewContent())
     }
     
