@@ -23,7 +23,7 @@ final class DatePickerController: BottomPopupViewController {
     )
     private lazy var monthPickerView = DJPickerView(
         title: "",
-        value: "November",
+        value: selectedMonth.name,
         bgColor: .white,
         borderColor: .clear,
         borderWidth: 0,
