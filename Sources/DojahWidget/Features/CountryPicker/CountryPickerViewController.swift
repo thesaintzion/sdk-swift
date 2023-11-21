@@ -27,18 +27,18 @@ final class CountryPickerViewController: DJBaseViewController {
     private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
         subviews: [countryPickerView, continueButton, termsView],
-        spacing: 20
+        spacing: 30
     )
     
     override func viewDidLoad() {
         super.viewDidLoad()
         with(contentStackView) {
             addSubview($0)
-            $0.centerYInSuperview()
             $0.anchor(
+                top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
-                padding: .kinit(leftRight: 16)
+                padding: .kinit(topBottom: 50, leftRight: 16)
             )
         }
     }

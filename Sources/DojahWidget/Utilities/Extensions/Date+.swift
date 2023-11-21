@@ -8,7 +8,11 @@
 import Foundation
 import UIKit
 
-public extension Date {
+func current(_ component: Calendar.Component) -> Int {
+    Calendar.current.component(component, from: Date())
+}
+
+extension Date {
     var daySuffix: String {
         switch Calendar.current.component(.day, from: self) {
         case 1, 21, 31: return "st"

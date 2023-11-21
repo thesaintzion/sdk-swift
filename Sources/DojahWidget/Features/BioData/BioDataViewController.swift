@@ -85,7 +85,7 @@ final class BioDataViewController: DJBaseViewController {
     }
     
     private func didTapDOBTextField() {
-        let datePickerController = DatePickerViewController()
+        let datePickerController = DatePickerController()
         datePickerController.delegate = self
         present(datePickerController, animated: true)
     }

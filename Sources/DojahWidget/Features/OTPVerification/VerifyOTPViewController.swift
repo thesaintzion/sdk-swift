@@ -90,11 +90,11 @@ final class VerifyOTPViewController: DJBaseViewController {
     private func setupUI() {
         with(contentStackView) {
             addSubview($0)
-            $0.centerYInSuperview()
             $0.anchor(
+                top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
-                padding: .kinit(leftRight: 20)
+                padding: .kinit(topBottom: 50, leftRight: 20)
             )
         }
     }

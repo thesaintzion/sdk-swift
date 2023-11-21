@@ -18,7 +18,6 @@ extension UIDatePicker {
             }
         }
         datePickerMode = dateMode
-        //minDate()
     }
     
     func dateString(format: String = "dd/MM/yyyy") -> String {

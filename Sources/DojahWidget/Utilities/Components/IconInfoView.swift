@@ -17,7 +17,8 @@ final class IconInfoView: BaseView {
         icon: UIImage = .res(.greenInfoCircle),
         bgColor: UIColor = .djLightGreen,
         textAlignment: NSTextAlignment = .left,
-        numberOfLines: Int = 1
+        numberOfLines: Int = 1,
+        cornerRadius: CGFloat = 15
     ) {
         iconLabel = IconUILabel(
             text: text,
@@ -32,6 +33,7 @@ final class IconInfoView: BaseView {
         
         super.init(frame: .zero)
         backgroundColor = bgColor
+        viewCornerRadius = cornerRadius
     }
     
     @available(*, unavailable)
@@ -40,7 +42,6 @@ final class IconInfoView: BaseView {
     }
     
     override func setup() {
-        viewCornerRadius = 15
         with(iconLabel) {
             addSubview($0)
             $0.fillSuperview(padding: .kinit(topBottom: 6, leftRight: 8))

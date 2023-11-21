@@ -320,6 +320,11 @@ extension UIView {
         leftSpacerView.widthEquals(rightSpacerView)
         return hStackView
     }
+    
+    @discardableResult
+    func withHStackLeftAlignment() -> HStackView {
+        HStackView(subviews: [self, UIView.vspacer()], alignment: .center)
+    }
 }
 
 extension Array where Element == UIView {

@@ -8,17 +8,15 @@ let package = Package(
     platforms: [.iOS(.v12)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "DojahWidget",
-            targets: ["DojahWidget"]),
+        .library(name: "DojahWidget", targets: ["DojahWidget"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/airbnb/HorizonCalendar.git", from: "1.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "DojahWidget"),
-        .testTarget(
-            name: "DojahWidgetTests",
-            dependencies: ["DojahWidget"]),
+        .target(name: "DojahWidget", dependencies: ["HorizonCalendar"]),
+        .testTarget(name: "DojahWidgetTests", dependencies: ["DojahWidget"]),
     ]
 )

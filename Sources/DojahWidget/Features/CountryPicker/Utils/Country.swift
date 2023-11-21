@@ -52,10 +52,21 @@ enum Country: Int, CaseIterable, SelectableItem {
             return "+254"
         }
     }
+    
+    var emoticon: String {
+        switch self {
+        case .nigeria:
+            return "🇳🇬"
+        case .ghana:
+            return "🇬🇭"
+        case .kenya:
+            return "🇺🇬"
+        }
+    }
 }
 
 extension [Country] {
     var names: [String] {
-        map { $0.name }
+        map { "\($0.emoticon)  \($0.name)" }
     }
 }

@@ -25,4 +25,10 @@ enum DJConstants {
         "If the image is blurry or dark, you may retake the photo by pressing the designated button.",
         "If you are satisfied with the captured image, proceed to the next step to continue with the verification process."
     ]
+    
+    static let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    
+    static let monthDays = Array(1...31)
+    
+    static let years = Array(1990...current(.year)).reversed()
 }

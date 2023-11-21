@@ -188,15 +188,10 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     }
     
     private func proceed() {
-        switch verificationMethod {
-        case .selfie, .videoKYC:
-            let viewModel = SelfieVideoKYCViewModel(verificationMethod: verificationMethod)
-            kpushViewController(SelfieVideoKYCViewController(viewModel: viewModel))
-        case .phoneNumberOTP, .emailOTP:
-            let viewModel = OTPVerificationViewModel(verificationMethod: verificationMethod)
-            kpushViewController(OTPVerificationViewController(viewModel: viewModel))
-//        case .homeAddress:
-//            kpushViewController(HomeAddressViewController())
+        showFeedbackController(
+            message: "Your identification has been successfully verified, you will now be redirected"
+        ) { [weak self] in
+            self?.popToViewController(ofClass: DojahWidgetViewController.self)
         }
     }
     

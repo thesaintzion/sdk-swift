@@ -8,6 +8,13 @@
 import UIKit
 
 final class PillIconTextView: BaseView {
+    
+    private var iconTextView: IconTextView!
+    
+    var text: String? {
+        get { iconTextView.text }
+        set { iconTextView.text = newValue }
+    }
 
     convenience init(
         text: String = "",
@@ -29,7 +36,7 @@ final class PillIconTextView: BaseView {
         cornerRadius: CGFloat = 12
     ) {
         self.init(frame: .zero)
-        let iconTextView = IconTextView(
+        iconTextView = IconTextView(
             text: text,
             font: font,
             icon: icon,

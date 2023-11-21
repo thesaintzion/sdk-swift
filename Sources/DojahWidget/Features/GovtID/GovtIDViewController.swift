@@ -70,7 +70,16 @@ final class GovtIDViewController: DJBaseViewController {
     
     private func didTapContinueButton() {
         guard let govtIDVerificationMethod else { return }
-        kpushViewController(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
+        switch govtIDVerificationMethod {
+        case .govtID:
+            kpushViewController(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
+        case .selfie, .videoKYC:
+            let viewModel = SelfieVideoKYCViewModel(verificationMethod: govtIDVerificationMethod)
+            kpushViewController(SelfieVideoKYCViewController(viewModel: viewModel))
+        case .phoneNumberOTP, .emailOTP:
+            let viewModel = OTPVerificationViewModel(verificationMethod: govtIDVerificationMethod)
+            kpushViewController(OTPVerificationViewController(viewModel: viewModel))
+        }
     }
     
     private func didChooseGovtID(name: String, index: Int) {

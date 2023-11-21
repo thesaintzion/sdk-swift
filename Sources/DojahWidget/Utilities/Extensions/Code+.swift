@@ -59,41 +59,29 @@ extension URL {
 
 //MARK: - Current Date Year and Month
 
-func currentYear() -> String {
-    let date = Date()
-    let calendar = Calendar.current
-    let currentYear = calendar.component(.year, from: date) // gets current year (i.e. 2017)
-    
-    return "\(currentYear)"
-}
+//func currentYear() -> String {
+//    let date = Date()
+//    let calendar = Calendar.current
+//    let currentYear = calendar.component(.year, from: date) // gets current year (i.e. 2017)
+//    
+//    return "\(currentYear)"
+//}
+//
+//func currentMonth() -> String {
+//    let date = Date()
+//    let calendar = Calendar.current
+//    let currentMonth = calendar.component(.month, from: date) // gets current month (i.e. 10)
+//    
+//    return "\(currentMonth)"
+//}
 
-func currentMonth() -> String {
-    let date = Date()
-    let calendar = Calendar.current
-    let currentMonth = calendar.component(.month, from: date) // gets current month (i.e. 10)
-    
-    return "\(currentMonth)"
-}
-
-func currentYearFirstTwoDigits() -> Int {
-    return Int(currentYear()[0,1])!
-}
-
-func currentYearLastTwoDigits() -> Int {
-    return Int(currentYear()[2,3])!
-}
-
-extension Collection where Iterator.Element == Int {
-    var seatsString: String {
-        return String(describing: self.compactMap { $0 }).replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-    }
-}
-
-extension Data {
-    var mbSize: Float {
-        return Float(Float(self.count) / 1048576.0)
-    }
-}
+//func currentYearFirstTwoDigits() -> Int {
+//    return Int(currentYear()[0,1])!
+//}
+//
+//func currentYearLastTwoDigits() -> Int {
+//    return Int(currentYear()[2,3])!
+//}
 
 extension Sequence {
     func distinctBy<A: Hashable>(by selector: (Iterator.Element) -> A) -> [Iterator.Element] {
