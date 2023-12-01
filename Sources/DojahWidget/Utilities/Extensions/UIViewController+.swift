@@ -157,11 +157,13 @@ extension UIViewController {
     
     func showFeedbackController(
         feedbackType: FeedbackType = .success,
+        title: String,
         message: String,
         doneAction: NoParamHandler? = nil
     ) {
         let controller = FeedbackViewController(
-            feedbackType: feedbackType,
+            feedbackType: feedbackType, 
+            title: title,
             message: message,
             doneAction: doneAction
         )

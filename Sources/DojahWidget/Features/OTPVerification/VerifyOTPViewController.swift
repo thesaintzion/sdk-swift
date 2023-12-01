@@ -133,6 +133,7 @@ final class VerifyOTPViewController: DJBaseViewController {
     
     private func didTapContinueButton() {
         showFeedbackController(
+            title: "OTP verification Success",
             message: "Your phone number has been successfully verified, you will now be redirected."
         ) { [weak self] in
             self?.popToViewController(ofClass: DojahWidgetViewController.self)

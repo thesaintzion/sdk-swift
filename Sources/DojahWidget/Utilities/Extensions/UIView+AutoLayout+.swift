@@ -145,6 +145,11 @@ extension UIView {
         return self
     }
     
+    @discardableResult func withSize(_ size: CGFloat) -> Self {
+        constraintSize(height: size, width: size)
+        return self
+    }
+    
     func constraintSize(height: CGFloat, width: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: height).isActive = true

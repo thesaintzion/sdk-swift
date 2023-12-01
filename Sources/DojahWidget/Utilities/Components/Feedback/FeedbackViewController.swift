@@ -6,28 +6,18 @@
 //
 
 import UIKit
-
-enum FeedbackType {
-    case success, failure
-    
-    var icon: UIImage {
-        switch self {
-        case .success:
-            return .res(.purpleSuccessCheckmark)
-        case .failure:
-            return .res(.xCircle)
-        }
-    }
-}
+import Lottie
 
 final class FeedbackViewController: DJBaseViewController {
     
     private let feedbackType: FeedbackType
+    private let titleText: String
     private let message: String
     private let doneAction: NoParamHandler?
     
-    init(feedbackType: FeedbackType, message: String, doneAction: NoParamHandler? = nil) {
+    init(feedbackType: FeedbackType, title: String, message: String, doneAction: NoParamHandler? = nil) {
         self.feedbackType = feedbackType
+        self.titleText = title
         self.message = message
         self.doneAction = doneAction
         super.init(nibName: nil, bundle: nil)
@@ -38,7 +28,9 @@ final class FeedbackViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private lazy var iconImageView = UIImageView(image: feedbackType.icon, height: 100)
+    private lazy var animationView = LottieAnimationView(name: feedbackType.lottieAnimationName, bundle: Bundle.module).withSize(200)
+    //private lazy var iconImageView = UIImageView(image: feedbackType.icon, height: 100)
+    private lazy var titleLabel = UILabel(text: titleText, font: .semibold(20), alignment: .center)
     private lazy var messageLabel = UILabel(
         text: message,
         font: .regular(16),
@@ -49,8 +41,9 @@ final class FeedbackViewController: DJBaseViewController {
         self?.didTapDoneButton()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [iconImageView, messageLabel, doneButton],
-        spacing: 20
+        subviews: [titleLabel, animationView, messageLabel, doneButton],
+        spacing: 20,
+        alignment: .center
     )
     
     override func viewDidLoad() {

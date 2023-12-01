@@ -189,6 +189,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     
     private func proceed() {
         showFeedbackController(
+            title: "Verification Success", 
             message: "Your identification has been successfully verified, you will now be redirected"
         ) { [weak self] in
             self?.popToViewController(ofClass: DojahWidgetViewController.self)
