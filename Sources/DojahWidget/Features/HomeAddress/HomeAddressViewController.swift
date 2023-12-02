@@ -51,7 +51,7 @@ final class HomeAddressViewController: DJBaseViewController {
             title: "Address Verification Success",
             message: "Your home address has been successfully verified, you will now be redirected"
         ) { [weak self] in
-            self?.popToViewController(ofClass: DojahWidgetViewController.self)
+            self?.popToViewController(ofClass: DJDisclaimerViewController.self)
         }
     }
 

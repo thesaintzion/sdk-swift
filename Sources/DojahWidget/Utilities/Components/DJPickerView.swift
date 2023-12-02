@@ -132,6 +132,13 @@ final class DJPickerView: BaseView {
         }
     }
     
+    func updateInfo(country: DJCountryDB) {
+        with(country) {
+            valueLabel.text = $0.countryName
+            leftIconImageView.image = $0.flag
+        }
+    }
+    
     func updateValue(_ value: String) {
         with(valueLabel) {
             $0.text = value.isEmpty ? "Select" : value

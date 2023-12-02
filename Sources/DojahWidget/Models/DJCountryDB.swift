@@ -7,6 +7,7 @@
 
 import Foundation
 import RealmSwift
+import UIKit
 
 class DJCountryDB: Object {
     @Persisted(primaryKey: true) var iso2: String
@@ -76,5 +77,9 @@ class DJCountryDB: Object {
         self.phonesMobile = phonesMobile
         self.phonesLandline = phonesLandline
         self.gdp = gdp
+    }
+    
+    var flag: UIImage {
+        UIImage(named: iso2.lowercased(), in: Bundle.module, compatibleWith: nil) ?? .res(.ng)
     }
 }

@@ -8,6 +8,18 @@
 import UIKit
 
 final class CountryPickerViewController: DJBaseViewController {
+    
+    private let viewModel: CountryPickerViewModel
+    
+    init(viewModel: CountryPickerViewModel = CountryPickerViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private let iconConfig = IconConfig(
         icon: .res(.ngFlag),
@@ -18,7 +30,7 @@ final class CountryPickerViewController: DJBaseViewController {
         title: "Select a country",
         value: "Nigeria",
         leftIconConfig: iconConfig,
-        items: Country.allCases.names,
+        items: viewModel.countryNames, //Country.allCases.names,
         itemSelectionHandler: didChooseCountry
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
@@ -48,7 +60,8 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     private func didChooseCountry(name: String, index: Int) {
-        guard let country = Country(rawValue: index) else { return }
+        //guard let country = Country(rawValue: index) else { return }
+        guard let country = viewModel.getCountry(name: name) else { return }
         countryPickerView.updateInfo(country: country)
     }
 

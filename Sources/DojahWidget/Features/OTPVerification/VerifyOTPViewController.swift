@@ -136,7 +136,7 @@ final class VerifyOTPViewController: DJBaseViewController {
             title: "OTP verification Success",
             message: "Your phone number has been successfully verified, you will now be redirected."
         ) { [weak self] in
-            self?.popToViewController(ofClass: DojahWidgetViewController.self)
+            self?.popToViewController(ofClass: DJDisclaimerViewController.self)
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  DojahWidgetViewController.swift
+//  DJDisclaimerViewController.swift
 //  
 //
 //  Created by Isaac Iniongun on 25/10/2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class DojahWidgetViewController: DJBaseViewController {
+public class DJDisclaimerViewController: DJBaseViewController {
     
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
     private let disclaimerTitleLabel = UILabel(
