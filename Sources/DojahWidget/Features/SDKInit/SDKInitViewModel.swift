@@ -48,6 +48,26 @@ final class SDKInitViewModel {
     }
     
     private func preAuthenticate() {
+        let params = ["widget_id": widgetID]
+        authenticationRemoteDatasource.getPreAuthenticationInfo(params: params) { [weak self] result in
+            switch result {
+            case let .success(preAuthRes):
+                self?.didGetPreAuthenticationResponse(preAuthRes)
+            case .failure(let error):
+                kprint("\(error)")
+                self?.viewProtocol?.showLoader(false)
+                self?.viewProtocol?.showSDKInitFailedView()
+            }
+        }
+    }
+    
+    private func didGetPreAuthenticationResponse(_ preAuthRes: DJPreAuthResponse) {
+        if let appConfig = preAuthRes.appConfig {
+            preference.appConfig = appConfig
+        }
+    }
+    
+    private func performIPAddressChecks() {
         
     }
 }

@@ -85,6 +85,8 @@ final class NetworkService: NetworkServiceProtocol {
             if let data {
                 do {
                     let response = try data.decode(into: T.self)
+                    kprint("Request Response:")
+                    kprint(response.prettyJson)
                     completion(.success(response))
                 } catch {
                     completion(.failure(.decodingFailure(reason: error.localizedDescription)))

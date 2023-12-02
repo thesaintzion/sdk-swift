@@ -94,10 +94,10 @@ extension UIView {
         }
     }
     
-    func centerYInSuperview() {
+    func centerYInSuperview(offset: CGFloat = 0) {
         translatesAutoresizingMaskIntoConstraints = false
         if let centerY = superview?.centerYAnchor {
-            centerYAnchor.constraint(equalTo: centerY).isActive = true
+            centerYAnchor.constraint(equalTo: centerY, constant: offset).isActive = true
         }
     }
     

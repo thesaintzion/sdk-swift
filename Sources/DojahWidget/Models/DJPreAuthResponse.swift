@@ -10,11 +10,11 @@ import Foundation
 struct DJPreAuthResponse: Codable {
     let widget: DJWidget?
     let publicKey: String?
-    let app: DJAppConfig?
+    let appConfig: DJAppConfig?
 
     enum CodingKeys: String, CodingKey {
         case widget
         case publicKey = "public_key"
-        case app
+        case appConfig = "app"
     }
 }

@@ -29,7 +29,6 @@ final class FeedbackViewController: DJBaseViewController {
     }
 
     private lazy var animationView = LottieAnimationView(name: feedbackType.lottieAnimationName, bundle: Bundle.module).withSize(200)
-    //private lazy var iconImageView = UIImageView(image: feedbackType.icon, height: 100)
     private lazy var titleLabel = UILabel(text: titleText, font: .semibold(20), alignment: .center)
     private lazy var messageLabel = UILabel(
         text: message,
@@ -42,21 +41,36 @@ final class FeedbackViewController: DJBaseViewController {
     }
     private lazy var contentStackView = VStackView(
         subviews: [titleLabel, animationView, messageLabel, doneButton],
-        spacing: 20,
+        spacing: 10,
         alignment: .center
     )
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         with(contentStackView) {
             addSubview($0)
             $0.anchor(
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
                 trailing: safeAreaTrailingAnchor,
+                padding: .kinit(topBottom: 100, leftRight: 20)
+            )
+        }
+        
+        with(doneButton) {
+            addSubview($0)
+            $0.anchor(
+                leading: safeAreaLeadingAnchor,
+                bottom: poweredView.topAnchor,
+                trailing: safeAreaTrailingAnchor,
                 padding: .kinit(topBottom: 50, leftRight: 20)
             )
-            $0.setCustomSpacing(50, after: messageLabel)
+        }
+        
+        with(animationView) {
+            $0.loopMode = .loop
+            $0.play()
         }
     }
     

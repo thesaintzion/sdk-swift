@@ -167,7 +167,9 @@ extension UIViewController {
             message: message,
             doneAction: doneAction
         )
-        kpushViewController(controller)
+        runOnMainThread { [weak self] in
+            self?.kpushViewController(controller)
+        }
     }
     
 }

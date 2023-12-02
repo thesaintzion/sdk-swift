@@ -40,16 +40,20 @@ final class SDKInitViewController: UIViewController {
         
         animationView.loopMode = .loop
         animationView.play()
+        
+        viewModel.initialize()
     }
 
 }
 
 extension SDKInitViewController: SDKInitViewProtocol {
     func showLoader(_ show: Bool) {
-        if show {
-            animationView.play()
-        } else {
-            animationView.stop()
+        runOnMainThread { [weak self] in
+            if show {
+                self?.animationView.play()
+            } else {
+                self?.animationView.stop()
+            }
         }
     }
     

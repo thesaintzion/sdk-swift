@@ -25,7 +25,7 @@ enum FeedbackType {
         case .success:
             return "success"
         case .failure:
-            return "failed"
+            return "error-2"
         }
     }
 }
