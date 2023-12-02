@@ -37,3 +37,11 @@ typealias UICollectionViewConformable = UICollectionViewDelegateFlowLayout & UIC
 typealias UIImagePickerViewConformable = UIImagePickerControllerDelegate & UINavigationControllerDelegate
 
 typealias StringURLParam = [String : URL]
+
+typealias Parameters = [String: Any]
+
+typealias HeaderParameters = [String: String]
+
+typealias DJResult<T: Codable> = Result<T, DJSDKError>
+
+typealias DJResultAction<T: Codable> = (DJResult<T>) -> Void

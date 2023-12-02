@@ -15,6 +15,7 @@ enum DJSDKError: Error, Equatable {
     case resourceNotFound
     case serverFailure
     case unableToLoadLocalJSON
+    case noResponseData
     
     var description: String? {
         switch self {
@@ -31,7 +32,9 @@ enum DJSDKError: Error, Equatable {
         case .serverFailure:
             return "Unable to contact the server, please try again."
         case .unableToLoadLocalJSON:
-            return "Unable to load local JSON file"
+            return "Unable to load local JSON file."
+        case .noResponseData:
+            return "No response data returned for network request."
         }
     }
 }

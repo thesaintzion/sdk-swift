@@ -13,4 +13,7 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultPrimitive(key: .countriesInitialized, default: false)
     var countriesInitialized: Bool
+    
+    @UserDefaultCodable(key: .appConfig, default: nil)
+    var appConfig: DJAppConfig?
 }

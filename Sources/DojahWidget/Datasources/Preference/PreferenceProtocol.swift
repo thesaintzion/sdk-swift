@@ -10,4 +10,5 @@ import Foundation
 protocol PreferenceProtocol {
     var widgetID: String { get set }
     var countriesInitialized: Bool { get set }
+    var appConfig: DJAppConfig? { get set }
 }

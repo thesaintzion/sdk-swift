@@ -10,4 +10,5 @@ import Foundation
 enum PreferenceKey: String {
     case widgetID
     case countriesInitialized
+    case appConfig
 }

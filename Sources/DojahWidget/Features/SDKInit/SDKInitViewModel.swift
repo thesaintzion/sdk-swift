@@ -13,16 +13,19 @@ final class SDKInitViewModel {
     private let widgetID: String
     private var preference: PreferenceProtocol
     private let countriesDatasource: CountriesLocalDatasourceProtocol
+    private let authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol
     
     init(
         widgetID: String,
         preference: PreferenceProtocol = PreferenceImpl(),
-        countriesDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource()
+        countriesDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource(),
+        authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol = AuthenticationRemoteDatasource()
     ) {
         self.widgetID = widgetID
         self.preference = preference
         self.preference.widgetID = widgetID
         self.countriesDatasource = countriesDatasource
+        self.authenticationRemoteDatasource = authenticationRemoteDatasource
     }
     
     func initialize() {
@@ -33,7 +36,7 @@ final class SDKInitViewModel {
         }
         
         do {
-            guard let countries = try jsonData.decode(into: [DJCountry].self) else { return }
+            let countries = try jsonData.decode(into: [DJCountry].self)
             let dbCountries = countries.map { $0.countryDB }
             try countriesDatasource.saveCountries(dbCountries)
             preference.countriesInitialized = true
