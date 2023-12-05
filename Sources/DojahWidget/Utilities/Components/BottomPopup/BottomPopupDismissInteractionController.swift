@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol BottomPopupDismissInteractionControllerDelegate: class {
+protocol BottomPopupDismissInteractionControllerDelegate: AnyObject {
     func dismissInteractionPercentChanged(from oldValue: CGFloat, to newValue: CGFloat)
 }
 

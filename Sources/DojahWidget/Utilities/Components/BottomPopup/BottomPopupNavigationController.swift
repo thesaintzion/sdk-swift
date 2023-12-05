@@ -86,7 +86,7 @@ open class BottomPopupNavigationController: UINavigationController, BottomPopupA
 }
 
 extension BottomPopupNavigationController {
-    open func updatePopupHeight(to height: CGFloat) {
+    public func updatePopupHeight(to height: CGFloat) {
         transitionHandler?.setHeight(to: height)
     }
 }

@@ -27,6 +27,6 @@ enum DJRemotePath {
     }
     
     var absolutePath: String {
-        "https://api-dev.dojah.services/widget/\(path)"
+        "https://api-dev.dojah.services/\(path)"
     }
 }

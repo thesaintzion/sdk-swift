@@ -11,7 +11,7 @@ final class NetworkService: NetworkServiceProtocol {
     
     private let urlSession: URLSession
     
-    init(urlSession: URLSession = URLSession.shared) {
+    init(urlSession: URLSession = URLSession.withTimeout(60)) {
         self.urlSession = urlSession
     }
     
@@ -67,33 +67,45 @@ final class NetworkService: NetworkServiceProtocol {
                 let statusCode = httpURLResponse.statusCode
                 
                 if (400...499).contains(statusCode) {
+                    kprint("400: Network Error:")
+                    kprint("\(String(describing: error))")
                     completion(.failure(.resourceNotFound))
                 }
                 
                 if statusCode >= 500 {
+                    kprint("500: Network Error:")
+                    kprint("\(String(describing: error))")
                     completion(.failure(.serverFailure))
                 }
-                
-                return
             }
             
             if let error {
+                kprint("Network Error:")
+                kprint("\(error)")
                 completion(.failure(.requestFailure(reason: error.localizedDescription)))
-                return
             }
             
             if let data {
+                
+                do {
+                    kprint("Request Data Response:")
+                    kprint(try data.prettyJson())
+                } catch {
+                    kprint("Unable to read data response as JSON")
+                }
+                
                 do {
                     let response = try data.decode(into: T.self)
-                    kprint("Request Response:")
+                    kprint("Codable Request Response:")
                     kprint(response.prettyJson)
                     completion(.success(response))
                 } catch {
+                    kprint("Decoding Error:")
+                    kprint("\(error)")
                     completion(.failure(.decodingFailure(reason: error.localizedDescription)))
                 }
-                
-                return
             } else {
+                kprint("No Response Data:")
                 completion(.failure(.noResponseData))
             }
             
