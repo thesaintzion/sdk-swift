@@ -8,8 +8,13 @@
 import Foundation
 
 struct DJPage: Codable {
-    let page: String?
+    let pageName: DJPageName?
     let config: DJPageConfig?
+    
+    enum CodingKeys: String, CodingKey {
+        case pageName = "page"
+        case config
+    }
 }
 
 struct DJPageConfig: Codable {

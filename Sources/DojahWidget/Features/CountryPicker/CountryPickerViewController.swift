@@ -30,7 +30,8 @@ final class CountryPickerViewController: DJBaseViewController {
         title: "Select a country",
         value: "Nigeria",
         leftIconConfig: iconConfig,
-        items: viewModel.countryNames, //Country.allCases.names,
+        items: viewModel.countryNames,
+        showSelectedItem: false,
         itemSelectionHandler: didChooseCountry
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
@@ -60,9 +61,8 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     private func didChooseCountry(name: String, index: Int) {
-        //guard let country = Country(rawValue: index) else { return }
-        guard let country = viewModel.getCountry(name: name) else { return }
-        countryPickerView.updateInfo(country: country)
+        //guard let country = viewModel.getCountry(name: name) else { return }
+        countryPickerView.updateInfo(country: viewModel.country(at: index))
     }
 
 }

@@ -11,7 +11,7 @@ final class CountryPickerViewModel {
     private let countriesLocalDatasource: CountriesLocalDatasourceProtocol
     var countries = [DJCountryDB]()
     var countryNames: [String] {
-        countries.map { $0.countryName }
+        countries.map { "\($0.emoticon)  \($0.countryName)" }
     }
     
     init(countriesLocalDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource()) {
@@ -20,6 +20,11 @@ final class CountryPickerViewModel {
     }
     
     func getCountry(name: String) -> DJCountryDB? {
-        countries.first { $0.countryName.insensitiveEquals(name) }
+        guard let kname = name.components(separatedBy: .whitespaces).last else { return nil }
+        return countries.first { $0.countryName.insensitiveEquals(kname) }
+    }
+    
+    func country(at index: Int) -> DJCountryDB {
+        countries[index]
     }
 }

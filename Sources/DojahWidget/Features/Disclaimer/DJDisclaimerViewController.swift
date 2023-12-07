@@ -9,6 +9,18 @@ import UIKit
 
 public class DJDisclaimerViewController: DJBaseViewController {
     
+    private let viewModel: DJDisclaimerViewModel
+    
+    init(viewModel: DJDisclaimerViewModel = DJDisclaimerViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
     private let disclaimerTitleLabel = UILabel(
         text: "Please note the following",
@@ -63,8 +75,12 @@ public class DJDisclaimerViewController: DJBaseViewController {
     }
     
     private func showCountryPicker() {
-        let viewController = CountryPickerViewController()
-        kpushViewController(viewController)
+        if viewModel.canSeeCountryPage {
+            let viewController = CountryPickerViewController()
+            kpushViewController(viewController)
+        } else {
+            
+        }
     }
 
 }

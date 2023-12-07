@@ -12,6 +12,7 @@ enum DJRemotePath {
     case auth
     case ipCheck
     case saveIP
+    case events
     
     var path: String {
         switch self {
@@ -23,6 +24,8 @@ enum DJRemotePath {
             return "api/v1/ip"
         case .saveIP:
             return "widget/kyc/checks"
+        case .events:
+            return "widget/kyc/events"
         }
     }
     

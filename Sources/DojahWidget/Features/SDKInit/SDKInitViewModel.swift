@@ -86,6 +86,7 @@ final class SDKInitViewModel {
         if let appConfig = preAuthRes.appConfig {
             preference.DJAppConfig = appConfig
         }
+        preference.DJCanSeeCountryPage = preAuthRes.widget?.countries?.isNotEmpty ?? false
         authenticate(using: preAuthRes)
     }
     
@@ -94,7 +95,7 @@ final class SDKInitViewModel {
             "app_id": preAuthRes.appConfig?.id ?? "",
             "public_key": preAuthRes.publicKey.orEmpty,
             "type": "kyc",
-            "review_process": preAuthRes.reviewProcess ?? "Automatic",
+            "review_process": preAuthRes.widget?.reviewProcess ?? "Automatic",
             "steps": createStepsParameters()
         ]
         
@@ -129,29 +130,39 @@ final class SDKInitViewModel {
         guard let preAuthRes else { return [] }
         var steps = [DJAuthStep]()
         var currentID = 0
-        steps.append(.init(name: "index", id: 0, config: .init()))
+        steps.append(.init(name: .index, id: 0, config: .init()))
         
         if (preAuthRes.widget?.countries ?? []).countGreaterThan(1) {
             currentID += 1
-            steps.append(.init(name: "countries", id: currentID, config: .init(configDefault: "")))
+            steps.append(.init(name: .countries, id: currentID, config: .init(configDefault: "")))
         }
         
-        let govtData = preAuthRes.widget?.pages?.first(where: { $0.page.orEmpty.insensitiveEquals("government-data") })
-        if let govtData {
+        let govtDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .governmentData })
+        if let govtDataPage {
             currentID += 1
-            steps.append(.init(name: "government-data", id: currentID, config: govtData.config ?? .init()))
-            let verifications = [govtData.config?.otp ?? false, govtData.config?.selfie ?? false]
+            steps.append(.init(name: .governmentData, id: currentID, config: govtDataPage.config ?? .init()))
+            let verifications = [govtDataPage.config?.otp ?? false, govtDataPage.config?.selfie ?? false]
             if verifications.contains(true) {
                 currentID += 1
-                steps.append(.init(name: "government-data-verification", id: currentID, config: govtData.config ?? .init()))
+                steps.append(.init(name: .governmentDataVerification, id: currentID, config: govtDataPage.config ?? .init()))
             }
         }
         
-        let pages = preAuthRes.widget?.pages?.filter { $0.page.orEmpty.insensitiveNotEquals("government-data") }
+        let idPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .id })
+        if let idPage {
+            currentID += 1
+            steps.append(.init(name: .idOptions, id: currentID, config: .init()))
+            currentID += 1
+            steps.append(.init(name: .id, id: currentID, config: idPage.config ?? .init()))
+        }
+        
+        let pages = preAuthRes.widget?.pages?.filter { $0.pageName != .governmentData && $0.pageName != .id }
         if let pages {
             for page in pages {
-                currentID += 1
-                steps.append(.init(name: page.page.orEmpty, id: currentID, config: page.config ?? .init()))
+                if let pageName = page.pageName {
+                    currentID += 1
+                    steps.append(.init(name: pageName, id: currentID, config: page.config ?? .init()))
+                }
             }
         }
         

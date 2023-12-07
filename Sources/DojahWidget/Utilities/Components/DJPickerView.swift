@@ -32,8 +32,11 @@ final class DJPickerView: BaseView {
             $0.textFont = .regular(15)
             $0.direction = .bottom
             $0.selectionAction = { [weak self] index, value in
-                self?.valueLabel.text = value
-                self?.itemSelectionHandler?(value, index)
+                guard let self else { return }
+                if self.showSelectedItem {
+                    self.valueLabel.text = value
+                }
+                self.itemSelectionHandler?(value, index)
             }
         }
     }()
@@ -43,6 +46,7 @@ final class DJPickerView: BaseView {
         }
     }
     private var itemSelectionHandler: StringIntParamHandler?
+    private let showSelectedItem: Bool
     
     private lazy var contentStackView = VStackView(
         subviews: [titleLabel, valueView],
@@ -58,9 +62,11 @@ final class DJPickerView: BaseView {
         borderWidth: CGFloat = 0.7,
         showDropdownIcon: Bool = true,
         items: [String] = [],
+        showSelectedItem: Bool = true,
         itemSelectionHandler: StringIntParamHandler? = nil
     ) {
         selectionItems = items
+        self.showSelectedItem = showSelectedItem
         super.init(frame: .zero)
         titleLabel.text = title
         updateValue(value)

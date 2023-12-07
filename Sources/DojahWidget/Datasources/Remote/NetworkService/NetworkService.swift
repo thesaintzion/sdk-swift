@@ -10,9 +10,14 @@ import Foundation
 final class NetworkService: NetworkServiceProtocol {
     
     private let urlSession: URLSession
+    private let preference: PreferenceProtocol
     
-    init(urlSession: URLSession = URLSession.withTimeout(60)) {
+    init(
+        urlSession: URLSession = URLSession.withTimeout(60),
+        preference: PreferenceProtocol = PreferenceImpl()
+    ) {
         self.urlSession = urlSession
+        self.preference = preference
     }
     
     func makeRequest<T: Codable>(
@@ -62,8 +67,17 @@ final class NetworkService: NetworkServiceProtocol {
             for (key, value) in headers {
                 urlRequest.setValue(value, forHTTPHeaderField: key)
             }
+        }
+        
+        if ![.preAuth, .auth].contains(remotePath), preference.DJRequestHeaders.isNotEmpty {
+            for (key, value) in preference.DJRequestHeaders {
+                urlRequest.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+        
+        if let requestHeaders = urlRequest.allHTTPHeaderFields {
             kprint("Request Headers:")
-            kprint(headers.prettyJson)
+            kprint(requestHeaders.prettyJson)
         }
         
         urlSession.dataTask(with: urlRequest) { data, urlResponse, error in

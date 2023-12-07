@@ -14,4 +14,5 @@ protocol PreferenceProtocol {
     var DJRequestHeaders: DJHeaderParameters { get set }
     var DJUserAgent: String { get set }
     var DJIPCountry: String { get set }
+    var DJCanSeeCountryPage: Bool { get set }
 }

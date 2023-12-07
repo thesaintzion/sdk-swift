@@ -25,4 +25,7 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultPrimitive(key: .DJIPCountry, default: "")
     var DJIPCountry: String
+    
+    @UserDefaultPrimitive(key: .DJCanSeeCountryPage, default: false)
+    var DJCanSeeCountryPage: Bool
 }

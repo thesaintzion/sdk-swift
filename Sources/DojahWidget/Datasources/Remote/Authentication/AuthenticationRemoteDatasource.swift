@@ -9,14 +9,9 @@ import Foundation
 
 struct AuthenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol {
     private let service: NetworkServiceProtocol
-    private let preference: PreferenceProtocol
     
-    init(
-        service: NetworkServiceProtocol = NetworkService(),
-        preference: PreferenceProtocol = PreferenceImpl()
-    ) {
+    init(service: NetworkServiceProtocol = NetworkService()) {
         self.service = service
-        self.preference = preference
     }
     
     func getPreAuthenticationInfo(params: DJParameters, completion: @escaping DJResultAction<DJPreAuthResponse>) {
@@ -47,7 +42,7 @@ struct AuthenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol {
             requestMethod: .get,
             remotePath: .ipCheck,
             parameters: nil,
-            headers: preference.DJRequestHeaders,
+            headers: nil,
             completion: completion
         )
     }
@@ -58,7 +53,7 @@ struct AuthenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol {
             requestMethod: .post,
             remotePath: .saveIP,
             parameters: params,
-            headers: preference.DJRequestHeaders,
+            headers: nil,
             completion: completion
         )
     }

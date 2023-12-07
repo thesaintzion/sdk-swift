@@ -8,7 +8,7 @@
 import Foundation
 
 struct DJAuthStep: Codable {
-    let name: String
+    let name: DJPageName
     let id: Int
     let config: DJPageConfig
 }

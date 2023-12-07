@@ -82,4 +82,16 @@ class DJCountryDB: Object {
     var flag: UIImage {
         UIImage(named: iso2.lowercased(), in: Bundle.module, compatibleWith: nil) ?? .res(.ng)
     }
+    
+    var emoticon: String {
+        let baseFlagScalar: UInt32 = 127397
+        var flagString = ""
+        for scalarValue in iso2.uppercased().unicodeScalars {
+            guard let scalar = UnicodeScalar(baseFlagScalar + scalarValue.value) else {
+                continue
+            }
+            flagString.unicodeScalars.append(scalar)
+        }
+        return flagString
+    }
 }
