@@ -12,8 +12,8 @@ protocol NetworkServiceProtocol {
         responseType: T.Type,
         requestMethod: DJHttpMethod,
         remotePath: DJRemotePath,
-        parameters: Parameters?,
-        headers: HeaderParameters?,
+        parameters: DJParameters?,
+        headers: DJHeaderParameters?,
         completion: @escaping DJResultAction<T>
     )
 }

@@ -60,6 +60,10 @@ extension Encodable {
         return (try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self))) as? [[String: Any]] ?? [[:]]
     }
     
+    func encodedData() -> Data? {
+        try? JSONEncoder().encode(self)
+    }
+    
 }
 
 extension Data {

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+import WebKit
 
 final class SDKInitViewModel {
     
@@ -14,6 +16,8 @@ final class SDKInitViewModel {
     private var preference: PreferenceProtocol
     private let countriesDatasource: CountriesLocalDatasourceProtocol
     private let authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol
+    private var authResponse: DJAuthResponse?
+    private var preAuthRes: DJPreAuthResponse?
     
     init(
         widgetID: String,
@@ -23,15 +27,22 @@ final class SDKInitViewModel {
     ) {
         self.widgetID = widgetID
         self.preference = preference
-        self.preference.widgetID = widgetID
+        self.preference.DJWidgetID = widgetID
         self.countriesDatasource = countriesDatasource
         self.authenticationRemoteDatasource = authenticationRemoteDatasource
     }
     
     func initialize() {
         viewProtocol?.showLoader(true)
-        guard !preference.countriesInitialized, let jsonData = jsonData(from: "countries") else {
+        getUserAgent()
+        
+        guard !preference.DJCountriesInitialized else {
             preAuthenticate()
+            return
+        }
+        
+        guard let jsonData = jsonData(from: "countries") else {
+            initializationDidFail()
             return
         }
         
@@ -39,12 +50,19 @@ final class SDKInitViewModel {
             let countries = try jsonData.decode(into: [DJCountry].self)
             let dbCountries = countries.map { $0.countryDB }
             try countriesDatasource.saveCountries(dbCountries)
-            preference.countriesInitialized = true
+            preference.DJCountriesInitialized = true
             preAuthenticate()
         } catch {
-            kprint("\(error)")
-            viewProtocol?.showSDKInitFailedView()
+            initializationDidFail(error: error)
         }
+    }
+    
+    private func initializationDidFail(error: Error? = nil) {
+        if let error {
+            kprint("\(error)")
+        }
+        viewProtocol?.showLoader(false)
+        viewProtocol?.showSDKInitFailedView()
     }
     
     private func preAuthenticate() {
@@ -54,20 +72,144 @@ final class SDKInitViewModel {
             case let .success(preAuthRes):
                 self?.didGetPreAuthenticationResponse(preAuthRes)
             case .failure(let error):
-                kprint("\(error)")
-                self?.viewProtocol?.showLoader(false)
-                self?.viewProtocol?.showSDKInitFailedView()
+                self?.initializationDidFail(error: error)
             }
         }
     }
     
     private func didGetPreAuthenticationResponse(_ preAuthRes: DJPreAuthResponse) {
+        guard preAuthRes.widget?.pages?.isNotEmpty ?? false else {
+            initializationDidFail()
+            return
+        }
+        self.preAuthRes = preAuthRes
         if let appConfig = preAuthRes.appConfig {
-            preference.appConfig = appConfig
+            preference.DJAppConfig = appConfig
+        }
+        authenticate(using: preAuthRes)
+    }
+    
+    private func authenticate(using preAuthRes: DJPreAuthResponse) {
+        let params: DJParameters = [
+            "app_id": preAuthRes.appConfig?.id ?? "",
+            "public_key": preAuthRes.publicKey.orEmpty,
+            "type": "kyc",
+            "review_process": preAuthRes.reviewProcess ?? "Automatic",
+            "steps": createStepsParameters()
+        ]
+        
+        authenticationRemoteDatasource.authenticate(params: params) { [weak self] result in
+            switch result {
+            case let .success(authResponse):
+                self?.didGetAuthenticationResponse(authResponse: authResponse)
+            case let .failure(error):
+                self?.initializationDidFail(error: error)
+            }
         }
     }
     
-    private func performIPAddressChecks() {
+    private func didGetAuthenticationResponse(authResponse: DJAuthResponse) {
+        guard authResponse.initData.isNotNil else {
+            initializationDidFail()
+            return
+        }
+        self.authResponse = authResponse
+        guard let preAuthRes else { return }
+        preference.DJRequestHeaders = [
+            "authorization": UUID().uuidString,
+            "app-id": preAuthRes.appConfig?.id ?? authResponse.appConfig?.id ?? "",
+            "p-key": preAuthRes.publicKey.orEmpty,
+            "session": authResponse.sessionID.orEmpty,
+            "reference": authResponse.initData?.data?.referenceID ?? ""
+        ]
+        getIPAddress()
+    }
+    
+    private func createStepsParameters() -> [DJParameters] {
+        guard let preAuthRes else { return [] }
+        var steps = [DJAuthStep]()
+        var currentID = 0
+        steps.append(.init(name: "index", id: 0, config: .init()))
         
+        if (preAuthRes.widget?.countries ?? []).countGreaterThan(1) {
+            currentID += 1
+            steps.append(.init(name: "countries", id: currentID, config: .init(configDefault: "")))
+        }
+        
+        let govtData = preAuthRes.widget?.pages?.first(where: { $0.page.orEmpty.insensitiveEquals("government-data") })
+        if let govtData {
+            currentID += 1
+            steps.append(.init(name: "government-data", id: currentID, config: govtData.config ?? .init()))
+            let verifications = [govtData.config?.otp ?? false, govtData.config?.selfie ?? false]
+            if verifications.contains(true) {
+                currentID += 1
+                steps.append(.init(name: "government-data-verification", id: currentID, config: govtData.config ?? .init()))
+            }
+        }
+        
+        let pages = preAuthRes.widget?.pages?.filter { $0.page.orEmpty.insensitiveNotEquals("government-data") }
+        if let pages {
+            for page in pages {
+                currentID += 1
+                steps.append(.init(name: page.page.orEmpty, id: currentID, config: page.config ?? .init()))
+            }
+        }
+        
+        kprint(String(describing: steps.dictionaryArray))
+        
+        return steps.map { $0.dictionary }
+    }
+    
+    private func getIPAddress() {
+        authenticationRemoteDatasource.getIPAddress { [weak self] result in
+            switch result {
+            case let .success(ipAddress):
+                self?.saveIPAddress(ipAddress)
+            case let .failure(error):
+                self?.initializationDidFail(error: error)
+            }
+        }
+    }
+    
+    private func saveIPAddress(_ ipAddress: DJIPAddress) {
+        guard ipAddress.ip != "" else {
+            initializationDidFail()
+            return
+        }
+        guard let authResponse else { return }
+        let parameters: DJParameters = [
+            "ip": ipAddress.ip.orEmpty,
+            "device_info": preference.DJUserAgent,
+            "verification_id": authResponse.initData?.data?.verificationID ?? 0
+        ]
+        authenticationRemoteDatasource.saveIPAddress(params: parameters) { [weak self] result in
+            switch result {
+            case let .success(ipAddressResponse):
+                self?.didSaveIPAddress(response: ipAddressResponse)
+            case let .failure(error):
+                self?.initializationDidFail(error: error)
+            }
+        }
+    }
+    
+    private func didSaveIPAddress(response: DJIPAddressResponse) {
+        guard let country = response.entity?.country, country.isNotEmpty else {
+            initializationDidFail()
+            return
+        }
+        preference.DJIPCountry = country
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showDisclaimer()
+        }
+    }
+    
+    private func getUserAgent() {
+        guard preference.DJUserAgent.isEmpty else { return }
+        if let userAgent = WKWebView().value(forKey: "userAgent") as? String {
+            kprint("UserAgent: \(userAgent)")
+            preference.DJUserAgent = userAgent
+        } else {
+            kprint("Unable to get UserAgent")
+        }
     }
 }

@@ -8,7 +8,10 @@
 import Foundation
 
 enum PreferenceKey: String {
-    case widgetID
-    case countriesInitialized
-    case appConfig
+    case DJWidgetID
+    case DJCountriesInitialized
+    case DJAppConfig
+    case DJRequestHeaders
+    case DJUserAgent
+    case DJIPCountry
 }

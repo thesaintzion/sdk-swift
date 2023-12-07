@@ -8,12 +8,21 @@
 import Foundation
 
 struct PreferenceImpl: PreferenceProtocol {
-    @UserDefaultPrimitive(key: .widgetID, default: "")
-    var widgetID: String
+    @UserDefaultPrimitive(key: .DJWidgetID, default: "")
+    var DJWidgetID: String
     
-    @UserDefaultPrimitive(key: .countriesInitialized, default: false)
-    var countriesInitialized: Bool
+    @UserDefaultPrimitive(key: .DJCountriesInitialized, default: false)
+    var DJCountriesInitialized: Bool
     
-    @UserDefaultCodable(key: .appConfig, default: nil)
-    var appConfig: DJAppConfig?
+    @UserDefaultCodable(key: .DJAppConfig, default: nil)
+    var DJAppConfig: DJAppConfig?
+    
+    @UserDefaultCodable(key: .DJRequestHeaders, default: [:])
+    var DJRequestHeaders: DJHeaderParameters
+    
+    @UserDefaultPrimitive(key: .DJUserAgent, default: "")
+    var DJUserAgent: String
+    
+    @UserDefaultPrimitive(key: .DJIPCountry, default: "")
+    var DJIPCountry: String
 }

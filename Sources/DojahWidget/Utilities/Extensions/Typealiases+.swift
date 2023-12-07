@@ -38,9 +38,9 @@ typealias UIImagePickerViewConformable = UIImagePickerControllerDelegate & UINav
 
 typealias StringURLParam = [String : URL]
 
-typealias Parameters = [String: Any]
+typealias DJParameters = [String: Any]
 
-typealias HeaderParameters = [String: String]
+typealias DJHeaderParameters = [String: String]
 
 typealias DJResult<T: Codable> = Result<T, DJSDKError>
 

@@ -61,9 +61,15 @@ extension SDKInitViewController: SDKInitViewProtocol {
         showFeedbackController(
             feedbackType: .failure,
             title: "SDK Initialization Failed",
-            message: "Unable to initialize Dojah Widget SDK, please try again or contact support."
+            message: "Unable to initialize Dojah Widget SDK, please try again or contact support.",
+            showNavControls: false
         ) { [weak self] in
             self?.kpopToRootViewController()
         }
+    }
+    
+    func showDisclaimer() {
+        let controller = DJDisclaimerViewController()
+        kpushViewController(controller)
     }
 }

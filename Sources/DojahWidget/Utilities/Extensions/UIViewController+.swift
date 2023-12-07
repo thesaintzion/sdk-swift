@@ -159,12 +159,14 @@ extension UIViewController {
         feedbackType: FeedbackType = .success,
         title: String,
         message: String,
+        showNavControls: Bool = true,
         doneAction: NoParamHandler? = nil
     ) {
         let controller = FeedbackViewController(
             feedbackType: feedbackType, 
             title: title,
             message: message,
+            showNavControls: showNavControls,
             doneAction: doneAction
         )
         runOnMainThread { [weak self] in

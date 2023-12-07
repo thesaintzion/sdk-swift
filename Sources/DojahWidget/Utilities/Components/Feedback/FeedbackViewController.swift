@@ -13,13 +13,21 @@ final class FeedbackViewController: DJBaseViewController {
     private let feedbackType: FeedbackType
     private let titleText: String
     private let message: String
+    private let showNavControls: Bool
     private let doneAction: NoParamHandler?
     
-    init(feedbackType: FeedbackType, title: String, message: String, doneAction: NoParamHandler? = nil) {
+    init(
+        feedbackType: FeedbackType,
+        title: String,
+        message: String,
+        showNavControls: Bool = true,
+        doneAction: NoParamHandler? = nil
+    ) {
         self.feedbackType = feedbackType
         self.titleText = title
         self.message = message
         self.doneAction = doneAction
+        self.showNavControls = showNavControls
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -47,7 +55,7 @@ final class FeedbackViewController: DJBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navView.showNavControls(showNavControls)
         with(contentStackView) {
             addSubview($0)
             $0.anchor(

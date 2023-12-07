@@ -8,7 +8,10 @@
 import Foundation
 
 protocol PreferenceProtocol {
-    var widgetID: String { get set }
-    var countriesInitialized: Bool { get set }
-    var appConfig: DJAppConfig? { get set }
+    var DJWidgetID: String { get set }
+    var DJCountriesInitialized: Bool { get set }
+    var DJAppConfig: DJAppConfig? { get set }
+    var DJRequestHeaders: DJHeaderParameters { get set }
+    var DJUserAgent: String { get set }
+    var DJIPCountry: String { get set }
 }

@@ -19,8 +19,8 @@ final class NetworkService: NetworkServiceProtocol {
         responseType: T.Type,
         requestMethod: DJHttpMethod,
         remotePath: DJRemotePath,
-        parameters: Parameters?,
-        headers: HeaderParameters?,
+        parameters: DJParameters?,
+        headers: DJHeaderParameters?,
         completion: @escaping DJResultAction<T>
     ) {
         
@@ -51,6 +51,8 @@ final class NetworkService: NetworkServiceProtocol {
             do {
                 let requestBody = try parameters.serializedData()
                 urlRequest.httpBody = requestBody
+                kprint("Request Body:")
+                kprint(parameters.prettyJson)
             } catch {
                 completion(.failure(.encodingFailure(reason: error.localizedDescription)))
             }
@@ -60,6 +62,8 @@ final class NetworkService: NetworkServiceProtocol {
             for (key, value) in headers {
                 urlRequest.setValue(value, forHTTPHeaderField: key)
             }
+            kprint("Request Headers:")
+            kprint(headers.prettyJson)
         }
         
         urlSession.dataTask(with: urlRequest) { data, urlResponse, error in
@@ -70,12 +74,14 @@ final class NetworkService: NetworkServiceProtocol {
                     kprint("400: Network Error:")
                     kprint("\(String(describing: error))")
                     completion(.failure(.resourceNotFound))
+                    return
                 }
                 
                 if statusCode >= 500 {
                     kprint("500: Network Error:")
                     kprint("\(String(describing: error))")
                     completion(.failure(.serverFailure))
+                    return
                 }
             }
             
@@ -83,6 +89,7 @@ final class NetworkService: NetworkServiceProtocol {
                 kprint("Network Error:")
                 kprint("\(error)")
                 completion(.failure(.requestFailure(reason: error.localizedDescription)))
+                return
             }
             
             if let data {
