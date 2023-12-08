@@ -10,7 +10,7 @@ import Foundation
 struct EventsRemoteDatasource: EventsRemoteDatasourceProtocol {
     private let service: NetworkServiceProtocol
     
-    init(service: NetworkServiceProtocol) {
+    init(service: NetworkServiceProtocol = NetworkService()) {
         self.service = service
     }
     

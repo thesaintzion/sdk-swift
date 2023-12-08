@@ -73,7 +73,7 @@ final class SelectableItemsViewController: BottomPopupViewController {
     override var popupTopCornerRadius: CGFloat { 20 }
     
     private func didChooseItem(_ item: SelectableItem) {
-        dismissViewController { [weak self] in
+        kdismiss { [weak self] in
             self?.delegate?.didChooseItem(item)
         }
     }

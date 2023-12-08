@@ -7,13 +7,23 @@
 
 import Foundation
 
-final class DJDisclaimerViewModel {
-    private let preference: PreferenceProtocol
+final class DJDisclaimerViewModel: BaseViewModel {
     var canSeeCountryPage: Bool {
         preference.DJCanSeeCountryPage
     }
     
-    init(preference: PreferenceProtocol = PreferenceImpl()) {
-        self.preference = preference
+    func postStepCompletedEvent() {
+        //let vp = viewProtocol as? DJDisclaimerViewProtocol
+        
+        postEvent(request: .init(name: .stepCompleted, value: "index", stepNumber: 0))
     }
+    
+    override func postEventDidSucceed(_ eventsResponse: DJEventResponse) {
+        kprint("Posted index completed event")
+    }
+    
+    override func postEventDidFail(_ error: Error) {
+        kprint("couldn't post index event")
+    }
+    
 }

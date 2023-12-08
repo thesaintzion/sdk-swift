@@ -10,24 +10,10 @@ import Lottie
 
 final class FeedbackViewController: DJBaseViewController {
     
-    private let feedbackType: FeedbackType
-    private let titleText: String
-    private let message: String
-    private let showNavControls: Bool
-    private let doneAction: NoParamHandler?
+    private let config: FeedbackConfig
     
-    init(
-        feedbackType: FeedbackType,
-        title: String,
-        message: String,
-        showNavControls: Bool = true,
-        doneAction: NoParamHandler? = nil
-    ) {
-        self.feedbackType = feedbackType
-        self.titleText = title
-        self.message = message
-        self.doneAction = doneAction
-        self.showNavControls = showNavControls
+    init(config: FeedbackConfig) {
+        self.config = config
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,10 +22,10 @@ final class FeedbackViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private lazy var animationView = LottieAnimationView(name: feedbackType.lottieAnimationName, bundle: Bundle.module).withSize(200)
-    private lazy var titleLabel = UILabel(text: titleText, font: .semibold(20), alignment: .center)
+    private lazy var animationView = LottieAnimationView(name: config.feedbackType.lottieAnimationName, bundle: Bundle.module).withSize(200)
+    private lazy var titleLabel = UILabel(text: config.titleText, font: .semibold(20), alignment: .center)
     private lazy var messageLabel = UILabel(
-        text: message,
+        text: config.message,
         font: .regular(16),
         numberOfLines: 0,
         alignment: .center
@@ -55,7 +41,7 @@ final class FeedbackViewController: DJBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navView.showNavControls(showNavControls)
+        navView.showNavControls(config.showNavControls)
         with(contentStackView) {
             addSubview($0)
             $0.anchor(
@@ -83,7 +69,7 @@ final class FeedbackViewController: DJBaseViewController {
     }
     
     private func didTapDoneButton() {
-        doneAction?()
+        config.doneAction?()
     }
 
 }

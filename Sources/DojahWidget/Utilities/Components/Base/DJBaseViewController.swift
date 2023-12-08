@@ -8,9 +8,18 @@
 import UIKit
 
 public class DJBaseViewController: UIViewController {
-    
     let navView = DJNavBarView()
     let poweredView = DJPoweredView()
+    var kviewModel: BaseViewModel? {
+        didSet {
+            bindViewModel()
+        }
+    }
+    private lazy var loaderViewController: LoaderViewController = {
+        let controller = LoaderViewController()
+        controller.modalPresentationStyle = .overCurrentContext
+        return controller
+    }()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,16 +55,37 @@ public class DJBaseViewController: UIViewController {
     }
     
     func addTapGestures() {}
+    
+    func bindViewModel() {
+        kviewModel?.showLoader = { [weak self] show in
+            self?.showLoader(show)
+        }
+        
+        kviewModel?.showMessage = { [weak self] config in
+            self?.showMessage(config: config)
+        }
+    }
+    
+    func showLoader(_ show: Bool) {
+        if show {
+            kpresent(vc: loaderViewController)
+        } else {
+            loaderViewController.kdismiss()
+        }
+    }
+    
+    func showMessage(config: FeedbackConfig) {
+        showFeedbackController(config: config)
+    }
 
 }
 
 extension DJBaseViewController: DJNavBarViewDelegate {
     func didTapBack() {
-        kpopViewController()
+        kpop()
     }
     
     func didDismiss() {
-        kpopViewController()
+        kpop()
     }
-    
 }

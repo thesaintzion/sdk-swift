@@ -8,5 +8,5 @@
 import Foundation
 
 struct DJEventResponse: Codable {
-    
+    let entity: DJEntity?
 }

@@ -72,13 +72,13 @@ final class GovtIDViewController: DJBaseViewController {
         guard let govtIDVerificationMethod else { return }
         switch govtIDVerificationMethod {
         case .govtID:
-            kpushViewController(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
+            kpush(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
         case .selfie, .videoKYC:
             let viewModel = SelfieVideoKYCViewModel(verificationMethod: govtIDVerificationMethod)
-            kpushViewController(SelfieVideoKYCViewController(viewModel: viewModel))
+            kpush(SelfieVideoKYCViewController(viewModel: viewModel))
         case .phoneNumberOTP, .emailOTP:
             let viewModel = OTPVerificationViewModel(verificationMethod: govtIDVerificationMethod)
-            kpushViewController(OTPVerificationViewController(viewModel: viewModel))
+            kpush(OTPVerificationViewController(viewModel: viewModel))
         }
     }
     

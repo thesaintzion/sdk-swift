@@ -7,13 +7,14 @@
 
 import UIKit
 
-public class DJDisclaimerViewController: DJBaseViewController {
+class DJDisclaimerViewController: DJBaseViewController {
     
     private let viewModel: DJDisclaimerViewModel
     
     init(viewModel: DJDisclaimerViewModel = DJDisclaimerViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
     }
     
     @available(*, unavailable)
@@ -70,17 +71,22 @@ public class DJDisclaimerViewController: DJBaseViewController {
     
     internal override func addTapGestures() {
         continueButton.tapAction = { [weak self] in
-            self?.showCountryPicker()
+            self?.viewModel.postStepCompletedEvent()
         }
     }
     
     private func showCountryPicker() {
         if viewModel.canSeeCountryPage {
             let viewController = CountryPickerViewController()
-            kpushViewController(viewController)
+            kpush(viewController)
         } else {
             
         }
     }
+}
 
+extension DJDisclaimerViewController: DJDisclaimerViewProtocol {
+    func doSomething() {
+        
+    }
 }

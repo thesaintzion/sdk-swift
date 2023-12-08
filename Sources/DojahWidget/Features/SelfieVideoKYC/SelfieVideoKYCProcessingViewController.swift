@@ -52,12 +52,14 @@ final class SelfieVideoKYCProcessingViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        showFeedbackController(
-            title: "ID Verification Success",
-            message: "Your identification has been successfully verified, you will now be redirected"
-        ) { [weak self] in
-            self?.popToViewController(ofClass: DJDisclaimerViewController.self)
-        }
+        let config: FeedbackConfig = .success(
+            titleText: "ID Verification Success",
+            message: "Your identification has been successfully verified, you will now be redirected",
+            doneAction: { [weak self] in
+                self?.popToViewController(ofClass: DJDisclaimerViewController.self)
+            }
+        )
+        showFeedbackController(config: config)
     }
     
 }

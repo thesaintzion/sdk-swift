@@ -57,7 +57,7 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     private func showBioData() {
-        kpushViewController(BioDataViewController())
+        kpush(BioDataViewController())
     }
     
     private func didChooseCountry(name: String, index: Int) {

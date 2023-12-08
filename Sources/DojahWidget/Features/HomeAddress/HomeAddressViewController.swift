@@ -47,12 +47,14 @@ final class HomeAddressViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        showFeedbackController(
-            title: "Address Verification Success",
-            message: "Your home address has been successfully verified, you will now be redirected"
-        ) { [weak self] in
-            self?.popToViewController(ofClass: DJDisclaimerViewController.self)
-        }
+        let config: FeedbackConfig = .success(
+            titleText: "Address Verification Success",
+            message: "Your home address has been successfully verified, you will now be redirected",
+            doneAction: { [weak self] in
+                self?.popToViewController(ofClass: DJDisclaimerViewController.self)
+            }
+        )
+        showFeedbackController(config: config)
     }
 
 }

@@ -134,7 +134,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
             attachmentManager.openPhotoLibrary(on: self)
         case .preview:
             let controller = SelfieVideoKYCProcessingViewController(viewModel: viewModel)
-            kpushViewController(controller)
+            kpush(controller)
         }
     }
     

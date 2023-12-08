@@ -106,30 +106,48 @@ extension UIViewController {
         tabBarController?.tabBar.isHidden = !show
     }
     
-    func kpopViewController(animated: Bool = true) {
-        navigationController?.popViewController(animated: animated)
+    func kpop(animated: Bool = true) {
+        runOnMainThread { [weak self] in
+            self?.navigationController?.popViewController(animated: animated)
+        }
     }
     
-    func kpopToRootViewController(animated: Bool = true) {
-        navigationController?.popToRootViewController(animated: animated)
+    func kpopToRoot(animated: Bool = true) {
+        runOnMainThread { [weak self] in
+            self?.navigationController?.popToRootViewController(animated: animated)
+        }
     }
     
-    func kpushViewController(_ viewcontroller: UIViewController, animated: Bool = true) {
-        navigationController?.pushViewController(viewcontroller, animated: animated)
+    func kpush(_ viewcontroller: UIViewController, animated: Bool = true) {
+        runOnMainThread { [weak self] in
+            self?.navigationController?.pushViewController(viewcontroller, animated: animated)
+        }
     }
     
-    func dismissViewController(animated: Bool = true, completion: (() -> Void)? = nil) {
-        dismiss(animated: animated, completion: completion)
+    func kpresent(vc: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
+        runOnMainThread { [weak self] in
+            self?.navigationController?.present(vc, animated: animated, completion: completion)
+        }
+    }
+    
+    func kdismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+        runOnMainThread { [weak self] in
+            self?.dismiss(animated: animated, completion: completion)
+        }
     }
     
     func popToViewController(ofClass: AnyClass, animated: Bool = true) {
-        if let vc = navigationController?.viewControllers.last(where: { $0.isKind(of: ofClass) }) {
-            navigationController?.popToViewController(vc, animated: animated)
+        runOnMainThread { [weak self] in
+            if let vc = self?.navigationController?.viewControllers.last(where: { $0.isKind(of: ofClass) }) {
+                self?.navigationController?.popToViewController(vc, animated: animated)
+            }
         }
     }
     
     func setViewControllers(using viewController: UIViewController, animate: Bool = false) {
-        navigationController?.setViewControllers([viewController], animated: animate)
+        runOnMainThread { [weak self] in
+            self?.navigationController?.setViewControllers([viewController], animated: animate)
+        }
     }
     
     func showMessage(_ message: String, type: ToastType = .success) {
@@ -155,23 +173,9 @@ extension UIViewController {
         present(viewController, animated: true)
     }
     
-    func showFeedbackController(
-        feedbackType: FeedbackType = .success,
-        title: String,
-        message: String,
-        showNavControls: Bool = true,
-        doneAction: NoParamHandler? = nil
-    ) {
-        let controller = FeedbackViewController(
-            feedbackType: feedbackType, 
-            title: title,
-            message: message,
-            showNavControls: showNavControls,
-            doneAction: doneAction
-        )
-        runOnMainThread { [weak self] in
-            self?.kpushViewController(controller)
-        }
+    func showFeedbackController(config: FeedbackConfig) {
+        let controller = FeedbackViewController(config: config)
+        kpush(controller)
     }
     
 }

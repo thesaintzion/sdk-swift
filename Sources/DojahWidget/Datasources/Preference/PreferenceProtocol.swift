@@ -15,4 +15,5 @@ protocol PreferenceProtocol {
     var DJUserAgent: String { get set }
     var DJIPCountry: String { get set }
     var DJCanSeeCountryPage: Bool { get set }
+    var DJVerificationID: Int { get set }
 }

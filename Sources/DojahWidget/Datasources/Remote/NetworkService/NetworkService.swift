@@ -8,7 +8,6 @@
 import Foundation
 
 final class NetworkService: NetworkServiceProtocol {
-    
     private let urlSession: URLSession
     private let preference: PreferenceProtocol
     
@@ -52,8 +51,11 @@ final class NetworkService: NetworkServiceProtocol {
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        if requestMethod == .post, let parameters {
+        if requestMethod == .post, var parameters {
             do {
+                if [.events, .saveIP].contains(remotePath) {
+                    parameters = parameters.merge(["verification_id": preference.DJVerificationID])
+                }
                 let requestBody = try parameters.serializedData()
                 urlRequest.httpBody = requestBody
                 kprint("Request Body:")

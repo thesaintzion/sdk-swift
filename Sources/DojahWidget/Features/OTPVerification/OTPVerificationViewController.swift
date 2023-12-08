@@ -57,7 +57,7 @@ final class OTPVerificationViewController: DJBaseViewController {
         } else {
             viewModel.verificationInfo = emailTextField.text
         }
-        kpushViewController(VerifyOTPViewController(viewModel: viewModel))
+        kpush(VerifyOTPViewController(viewModel: viewModel))
     }
 
 }

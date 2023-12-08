@@ -123,6 +123,7 @@ final class SDKInitViewModel {
             "session": authResponse.sessionID.orEmpty,
             "reference": authResponse.initData?.data?.referenceID ?? ""
         ]
+        preference.DJVerificationID = authResponse.initData?.data?.verificationID ?? 0
         getIPAddress()
     }
     
@@ -187,11 +188,9 @@ final class SDKInitViewModel {
             initializationDidFail()
             return
         }
-        guard let authResponse else { return }
         let parameters: DJParameters = [
             "ip": ipAddress.ip.orEmpty,
-            "device_info": preference.DJUserAgent,
-            "verification_id": authResponse.initData?.data?.verificationID ?? 0
+            "device_info": preference.DJUserAgent
         ]
         authenticationRemoteDatasource.saveIPAddress(params: parameters) { [weak self] result in
             switch result {

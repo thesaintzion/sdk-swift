@@ -132,12 +132,14 @@ final class VerifyOTPViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        showFeedbackController(
-            title: "OTP verification Success",
-            message: "Your phone number has been successfully verified, you will now be redirected."
-        ) { [weak self] in
-            self?.popToViewController(ofClass: DJDisclaimerViewController.self)
-        }
+        let config: FeedbackConfig = .success(
+            titleText: "OTP verification Success",
+            message: "Your phone number has been successfully verified, you will now be redirected.",
+            doneAction: { [weak self] in
+                self?.popToViewController(ofClass: DJDisclaimerViewController.self)
+            }
+        )
+        showFeedbackController(config: config)
     }
     
     deinit {
