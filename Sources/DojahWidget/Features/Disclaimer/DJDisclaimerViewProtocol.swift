@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol DJDisclaimerViewProtocol: AnyObject {
-    func doSomething()
+protocol DJDisclaimerViewProtocol: BaseViewProtocol {
+    
 }

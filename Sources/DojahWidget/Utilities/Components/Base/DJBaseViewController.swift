@@ -64,6 +64,12 @@ public class DJBaseViewController: UIViewController {
         kviewModel?.showMessage = { [weak self] config in
             self?.showMessage(config: config)
         }
+        
+        kviewModel?.showNextPage = { [weak self] in
+            runOnMainThread {
+                self?.showNextPage()
+            }
+        }
     }
     
     func showLoader(_ show: Bool) {
@@ -76,6 +82,46 @@ public class DJBaseViewController: UIViewController {
     
     func showMessage(config: FeedbackConfig) {
         showFeedbackController(config: config)
+    }
+    
+    func showNextPage() {
+        guard let kviewModel else { return }
+        let pageName = kviewModel.preference.DJNextPageName
+        switch pageName {
+        case .countries:
+            if kviewModel.preference.DJCanSeeCountryPage {
+                let viewController = CountryPickerViewController()
+                kpush(viewController)
+            } else {
+                kviewModel.setNextPageName(stepNumber: 2)
+            }
+        case .userData:
+            break
+        case .phoneNumber:
+            break
+        case .address:
+            break
+        case .email:
+            break
+        case .governmentData:
+            break
+        case .governmentDataVerification:
+            break
+        case .businessData:
+            break
+        case .selfie:
+            break
+        case .id:
+            break
+        case .businessID:
+            break
+        case .additionalDocument:
+            break
+        case .index:
+            break
+        case .idOptions:
+            break
+        }
     }
 
 }

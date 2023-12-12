@@ -33,7 +33,9 @@ final class SDKInitViewModel {
     }
     
     func initialize() {
-        viewProtocol?.showLoader(true)
+        viewProtocol?.showDisclaimer()
+        
+        /*viewProtocol?.showLoader(true)
         getUserAgent()
         
         guard !preference.DJCountriesInitialized else {
@@ -54,7 +56,7 @@ final class SDKInitViewModel {
             preAuthenticate()
         } catch {
             initializationDidFail(error: error)
-        }
+        }*/
     }
     
     private func initializationDidFail(error: Error? = nil) {
@@ -124,6 +126,8 @@ final class SDKInitViewModel {
             "reference": authResponse.initData?.data?.referenceID ?? ""
         ]
         preference.DJVerificationID = authResponse.initData?.data?.verificationID ?? 0
+        preference.DJSteps = authResponse.initData?.data?.steps ?? []
+        
         getIPAddress()
     }
     

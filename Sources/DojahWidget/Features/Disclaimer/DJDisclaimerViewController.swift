@@ -86,7 +86,5 @@ class DJDisclaimerViewController: DJBaseViewController {
 }
 
 extension DJDisclaimerViewController: DJDisclaimerViewProtocol {
-    func doSomething() {
-        
-    }
+    
 }

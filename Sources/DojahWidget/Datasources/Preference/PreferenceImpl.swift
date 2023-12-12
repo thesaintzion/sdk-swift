@@ -31,4 +31,10 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultPrimitive(key: .DJVerificationID, default: 0)
     var DJVerificationID: Int
+    
+    @UserDefaultCodable(key: .DJSteps, default: [])
+    var DJSteps: [DJAuthStep]
+    
+    @UserDefaultCodable(key: .DJNextPageName, default: .index)
+    var DJNextPageName: DJPageName
 }

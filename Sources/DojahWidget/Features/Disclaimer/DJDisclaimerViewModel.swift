@@ -8,18 +8,17 @@
 import Foundation
 
 final class DJDisclaimerViewModel: BaseViewModel {
+    weak var viewProtocol: DJDisclaimerViewProtocol?
     var canSeeCountryPage: Bool {
         preference.DJCanSeeCountryPage
     }
     
     func postStepCompletedEvent() {
-        //let vp = viewProtocol as? DJDisclaimerViewProtocol
-        
         postEvent(request: .init(name: .stepCompleted, value: "index", stepNumber: 0))
     }
     
     override func postEventDidSucceed(_ eventsResponse: DJEventResponse) {
-        kprint("Posted index completed event")
+        setNextPageName(stepNumber: 1)
     }
     
     override func postEventDidFail(_ error: Error) {

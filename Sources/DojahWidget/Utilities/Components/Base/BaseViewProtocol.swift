@@ -8,6 +8,5 @@
 import Foundation
 
 protocol BaseViewProtocol: AnyObject {
-    func showLoader(_ show: Bool)
-    func showMessage(config: FeedbackConfig)
+    
 }

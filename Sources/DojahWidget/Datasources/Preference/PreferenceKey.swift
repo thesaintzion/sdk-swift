@@ -16,4 +16,6 @@ enum PreferenceKey: String {
     case DJIPCountry
     case DJCanSeeCountryPage
     case DJVerificationID
+    case DJSteps
+    case DJNextPageName
 }
