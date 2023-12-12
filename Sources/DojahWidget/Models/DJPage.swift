@@ -29,7 +29,7 @@ struct DJPageConfig: Codable {
     let ghDL, ghVoter: Bool?
     let keDL, keID, keKRA: Bool?
     let tzNIN: Bool?
-    let ugID, ugTelco: Bool?
+    let ugID, ugTELCO: Bool?
     let saID, saDL: Bool?
     let configDefault: String?
     
@@ -46,7 +46,7 @@ struct DJPageConfig: Codable {
         case keKRA = "ke-kra"
         case tzNIN = "tz-nin"
         case ugID = "ug-id"
-        case ugTelco = "ug-telco"
+        case ugTELCO = "ug-telco"
         case saID = "sa-id"
         case saDL = "sa-dl"
         case configDefault = "default"
@@ -76,7 +76,7 @@ struct DJPageConfig: Codable {
         keKRA: Bool? = nil,
         tzNIN: Bool? = nil,
         ugID: Bool? = nil,
-        ugTelco: Bool? = nil,
+        ugTELCO: Bool? = nil,
         saID: Bool? = nil,
         saDL: Bool? = nil,
         configDefault: String? = nil
@@ -104,7 +104,7 @@ struct DJPageConfig: Codable {
         self.keKRA = keKRA
         self.tzNIN = tzNIN
         self.ugID = ugID
-        self.ugTelco = ugTelco
+        self.ugTELCO = ugTELCO
         self.saID = saID
         self.saDL = saDL
         self.configDefault = configDefault
