@@ -22,7 +22,7 @@ final class FeedbackViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private lazy var animationView = LottieAnimationView(name: config.feedbackType.lottieAnimationName, bundle: Bundle.module).withSize(200)
+    private lazy var animationView = LottieAnimationView(name: config.feedbackType.lottieAnimationName, bundle: Bundle.module).withHeight(200)
     private lazy var titleLabel = UILabel(text: config.titleText, font: .semibold(20), alignment: .center)
     private lazy var messageLabel = UILabel(
         text: config.message,

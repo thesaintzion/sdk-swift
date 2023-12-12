@@ -43,8 +43,8 @@
       "inputMode": "text"
     },
     "dl": {
-      "name": "Driver\"s License",
-      "abbr": "Driver\"s License",
+      "name": "Driver\'s License",
+      "abbr": "Driver\'s License",
       "subtext": "",
       "subtext2": "",
       "placeholder": "ABC98765AA77",
@@ -77,7 +77,7 @@
     },
     "voter": {
       "id": "voter-id",
-      "name": "Voter\"s Card",
+      "name": "Voter\'s Card",
       "value": "NG-VCARD"
     },
     "mobile": {
@@ -93,7 +93,7 @@
     },
     "NG-DLI": {
       "enum": "DL_ID",
-      "idName": "Driver\"s License"
+      "idName": "Driver\'s License"
     },
     "NG-PASS": {
       "enum": "PASSPORT_ID",
@@ -113,7 +113,7 @@
     },
     "NG-VCARD": {
       "enum": "NG-VCARD",
-      "idName": "Voter\"s Card"
+      "idName": "Voter\'s Card"
     },
     "NG-NIN-SLIP": {
       "enum": "NG-NIN-SLIP",
@@ -126,8 +126,8 @@
       "name": "OTP (One-time Password)"
     },
     "gh-dl": {
-      "name": "Driver\"s License",
-      "abbr": "Driver\"s License",
+      "name": "Driver\'s License",
+      "abbr": "Driver\'s License",
       "subtext": "",
       "subtext2": "",
       "placeholder": "V0000000",
@@ -139,8 +139,8 @@
       "inputMode": "text"
     },
     "gh-voter": {
-      "name": "Voter\"s Card",
-      "abbr": "Voter\"s Card",
+      "name": "Voter\'s Card",
+      "abbr": "Voter\'s Card",
       "subtext": "",
       "subtext2": "",
       "placeholder": "V0000000",
@@ -184,8 +184,8 @@
       "inputMode": "numeric"
     },
     "ke-dl": {
-      "name": "Driver\"s License",
-      "abbr": "Driver\"s License",
+      "name": "Driver\'s License",
+      "abbr": "Driver\'s License",
       "subtext": "",
       "subtext2": "",
       "placeholder": "V0000000",
@@ -220,8 +220,8 @@
       "inputMode": "text"
     },
     "sa-dl": {
-      "name": "Driver\"s License",
-      "abbr": "Driver\"s License",
+      "name": "Driver\'s License",
+      "abbr": "Driver\'s License",
       "subtext": "",
       "subtext2": "",
       "placeholder": "V0000000",

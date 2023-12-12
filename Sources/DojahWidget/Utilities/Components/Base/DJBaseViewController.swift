@@ -81,7 +81,9 @@ public class DJBaseViewController: UIViewController {
     }
     
     func showMessage(config: FeedbackConfig) {
-        showFeedbackController(config: config)
+        runOnMainThread { [weak self] in
+            self?.showFeedbackController(config: config)
+        }
     }
     
     func showNextPage() {
@@ -104,7 +106,8 @@ public class DJBaseViewController: UIViewController {
         case .email:
             break
         case .governmentData:
-            break
+            let controller = GovernmentDataViewController()
+            kpush(controller)
         case .governmentDataVerification:
             break
         case .businessData:

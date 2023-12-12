@@ -8,14 +8,14 @@
 import UIKit
 
 final class DJTextField: BaseView {
-    fileprivate let titleLabel = UILabel(
+    private let titleLabel = UILabel(
         text: "Title Label",
         font: .light(13),
         numberOfLines: 0,
         color: .aLabel,
         alignment: .left
     )
-    fileprivate let errorLabel = UILabel(
+    private let errorLabel = UILabel(
         text: "Error Label",
         font: .regular(13),
         numberOfLines: 0, 
@@ -32,16 +32,16 @@ final class DJTextField: BaseView {
         radius: 5
     )
     let leftIconImageView = UIImageView()
-    fileprivate let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
-    fileprivate let pickerManager = PickerManager()
-    fileprivate let pickerView = UIPickerView()
-    fileprivate var passwordVisible = false
-    fileprivate var validationType: ValidationType?
-    fileprivate let inputValidator = InputValidatorImpl()
-    fileprivate var heightConstraint: NSLayoutConstraint?
-    fileprivate var errorLabelHeightConstraint: NSLayoutConstraint?
-    fileprivate var errorLabelVisible = false
-    fileprivate var maxLength: Int? = nil
+    private let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
+    private let pickerManager = PickerManager()
+    private let pickerView = UIPickerView()
+    private var passwordVisible = false
+    private var validationType: ValidationType?
+    private let inputValidator = InputValidatorImpl()
+    private var heightConstraint: NSLayoutConstraint?
+    private var errorLabelHeightConstraint: NSLayoutConstraint?
+    private var errorLabelVisible = false
+    var maxLength: Int? = nil
     
     var title: String {
         get { titleLabel.text.orEmpty }

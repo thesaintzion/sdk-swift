@@ -18,5 +18,5 @@ protocol PreferenceProtocol {
     var DJVerificationID: Int { get set }
     var DJSteps: [DJAuthStep] { get set }
     var DJAuthStep: DJAuthStep { get set }
-    var DJGovernmentIDConfig: DJGovernmentIDConfig { get set }
+    var DJGovernmentIDConfig: DJGovernmentIDConfig? { get set }
 }

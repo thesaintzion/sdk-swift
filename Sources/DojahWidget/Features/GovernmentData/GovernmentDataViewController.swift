@@ -8,18 +8,35 @@
 import UIKit
 
 final class GovernmentDataViewController: DJBaseViewController {
+    
+    private let viewModel: DJGovernmentDataViewModel
+    
+    init(viewModel: DJGovernmentDataViewModel = DJGovernmentDataViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
+    }
+    
+    @available(*, unavailable)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private lazy var govtIDView = DJPickerView(
         title: "Government Identification",
-        items: GovtID.allCases.titles,
-        itemSelectionHandler: didChooseGovtID
+        items: viewModel.governmentIDs.names,
+        itemSelectionHandler: { [weak self] _, index in
+            self?.viewModel.didChooseGovernmentData(at: index, type: .id)
+        }
     )
     private let govtIDNumberTextField = DJTextField(title: "Govt. ID Number")
     private lazy var verificationMethodView = DJPickerView(
         title: "Verify with",
-        items: GovtIDVerificationMethod.allCases.titles,
-        itemSelectionHandler: didChooseGovtVerificationMethod
+        items: viewModel.governmentIDVerificationMethods.names,
+        itemSelectionHandler: { [weak self] _, index in
+            self?.viewModel.didChooseGovernmentData(at: index, type: .verificationMethod)
+        }
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.didTapContinueButton()
@@ -38,6 +55,9 @@ final class GovernmentDataViewController: DJBaseViewController {
     }
     
     private func setupUI() {
+        viewModel.getGovernmentIDConfiguration()
+        viewModel.viewProtocol = self
+        
         with(contentScrollView) {
             addSubview($0)
             
@@ -81,22 +101,18 @@ final class GovernmentDataViewController: DJBaseViewController {
             kpush(OTPVerificationViewController(viewModel: viewModel))
         }
     }
-    
-    private func didChooseGovtID(name: String, index: Int) {
-        guard let govtId = GovtID(rawValue: index) else { return }
-        govtID = govtId
-        govtIDView.updateValue(govtId.title)
+
+}
+
+extension GovernmentDataViewController: GovernmentDataViewProtocol {
+    func showGovtIDNumberTextField() {
+        guard let governmentID = viewModel.selectedGovernmentID else { return }
         with(govtIDNumberTextField) {
-            $0.textField.placeholder = govtId.numberTitle
-            $0.title = govtId.numberTitle
+            $0.textField.placeholder = governmentID.placeholder
+            $0.title = governmentID.name ?? "ID Number"
+            $0.textField.keyboardType = governmentID.inputType?.keyboardType ?? .default
+            $0.maxLength = governmentID.maxLength?.int
             $0.showView()
         }
     }
-    
-    private func didChooseGovtVerificationMethod(name: String, index: Int) {
-        guard let method = GovtIDVerificationMethod(rawValue: index) else { return }
-        govtIDVerificationMethod = method
-        verificationMethodView.updateValue(method.title)
-    }
-
 }

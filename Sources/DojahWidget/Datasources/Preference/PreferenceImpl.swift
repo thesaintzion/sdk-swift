@@ -38,6 +38,6 @@ struct PreferenceImpl: PreferenceProtocol {
     @UserDefaultCodable(key: .DJAuthStep, default: .index)
     var DJAuthStep: DJAuthStep
     
-    @UserDefaultCodable(key: .DJGovernmentIDConfig, default: .init())
-    var DJGovernmentIDConfig: DJGovernmentIDConfig
+    @UserDefaultCodable(key: .DJGovernmentIDConfig, default: nil)
+    var DJGovernmentIDConfig: DJGovernmentIDConfig?
 }

@@ -14,6 +14,7 @@ final class CountryPickerViewController: DJBaseViewController {
     init(viewModel: CountryPickerViewModel = CountryPickerViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
     }
     
     @available(*, unavailable)
@@ -35,7 +36,7 @@ final class CountryPickerViewController: DJBaseViewController {
         itemSelectionHandler: didChooseCountry
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
-        self?.showBioData()
+        self?.viewModel.didTapContinue()
     }
     private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
@@ -54,10 +55,6 @@ final class CountryPickerViewController: DJBaseViewController {
                 padding: .kinit(topBottom: 50, leftRight: 16)
             )
         }
-    }
-    
-    private func showBioData() {
-        kpush(BioDataViewController())
     }
     
     private func didChooseCountry(name: String, index: Int) {
