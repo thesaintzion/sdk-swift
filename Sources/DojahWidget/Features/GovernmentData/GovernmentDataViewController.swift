@@ -1,13 +1,13 @@
 //
-//  GovtIDViewController.swift
-//  
+//  GovernmentDataViewController.swift
+//
 //
 //  Created by Isaac Iniongun on 28/10/2023.
 //
 
 import UIKit
 
-final class GovtIDViewController: DJBaseViewController {
+final class GovernmentDataViewController: DJBaseViewController {
 
     private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private lazy var govtIDView = DJPickerView(

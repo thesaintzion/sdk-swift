@@ -36,28 +36,34 @@ final class SDKInitViewModel {
         preference.DJAuthStep = .index
         viewProtocol?.showDisclaimer()
         
-        /*viewProtocol?.showLoader(true)
+        viewProtocol?.showLoader(true)
         getUserAgent()
         
-        guard !preference.DJCountriesInitialized else {
+        guard !preference.DJConfigurationInitialized else {
             preAuthenticate()
             return
         }
         
-        guard let jsonData = jsonData(from: "countries") else {
+        guard let countriesJsonData = jsonData(from: "countries"),
+              let governmentIDConfigJsonData = jsonData(from: "government_data_config")
+        else {
             initializationDidFail()
             return
         }
         
         do {
-            let countries = try jsonData.decode(into: [DJCountry].self)
+            let countries = try countriesJsonData.decode(into: [DJCountry].self)
             let dbCountries = countries.map { $0.countryDB }
             try countriesDatasource.saveCountries(dbCountries)
-            preference.DJCountriesInitialized = true
+            
+            let governmentIDConfig = try governmentIDConfigJsonData.decode(into: DJGovernmentIDConfig.self)
+            preference.DJGovernmentIDConfig = governmentIDConfig
+            
+            preference.DJConfigurationInitialized = true
             preAuthenticate()
         } catch {
             initializationDidFail(error: error)
-        }*/
+        }
     }
     
     private func initializationDidFail(error: Error? = nil) {

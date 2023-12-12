@@ -9,7 +9,7 @@ import Foundation
 
 protocol PreferenceProtocol {
     var DJWidgetID: String { get set }
-    var DJCountriesInitialized: Bool { get set }
+    var DJConfigurationInitialized: Bool { get set }
     var DJAppConfig: DJAppConfig? { get set }
     var DJRequestHeaders: DJHeaderParameters { get set }
     var DJUserAgent: String { get set }
@@ -18,4 +18,5 @@ protocol PreferenceProtocol {
     var DJVerificationID: Int { get set }
     var DJSteps: [DJAuthStep] { get set }
     var DJAuthStep: DJAuthStep { get set }
+    var DJGovernmentIDConfig: DJGovernmentIDConfig { get set }
 }

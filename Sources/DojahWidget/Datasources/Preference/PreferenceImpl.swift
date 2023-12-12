@@ -11,8 +11,8 @@ struct PreferenceImpl: PreferenceProtocol {
     @UserDefaultPrimitive(key: .DJWidgetID, default: "")
     var DJWidgetID: String
     
-    @UserDefaultPrimitive(key: .DJCountriesInitialized, default: false)
-    var DJCountriesInitialized: Bool
+    @UserDefaultPrimitive(key: .DJConfigurationInitialized, default: false)
+    var DJConfigurationInitialized: Bool
     
     @UserDefaultCodable(key: .DJAppConfig, default: nil)
     var DJAppConfig: DJAppConfig?
@@ -37,4 +37,7 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultCodable(key: .DJAuthStep, default: .index)
     var DJAuthStep: DJAuthStep
+    
+    @UserDefaultCodable(key: .DJGovernmentIDConfig, default: .init())
+    var DJGovernmentIDConfig: DJGovernmentIDConfig
 }

@@ -27,7 +27,8 @@ let package = Package(
                 .product(name: "RealmSwift", package: "realm-swift")
             ],
             resources: [
-                .copy("Resources/countries.json"),
+                .copy("Resources/JSON/countries.json"),
+                .copy("Resources/JSON/government_data_config.json"),
                 .copy("Resources/Animations/loading-circle.json"),
                 .copy("Resources/Animations/cancel.json"),
                 .copy("Resources/Animations/warning.json"),
