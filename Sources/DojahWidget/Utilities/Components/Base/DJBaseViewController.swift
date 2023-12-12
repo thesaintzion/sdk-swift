@@ -86,14 +86,14 @@ public class DJBaseViewController: UIViewController {
     
     func showNextPage() {
         guard let kviewModel else { return }
-        let pageName = kviewModel.preference.DJNextPageName
+        let pageName = kviewModel.preference.DJAuthStep.name
         switch pageName {
         case .countries:
             if kviewModel.preference.DJCanSeeCountryPage {
                 let viewController = CountryPickerViewController()
                 kpush(viewController)
             } else {
-                kviewModel.setNextPageName(stepNumber: 2)
+                kviewModel.setNextAuthStep()
             }
         case .userData:
             break

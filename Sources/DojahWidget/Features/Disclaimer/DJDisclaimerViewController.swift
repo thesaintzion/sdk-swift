@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DJDisclaimerViewController: DJBaseViewController {
+final class DJDisclaimerViewController: DJBaseViewController {
     
     private let viewModel: DJDisclaimerViewModel
     
@@ -74,17 +74,6 @@ class DJDisclaimerViewController: DJBaseViewController {
             self?.viewModel.postStepCompletedEvent()
         }
     }
-    
-    private func showCountryPicker() {
-        if viewModel.canSeeCountryPage {
-            let viewController = CountryPickerViewController()
-            kpush(viewController)
-        } else {
-            
-        }
-    }
 }
 
-extension DJDisclaimerViewController: DJDisclaimerViewProtocol {
-    
-}
+extension DJDisclaimerViewController: DJDisclaimerViewProtocol {}

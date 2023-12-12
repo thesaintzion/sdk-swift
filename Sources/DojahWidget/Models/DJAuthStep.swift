@@ -12,3 +12,7 @@ struct DJAuthStep: Codable {
     let id: Int
     let config: DJPageConfig
 }
+
+extension DJAuthStep {
+    static let index = DJAuthStep(name: .index, id: 0, config: .init())
+}

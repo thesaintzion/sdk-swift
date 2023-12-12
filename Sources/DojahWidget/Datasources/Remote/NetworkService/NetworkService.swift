@@ -56,6 +56,11 @@ final class NetworkService: NetworkServiceProtocol {
                 if [.events, .saveIP].contains(remotePath) {
                     parameters = parameters.merge(["verification_id": preference.DJVerificationID])
                 }
+                
+                if remotePath == .events {
+                    parameters = parameters.merge(["step_number": preference.DJAuthStep.id])
+                }
+                
                 let requestBody = try parameters.serializedData()
                 urlRequest.httpBody = requestBody
                 kprint("Request Body:")

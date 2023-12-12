@@ -14,15 +14,15 @@ final class DJDisclaimerViewModel: BaseViewModel {
     }
     
     func postStepCompletedEvent() {
-        postEvent(request: .init(name: .stepCompleted, value: "index", stepNumber: 0))
-    }
-    
-    override func postEventDidSucceed(_ eventsResponse: DJEventResponse) {
-        setNextPageName(stepNumber: 1)
-    }
-    
-    override func postEventDidFail(_ error: Error) {
-        kprint("couldn't post index event")
+        postEvent(
+            request: .init(name: .stepCompleted, value: "index"),
+            didSucceed: { [weak self] eventRes in
+                self?.setNextAuthStep()
+            },
+            didFail: { error in
+                kprint("couldn't post index event")
+            }
+        )
     }
     
 }

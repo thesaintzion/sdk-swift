@@ -61,8 +61,8 @@ final class CountryPickerViewController: DJBaseViewController {
     }
     
     private func didChooseCountry(name: String, index: Int) {
-        //guard let country = viewModel.getCountry(name: name) else { return }
         countryPickerView.updateInfo(country: viewModel.country(at: index))
+        viewModel.didSelectCountry(at: index)
     }
 
 }

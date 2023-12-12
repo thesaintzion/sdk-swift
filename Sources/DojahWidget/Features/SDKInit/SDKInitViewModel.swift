@@ -33,6 +33,7 @@ final class SDKInitViewModel {
     }
     
     func initialize() {
+        preference.DJAuthStep = .index
         viewProtocol?.showDisclaimer()
         
         /*viewProtocol?.showLoader(true)

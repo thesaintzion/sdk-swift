@@ -10,11 +10,9 @@ import Foundation
 struct DJEventRequest: Codable {
     let name: DJEventName
     let value: String
-    let stepNumber: Int
     
     enum CodingKeys: String, CodingKey {
         case name = "event_name"
         case value = "event_value"
-        case stepNumber = "step_number"
     }
 }

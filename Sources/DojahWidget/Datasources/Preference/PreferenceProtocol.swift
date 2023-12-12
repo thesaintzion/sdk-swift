@@ -17,5 +17,5 @@ protocol PreferenceProtocol {
     var DJCanSeeCountryPage: Bool { get set }
     var DJVerificationID: Int { get set }
     var DJSteps: [DJAuthStep] { get set }
-    var DJNextPageName: DJPageName { get set }
+    var DJAuthStep: DJAuthStep { get set }
 }

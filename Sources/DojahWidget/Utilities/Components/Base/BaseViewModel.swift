@@ -22,31 +22,41 @@ class BaseViewModel {
         self.preference = preference
     }
     
-    func postEventDidSucceed(_ eventsResponse: DJEventResponse) {}
-    
-    func postEventDidFail(_ error: Error) {}
-    
-    func postEvent(request: DJEventRequest) {
-        showLoader?(true)
+    func postEvent(
+        request: DJEventRequest,
+        showLoader: Bool = true,
+        showError: Bool = true,
+        didSucceed: ParamHandler<DJEventResponse>? = nil,
+        didFail: ParamHandler<Error>? = nil
+    ) {
+        self.showLoader?(showLoader)
         eventsRemoteDatasource.postEvent(request: request) { [weak self] result in
-            self?.showLoader?(false)
+            if showLoader {
+                self?.showLoader?(false)
+            }
             switch result {
             case let .success(eventsResponse):
                 if eventsResponse.entity?.success == true {
-                    self?.postEventDidSucceed(eventsResponse)
+                    didSucceed?(eventsResponse)
                 } else {
-                    self?.postEventDidFail(DJSDKError.tryAgain)
+                    if showError {
+                        self?.showMessage?(.error(message: eventsResponse.entity?.msg ?? "Unable to post event: \(request.name)"))
+                    }
+                    didFail?(DJSDKError.tryAgain)
                 }
             case let .failure(error):
-                self?.showMessage?(.error())
-                self?.postEventDidFail(error)
+                if showError {
+                    self?.showMessage?(.error(message: error.description ?? "Unable to post event: \(request.name)"))
+                }
+                didFail?(error)
             }
         }
     }
     
-    func setNextPageName(stepNumber: Int) {
-        guard let pageName = preference.DJSteps.first(where: { $0.id == stepNumber })?.name else { return }
-        preference.DJNextPageName = pageName
+    func setNextAuthStep() {
+        let nextStep = preference.DJAuthStep.id + 1
+        guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else { return }
+        preference.DJAuthStep = authStep
         showNextPage?()
     }
 }
