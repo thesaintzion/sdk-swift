@@ -18,6 +18,7 @@ final class CountryPickerViewModel: BaseViewModel {
         self.countriesLocalDatasource = countriesLocalDatasource
         countries = countriesLocalDatasource.getCountries()
         super.init()
+        preference.DJCountryCode = "NG"
     }
     
     func country(at index: Int) -> DJCountryDB {
@@ -25,9 +26,10 @@ final class CountryPickerViewModel: BaseViewModel {
     }
     
     func didSelectCountry(at index: Int) {
-        let countryName = country(at: index).countryName
+        let country = country(at: index)
+        preference.DJCountryCode = country.iso2
         postEvent(
-            request: .init(name: .countrySelected, value: countryName),
+            request: .init(name: .countrySelected, value: country.countryName),
             showLoader: false,
             showError: false
         )

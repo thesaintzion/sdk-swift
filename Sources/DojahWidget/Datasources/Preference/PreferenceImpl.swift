@@ -40,4 +40,7 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultCodable(key: .DJGovernmentIDConfig, default: nil)
     var DJGovernmentIDConfig: DJGovernmentIDConfig?
+    
+    @UserDefaultPrimitive(key: .DJCountryCode, default: "")
+    var DJCountryCode: String
 }

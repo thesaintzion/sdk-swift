@@ -39,7 +39,7 @@ final class GovernmentDataViewController: DJBaseViewController {
         }
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
-        self?.didTapContinueButton()
+        self?.viewModel.didTapContinue()
     }
     private lazy var contentStackView = VStackView(
         subviews: [govtIDView, govtIDNumberTextField, verificationMethodView, continueButton],
@@ -86,6 +86,9 @@ final class GovernmentDataViewController: DJBaseViewController {
         }
         
         govtIDNumberTextField.showView(false)
+        govtIDNumberTextField.textDidChange = { [weak self] text in
+            self?.viewModel.idNumber = text
+        }
     }
     
     private func didTapContinueButton() {
@@ -114,5 +117,9 @@ extension GovernmentDataViewController: GovernmentDataViewProtocol {
             $0.maxLength = governmentID.maxLength?.int
             $0.showView()
         }
+    }
+    
+    func errorAction() {
+        kpop()
     }
 }

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol EventsRemoteDatasourceProtocol {
-    func postEvent(request: DJEventRequest, completion: @escaping DJResultAction<DJEventResponse>)
+    func postEvent(request: DJEventRequest, completion: @escaping DJResultAction<EntityResponse<DJSuccessMessageEntity>>)
 }

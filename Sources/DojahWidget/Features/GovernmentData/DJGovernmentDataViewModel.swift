@@ -14,6 +14,8 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     var governmentIDVerificationMethods = [DJGovernmentID]()
     var selectedGovernmentID: DJGovernmentID?
     var selectedGovernmentIDVerificationMethod: DJGovernmentID?
+    var idNumber = ""
+    private var lookupEntity: GovernmentDataLookupEntity? = nil
     
     init(remoteDatasource: GovernmentDataRemoteDatasourceProtocol = GovernmentDataRemoteDatasource()) {
         self.remoteDatasource = remoteDatasource
@@ -114,12 +116,107 @@ final class DJGovernmentDataViewModel: BaseViewModel {
             selectedGovernmentID = governmentIDs[index]
             viewProtocol?.showGovtIDNumberTextField()
         case .verificationMethod:
-            selectedGovernmentIDVerificationMethod = governmentIDs[index]
+            selectedGovernmentIDVerificationMethod = governmentIDVerificationMethods[index]
             sendVerificationMethodSelectedEvent()
         }
     }
     
     private func sendVerificationMethodSelectedEvent() {
+        guard let modeParam = selectedGovernmentIDVerificationMethod?.verificationModeParam else { return }
+        postEvent(
+            request: .init(name: .verificationModeSelected, value: modeParam),
+            showLoader: false,
+            showError: false
+        )
+    }
+    
+    func didTapContinue() {
+        guard let selectedGovernmentID else { return }
+        postEvent(
+            request: .init(name: .verificationTypeSelected, value: "\(selectedGovernmentID.idTypeParam),\(idNumber)"),
+            didSucceed: { [weak self] _ in
+                self?.lookupGovernmentData()
+            },
+            didFail: { [weak self] _ in
+                
+            }
+        )
+    }
+    
+    private func lookupGovernmentData() {
+        guard let idEnum = selectedGovernmentID?.idEnum, let idType = DJGovernmentIDType(rawValue: idEnum) else { return }
+        remoteDatasource.lookupID(number: idNumber, idType: idType) { [weak self] result in
+            switch result {
+            case let .success(lookupResponse):
+                if let response = lookupResponse.entity {
+                    self?.lookupEntity = response
+                    self?.didGetLookResponse()
+                } else {
+                    self?.showErrorMessage("Unable to lookup Government Data, please try again")
+                }
+            case let .failure(error):
+                self?.showErrorMessage(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        showMessage?(
+            .error(
+                message: message,
+                doneAction: { [weak self] in
+                    self?.viewProtocol?.errorAction()
+                }
+            )
+        )
+    }
+    
+    private func didGetLookResponse() {
+        guard let lookupEntity, let selectedGovernmentID else { return }
+        let eventRequest = DJEventRequest(
+            name: .customerGovernmentDataCollected,
+            value: lookupEntity.dataCollectedParam(
+                idEnum: selectedGovernmentID.idEnum.orEmpty,
+                countryCode: preference.DJCountryCode
+            )
+        )
+        postEvent(
+            request: eventRequest,
+            didSucceed: { [weak self] _ in
+                self?.postGovernmentImageCollectedEvent()
+            },
+            didFail: { [weak self] _ in
+                
+            }
+        )
+    }
+    
+    private func postGovernmentImageCollectedEvent() {
+        guard let lookupEntity, let image = lookupEntity.image ?? lookupEntity.photo else { return }
+        postEvent(
+            request: .init(name: .governmentImageCollected, value: image),
+            didSucceed: { [weak self] _ in
+                self?.postStepCompletedEvent()
+            },
+            didFail: { [weak self] _ in
+                
+            }
+        )
+    }
+    
+    private func postStepCompletedEvent() {
+        postEvent(
+            request: .init(name: .stepCompleted, value: "government-data"),
+            didSucceed: { [weak self] _ in
+                self?.requestOTP()
+            },
+            didFail: { [weak self] _ in
+                
+            }
+        )
+    }
+    
+    private func requestOTP() {
         
     }
 }

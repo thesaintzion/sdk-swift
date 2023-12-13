@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GovernmentDataRemoteDatasourceProtocol {
-    
+    func lookupID(number: String, idType: DJGovernmentIDType, completion: @escaping DJResultAction<EntityResponse<GovernmentDataLookupEntity>>)
 }

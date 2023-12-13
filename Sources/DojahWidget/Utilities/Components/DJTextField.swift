@@ -42,6 +42,7 @@ final class DJTextField: BaseView {
     private var errorLabelHeightConstraint: NSLayoutConstraint?
     private var errorLabelVisible = false
     var maxLength: Int? = nil
+    var textDidChange: ParamHandler<String>? = nil
     
     var title: String {
         get { titleLabel.text.orEmpty }
@@ -145,6 +146,7 @@ final class DJTextField: BaseView {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        textDidChange?(textField.text.orEmpty)
         switch validationType {
         case .amount:
             textField.text = textField.text?.amountSanitized.double?.currencyFormatted()

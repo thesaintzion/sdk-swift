@@ -13,4 +13,15 @@ struct GovernmentDataRemoteDatasource: GovernmentDataRemoteDatasourceProtocol {
     init(service: NetworkServiceProtocol = NetworkService()) {
         self.service = service
     }
+    
+    func lookupID(number: String, idType: DJGovernmentIDType, completion: @escaping DJResultAction<EntityResponse<GovernmentDataLookupEntity>>) {
+        service.makeRequest(
+            responseType: EntityResponse<GovernmentDataLookupEntity>.self,
+            requestMethod: .get,
+            remotePath: idType.remotePath,
+            parameters: [idType.lookupParameterKeyName: number],
+            headers: nil,
+            completion: completion
+        )
+    }
 }

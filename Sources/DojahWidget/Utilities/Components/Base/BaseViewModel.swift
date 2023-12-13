@@ -26,7 +26,7 @@ class BaseViewModel {
         request: DJEventRequest,
         showLoader: Bool = true,
         showError: Bool = true,
-        didSucceed: ParamHandler<DJEventResponse>? = nil,
+        didSucceed: ParamHandler<EntityResponse<DJSuccessMessageEntity>>? = nil,
         didFail: ParamHandler<Error>? = nil
     ) {
         self.showLoader?(showLoader)

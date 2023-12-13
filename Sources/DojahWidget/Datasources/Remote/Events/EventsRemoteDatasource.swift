@@ -14,9 +14,9 @@ struct EventsRemoteDatasource: EventsRemoteDatasourceProtocol {
         self.service = service
     }
     
-    func postEvent(request: DJEventRequest, completion: @escaping DJResultAction<DJEventResponse>) {
+    func postEvent(request: DJEventRequest, completion: @escaping DJResultAction<EntityResponse<DJSuccessMessageEntity>>) {
         service.makeRequest(
-            responseType: DJEventResponse.self,
+            responseType: EntityResponse<DJSuccessMessageEntity>.self,
             requestMethod: .post,
             remotePath: .events,
             parameters: request.dictionary,
