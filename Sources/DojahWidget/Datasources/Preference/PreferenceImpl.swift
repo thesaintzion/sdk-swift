@@ -43,4 +43,10 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultPrimitive(key: .DJCountryCode, default: "")
     var DJCountryCode: String
+    
+    @UserDefaultCodable(key: .DJSelectedGovernmentIDVerificationMethod, default: nil)
+    var DJSelectedGovernmentIDVerificationMethod: DJGovernmentID?
+    
+    @UserDefaultPrimitive(key: .DJOTPVerificationInfo, default: "")
+    var DJOTPVerificationInfo: String
 }

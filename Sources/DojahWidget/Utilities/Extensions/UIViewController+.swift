@@ -174,8 +174,10 @@ extension UIViewController {
     }
     
     func showFeedbackController(config: FeedbackConfig) {
-        let controller = FeedbackViewController(config: config)
-        kpush(controller)
+        runOnMainThread { [weak self] in
+            let controller = FeedbackViewController(config: config)
+            self?.kpush(controller)
+        }
     }
     
 }

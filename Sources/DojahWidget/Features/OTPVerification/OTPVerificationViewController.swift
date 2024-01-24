@@ -52,12 +52,12 @@ final class OTPVerificationViewController: DJBaseViewController {
     }
     
     private func didTapContinueButton() {
-        if viewModel.isPhoneNumberVerification {
-            viewModel.verificationInfo = phoneNumberView.fullNumber
-        } else {
-            viewModel.verificationInfo = emailTextField.text
-        }
-        kpush(VerifyOTPViewController(viewModel: viewModel))
+//        if viewModel.isPhoneNumberVerification {
+//            viewModel.verificationInfo = phoneNumberView.fullNumber
+//        } else {
+//            viewModel.verificationInfo = emailTextField.text
+//        }
+//        kpush(VerifyOTPViewController(viewModel: viewModel))
     }
 
 }

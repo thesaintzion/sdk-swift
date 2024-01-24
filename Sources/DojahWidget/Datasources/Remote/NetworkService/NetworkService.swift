@@ -87,11 +87,17 @@ final class NetworkService: NetworkServiceProtocol {
             kprint(requestHeaders.prettyJson)
         }
         
-        urlSession.dataTask(with: urlRequest) { data, urlResponse, error in
+        urlSession.dataTask(with: urlRequest) { [weak self] data, urlResponse, error in
+            self?.printDataResponse(data)
+            
             if let httpURLResponse = urlResponse as? HTTPURLResponse {
                 let statusCode = httpURLResponse.statusCode
                 
                 if (400...499).contains(statusCode) {
+                    if statusCode == 402 {
+                        completion(.failure(.lowBalance))
+                        return
+                    }
                     kprint("400: Network Error:")
                     kprint("\(String(describing: error))")
                     completion(.failure(.resourceNotFound))
@@ -114,14 +120,6 @@ final class NetworkService: NetworkServiceProtocol {
             }
             
             if let data {
-                
-                do {
-                    kprint("Request Data Response:")
-                    kprint(try data.prettyJson())
-                } catch {
-                    kprint("Unable to read data response as JSON")
-                }
-                
                 do {
                     let response = try data.decode(into: T.self)
                     kprint("Codable Request Response:")
@@ -138,5 +136,16 @@ final class NetworkService: NetworkServiceProtocol {
             }
             
         }.resume()
+    }
+    
+    private func printDataResponse(_ data: Data?) {
+        if let data {
+            do {
+                kprint("Request Data Response:")
+                kprint(try data.prettyJson())
+            } catch {
+                kprint("Unable to read data response as JSON")
+            }
+        }
     }
 }

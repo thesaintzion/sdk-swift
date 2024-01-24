@@ -100,8 +100,9 @@ final class GovernmentDataViewController: DJBaseViewController {
             let viewModel = SelfieVideoKYCViewModel(verificationMethod: govtIDVerificationMethod)
             kpush(SelfieVideoKYCViewController(viewModel: viewModel))
         case .phoneNumberOTP, .emailOTP:
-            let viewModel = OTPVerificationViewModel(verificationMethod: govtIDVerificationMethod)
-            kpush(OTPVerificationViewController(viewModel: viewModel))
+            break
+//            let viewModel = OTPVerificationViewModel(verificationMethod: govtIDVerificationMethod)
+//            kpush(OTPVerificationViewController(viewModel: viewModel))
         }
     }
 

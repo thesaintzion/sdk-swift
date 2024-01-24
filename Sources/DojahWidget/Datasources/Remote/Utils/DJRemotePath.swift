@@ -20,6 +20,8 @@ enum DJRemotePath {
     case basicPhoneNumberLookup
     case advancedPhoneNumberLookup
     case driversLicenseLookup
+    case requestOTP
+    case validateOTP
     
     var path: String {
         switch self {
@@ -47,6 +49,10 @@ enum DJRemotePath {
             return "widget/kyc/mobile/advance"
         case .driversLicenseLookup:
             return "widget/kyc/dl"
+        case .requestOTP:
+            return "widget/sms/otp"
+        case .validateOTP:
+            return "widget/sms/otp/validate"
         }
     }
     

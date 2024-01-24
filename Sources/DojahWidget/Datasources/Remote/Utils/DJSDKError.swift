@@ -17,6 +17,7 @@ enum DJSDKError: Error, Equatable {
     case unableToLoadLocalJSON
     case noResponseData
     case tryAgain
+    case lowBalance
     
     var description: String? {
         switch self {
@@ -38,6 +39,8 @@ enum DJSDKError: Error, Equatable {
             return "No response data returned for network request."
         case .tryAgain:
             return "Please try that again."
+        case .lowBalance:
+            return "Your balance is low, pls visit the dashboard to top up"
         }
     }
 }

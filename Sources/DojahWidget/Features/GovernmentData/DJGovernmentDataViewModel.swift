@@ -9,7 +9,7 @@ import Foundation
 
 final class DJGovernmentDataViewModel: BaseViewModel {
     weak var viewProtocol: GovernmentDataViewProtocol?
-    private let remoteDatasource: GovernmentDataRemoteDatasourceProtocol
+    private let governmentDataRemoteDatasource: GovernmentDataRemoteDatasourceProtocol
     var governmentIDs = [DJGovernmentID]()
     var governmentIDVerificationMethods = [DJGovernmentID]()
     var selectedGovernmentID: DJGovernmentID?
@@ -18,7 +18,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     private var lookupEntity: GovernmentDataLookupEntity? = nil
     
     init(remoteDatasource: GovernmentDataRemoteDatasourceProtocol = GovernmentDataRemoteDatasource()) {
-        self.remoteDatasource = remoteDatasource
+        self.governmentDataRemoteDatasource = remoteDatasource
         super.init()
     }
     
@@ -117,6 +117,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
             viewProtocol?.showGovtIDNumberTextField()
         case .verificationMethod:
             selectedGovernmentIDVerificationMethod = governmentIDVerificationMethods[index]
+            preference.DJSelectedGovernmentIDVerificationMethod = selectedGovernmentIDVerificationMethod
             sendVerificationMethodSelectedEvent()
         }
     }
@@ -132,25 +133,33 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     
     func didTapContinue() {
         guard let selectedGovernmentID else { return }
-        postEvent(
-            request: .init(name: .verificationTypeSelected, value: "\(selectedGovernmentID.idTypeParam),\(idNumber)"),
-            didSucceed: { [weak self] _ in
-                self?.lookupGovernmentData()
-            },
-            didFail: { [weak self] _ in
-                
-            }
+        showLoader?(true)
+        let eventRequest = DJEventRequest(
+            name: .verificationTypeSelected,
+            value: "\(selectedGovernmentID.idTypeParam),\(idNumber)"
         )
+        eventsRemoteDatasource.postEvent(request: eventRequest) { [weak self] result in
+            switch result {
+            case let .success(successResponse):
+                if successResponse.entity?.success ?? false {
+                    self?.lookupGovernmentData()
+                } else {
+                    self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send verificationTypeSelected event")
+                }
+            case let .failure(error):
+                self?.showErrorMessage(error.localizedDescription)
+            }
+        }
     }
     
     private func lookupGovernmentData() {
         guard let idEnum = selectedGovernmentID?.idEnum, let idType = DJGovernmentIDType(rawValue: idEnum) else { return }
-        remoteDatasource.lookupID(number: idNumber, idType: idType) { [weak self] result in
+        governmentDataRemoteDatasource.lookupID(number: idNumber, idType: idType) { [weak self] result in
             switch result {
             case let .success(lookupResponse):
                 if let response = lookupResponse.entity {
                     self?.lookupEntity = response
-                    self?.didGetLookResponse()
+                    self?.postGovernmentDataCollectedEvent()
                 } else {
                     self?.showErrorMessage("Unable to lookup Government Data, please try again")
                 }
@@ -161,6 +170,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     }
     
     private func showErrorMessage(_ message: String) {
+        showLoader?(false)
         showMessage?(
             .error(
                 message: message,
@@ -171,7 +181,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         )
     }
     
-    private func didGetLookResponse() {
+    private func postGovernmentDataCollectedEvent() {
         guard let lookupEntity, let selectedGovernmentID else { return }
         let eventRequest = DJEventRequest(
             name: .customerGovernmentDataCollected,
@@ -180,43 +190,59 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                 countryCode: preference.DJCountryCode
             )
         )
-        postEvent(
-            request: eventRequest,
-            didSucceed: { [weak self] _ in
-                self?.postGovernmentImageCollectedEvent()
-            },
-            didFail: { [weak self] _ in
-                
+        eventsRemoteDatasource.postEvent(request: eventRequest) { [weak self] result in
+            switch result {
+            case let .success(successResponse):
+                if successResponse.entity?.success ?? false {
+                    self?.postGovernmentImageCollectedEvent()
+                } else {
+                    self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send customerGovernmentDataCollected event")
+                }
+            case let .failure(error):
+                self?.showErrorMessage(error.localizedDescription)
             }
-        )
+        }
     }
     
     private func postGovernmentImageCollectedEvent() {
         guard let lookupEntity, let image = lookupEntity.image ?? lookupEntity.photo else { return }
-        postEvent(
-            request: .init(name: .governmentImageCollected, value: image),
-            didSucceed: { [weak self] _ in
-                self?.postStepCompletedEvent()
-            },
-            didFail: { [weak self] _ in
-                
+        eventsRemoteDatasource.postEvent(request: .init(name: .governmentImageCollected, value: image)) { [weak self] result in
+            switch result {
+            case let .success(successResponse):
+                if successResponse.entity?.success ?? false {
+                    self?.postStepCompletedEvent()
+                } else {
+                    self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send governmentImageCollected event")
+                }
+            case let .failure(error):
+                self?.showErrorMessage(error.localizedDescription)
             }
-        )
+        }
     }
     
     private func postStepCompletedEvent() {
-        postEvent(
-            request: .init(name: .stepCompleted, value: "government-data"),
-            didSucceed: { [weak self] _ in
-                self?.requestOTP()
-            },
-            didFail: { [weak self] _ in
-                
+        eventsRemoteDatasource.postEvent(request: .init(name: .stepCompleted, value: "government-data")) { [weak self] result in
+            switch result {
+            case let .success(successResponse):
+                if successResponse.entity?.success ?? false {
+                    self?.didSendCompletedEvent()
+                } else {
+                    self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send stepCompleted::government-data event")
+                }
+            case let .failure(error):
+                self?.showErrorMessage(error.localizedDescription)
             }
-        )
+        }
     }
     
-    private func requestOTP() {
-        
+    private func didSendCompletedEvent() {
+        showLoader?(false)
+        if selectedGovernmentIDVerificationMethod?.verificationModeParam == "OTP" {
+            guard let lookupEntity,
+                  let phoneNumber = lookupEntity.phoneNumber1 ?? lookupEntity.phoneNumber2
+            else { return }
+            preference.DJOTPVerificationInfo = phoneNumber
+        }
+        setNextAuthStep()
     }
 }

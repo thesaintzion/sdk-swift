@@ -109,7 +109,13 @@ public class DJBaseViewController: UIViewController {
             let controller = GovernmentDataViewController()
             kpush(controller)
         case .governmentDataVerification:
-            break
+            guard let verificationMode = kviewModel.preference.DJSelectedGovernmentIDVerificationMethod?.verificationModeParam else { return }
+            if verificationMode == "OTP" {
+                let controller = VerifyOTPViewController()
+                kpush(controller)
+            } else {
+                
+            }
         case .businessData:
             break
         case .selfie:

@@ -20,4 +20,6 @@ enum PreferenceKey: String {
     case DJAuthStep
     case DJGovernmentIDConfig
     case DJCountryCode
+    case DJSelectedGovernmentIDVerificationMethod
+    case DJOTPVerificationInfo
 }

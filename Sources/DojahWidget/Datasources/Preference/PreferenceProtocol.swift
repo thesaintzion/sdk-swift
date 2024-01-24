@@ -20,4 +20,6 @@ protocol PreferenceProtocol {
     var DJAuthStep: DJAuthStep { get set }
     var DJGovernmentIDConfig: DJGovernmentIDConfig? { get set }
     var DJCountryCode: String { get set }
+    var DJSelectedGovernmentIDVerificationMethod: DJGovernmentID? { get set }
+    var DJOTPVerificationInfo: String { get set }
 }
