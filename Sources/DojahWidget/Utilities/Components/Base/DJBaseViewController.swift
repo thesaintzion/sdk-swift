@@ -70,6 +70,12 @@ public class DJBaseViewController: UIViewController {
                 self?.showNextPage()
             }
         }
+        
+        kviewModel?.errorDoneAction = { [weak self] in
+            runOnMainThread {
+                self?.kpop()
+            }
+        }
     }
     
     func showLoader(_ show: Bool) {

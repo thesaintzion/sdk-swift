@@ -13,6 +13,7 @@ class BaseViewModel {
     var showLoader: ParamHandler<Bool>?
     var showMessage: ParamHandler<FeedbackConfig>?
     var showNextPage: NoParamHandler?
+    var errorDoneAction: NoParamHandler?
     
     init(
         eventsRemoteDatasource: EventsRemoteDatasourceProtocol = EventsRemoteDatasource(),
@@ -58,5 +59,21 @@ class BaseViewModel {
         guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else { return }
         preference.DJAuthStep = authStep
         showNextPage?()
+    }
+    
+    func showErrorMessage(_ message: String, doneAction: NoParamHandler? = nil) {
+        showLoader?(false)
+        showMessage?(
+            .error(
+                message: message,
+                doneAction: { [weak self] in
+                    if let doneAction {
+                        doneAction()
+                    } else {
+                        self?.errorDoneAction?()
+                    }
+                }
+            )
+        )
     }
 }

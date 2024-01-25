@@ -1,25 +1,25 @@
 //
-//  EventsRemoteDatasource.swift
+//  UserDataRemoteDatasource.swift
 //
 //
-//  Created by Isaac Iniongun on 07/12/2023.
+//  Created by Isaac Iniongun on 25/01/2024.
 //
 
 import Foundation
 
-struct EventsRemoteDatasource: EventsRemoteDatasourceProtocol {
+struct UserDataRemoteDatasource: UserDataRemoteDatasourceProtocol {
     private let service: NetworkServiceProtocol
     
     init(service: NetworkServiceProtocol = NetworkService()) {
         self.service = service
     }
     
-    func postEvent(request: DJEventRequest, completion: @escaping DJResultAction<SuccessEntityResponse>) {
+    func saveUserData(params: DJParameters, completion: @escaping DJResultAction<SuccessEntityResponse>) {
         service.makeRequest(
             responseType: SuccessEntityResponse.self,
             requestMethod: .post,
-            remotePath: .events,
-            parameters: request.dictionary,
+            remotePath: .userData,
+            parameters: params,
             headers: nil,
             completion: completion
         )

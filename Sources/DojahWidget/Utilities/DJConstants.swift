@@ -8,6 +8,7 @@
 import Foundation
 
 enum DJConstants {
+    static let genericErrorMessage = "An error occurred, please try again"
     static let disclaimerItems = [
         "You must be in a well lit environment before getting started.",
         "Avoid wearing anything that hinders or hides your face from being seen.",

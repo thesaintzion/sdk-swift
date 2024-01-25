@@ -91,12 +91,17 @@ final class UserDataViewController: DJBaseViewController {
     
     private func didTapContinueButton() {
         if [firstNameTextField, middleNameTextField, lastNameTextField, dobTextField].areValid {
-            viewModel.didTapContinue()
+            viewModel.saveUserData(
+                firstName: firstNameTextField.text,
+                middleName: middleNameTextField.text,
+                lastName: lastNameTextField.text,
+                dob: dobTextField.text
+            )
         }
     }
     
     override func addTapGestures() {
-        dobTextField.textField.didTap { [weak self] in
+        dobTextField.textField.didTap(duration: 0.05) { [weak self] in
             self?.didTapDOBTextField()
         }
     }
@@ -109,18 +114,12 @@ final class UserDataViewController: DJBaseViewController {
 
 }
 
-extension UserDataViewController: UserDataViewProtocol {
-    
-}
+extension UserDataViewController: UserDataViewProtocol {}
 
 extension UserDataViewController: TermsAndPrivacyViewDelegate {
-    func didTapTerms() {
-        
-    }
+    func didTapTerms() {}
     
-    func didTapPrivacy() {
-        
-    }
+    func didTapPrivacy() {}
 }
 
 extension UserDataViewController: DatePickerViewDelegate {

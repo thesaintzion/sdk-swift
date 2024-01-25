@@ -8,5 +8,9 @@
 import Foundation
 
 protocol BaseViewProtocol: AnyObject {
-    
+    func errorDoneAction()
+}
+
+extension BaseViewProtocol {
+    func errorDoneAction() {}
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias SuccessEntityResponse = EntityResponse<DJSuccessMessageEntity>
+
 struct DJSuccessMessageEntity: Codable {
     let success: Bool?
     let msg: String?
