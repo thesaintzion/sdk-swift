@@ -35,17 +35,50 @@ final class UserDataViewModel: BaseViewModel {
         
         showLoader?(true)
         remoteDatasource.saveUserData(params: params) { [weak self] res in
-            self?.showLoader?(false)
             switch res {
             case .success(let res):
                 if res.entity?.success == true {
-                    self?.setNextAuthStep()
+                    self?.postStepCompletedEvent()
                 } else {
-                    self?.showErrorMessage(res.entity?.msg ?? DJConstants.genericErrorMessage)
+                    self?.showErrorMessage(res.entity?.msg ?? DJConstants.genericErrorMessage) {
+                        self?.postStepFailedEvent()
+                    }
                 }
             case .failure(let error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.localizedDescription) {
+                    self?.postStepFailedEvent()
+                }
             }
         }
+    }
+    
+    private func postStepCompletedEvent() {
+        postEvent(
+            request: .event(name: .stepCompleted, pageName: .userData),
+            showLoader: false,
+            showError: false,
+            didSucceed: { [weak self] eventRes in
+                self?.showLoader?(false)
+                self?.setNextAuthStep()
+            },
+            didFail: { [weak self] error in
+                kprint("couldn't post 'user-data' event")
+                self?.showLoader?(false)
+                self?.setNextAuthStep()
+            }
+        )
+    }
+    
+    private func postStepFailedEvent() {
+        postEvent(
+            request: .event(name: .stepFailed, pageName: .userData),
+            showError: false,
+            didSucceed: { [weak self] _ in
+                self?.errorDoneAction?()
+            },
+            didFail: { [weak self] _ in
+                self?.errorDoneAction?()
+            }
+        )
     }
 }

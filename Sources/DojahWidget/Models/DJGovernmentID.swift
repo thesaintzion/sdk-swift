@@ -25,7 +25,7 @@ struct DJGovernmentID: Codable {
     
     var verificationModeParam: String? {
         guard let name else { return nil }
-        if name.insensitiveContains("OTP") {
+        if name.insensitiveContains("otp") {
             return "OTP"
         } else if name.insensitiveContains("selfie") {
             return "LIVENESS"

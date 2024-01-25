@@ -307,8 +307,8 @@ final class DJTextField: BaseView {
     
     fileprivate func updateTextFieldAppearance(success: Bool = true) {
         with(textField) {
-            $0.borderColor = success ? .primary.withAlphaComponent(0.7) : .systemRed
-            $0.textColor = success ? .primary : .systemRed
+            $0.borderColor = success ? .djBorder : .systemRed
+            $0.textColor = success ? .aLabel : .systemRed
             if !success {
                 $0.shake(duration: 0.2)
             }

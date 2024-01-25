@@ -34,7 +34,7 @@ final class DJPickerView: BaseView {
             $0.selectionAction = { [weak self] index, value in
                 guard let self else { return }
                 if self.showSelectedItem {
-                    self.valueLabel.text = value
+                    self.updateValue(value)
                 }
                 self.itemSelectionHandler?(value, index)
             }

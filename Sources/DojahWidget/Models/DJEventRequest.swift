@@ -16,3 +16,9 @@ struct DJEventRequest: Codable {
         case value = "event_value"
     }
 }
+
+extension DJEventRequest {
+    static func event(name: DJEventName, pageName: DJPageName) -> DJEventRequest {
+        DJEventRequest(name: name, value: pageName.rawValue)
+    }
+}

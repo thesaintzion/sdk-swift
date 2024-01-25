@@ -30,7 +30,9 @@ class BaseViewModel {
         didSucceed: ParamHandler<EntityResponse<DJSuccessMessageEntity>>? = nil,
         didFail: ParamHandler<Error>? = nil
     ) {
-        self.showLoader?(showLoader)
+        if showLoader {
+            self.showLoader?(true)
+        }
         eventsRemoteDatasource.postEvent(request: request) { [weak self] result in
             if showLoader {
                 self?.showLoader?(false)
