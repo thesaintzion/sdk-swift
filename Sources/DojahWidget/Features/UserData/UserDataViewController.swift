@@ -7,7 +7,20 @@
 
 import UIKit
 
-final class BioDataViewController: DJBaseViewController {
+final class UserDataViewController: DJBaseViewController {
+    
+    private let viewModel: UserDataViewModel
+    
+    init(viewModel: UserDataViewModel = UserDataViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
+    }
+    
+    @available(*, unavailable)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private let firstNameTextField = DJTextField(
@@ -28,11 +41,12 @@ final class BioDataViewController: DJBaseViewController {
     private let dobTextField = DJTextField(
         title: "Date of birth",
         placeholder: "dd/mm/yyyy",
+        validationType: .dob,
         editable: false,
         rightIcon: .res(.calendar)
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
-        self?.showGovtID()
+        self?.didTapContinueButton()
     }
     private lazy var termsView = TermsAndPrivacyView(delegate: self)
     private lazy var contentStackView = VStackView(
@@ -47,6 +61,7 @@ final class BioDataViewController: DJBaseViewController {
     }
     
     private func setupUI() {
+        viewModel.viewProtocol = self
         with(contentScrollView) {
             addSubview($0)
             
@@ -74,8 +89,10 @@ final class BioDataViewController: DJBaseViewController {
         }
     }
     
-    private func showGovtID() {
-        kpush(GovernmentDataViewController())
+    private func didTapContinueButton() {
+        if [firstNameTextField, middleNameTextField, lastNameTextField, dobTextField].areValid {
+            viewModel.didTapContinue()
+        }
     }
     
     override func addTapGestures() {
@@ -92,7 +109,11 @@ final class BioDataViewController: DJBaseViewController {
 
 }
 
-extension BioDataViewController: TermsAndPrivacyViewDelegate {
+extension UserDataViewController: UserDataViewProtocol {
+    
+}
+
+extension UserDataViewController: TermsAndPrivacyViewDelegate {
     func didTapTerms() {
         
     }
@@ -102,7 +123,7 @@ extension BioDataViewController: TermsAndPrivacyViewDelegate {
     }
 }
 
-extension BioDataViewController: DatePickerViewDelegate {
+extension UserDataViewController: DatePickerViewDelegate {
     func didChooseDate(_ date: Date) {
         dobTextField.text = date.string(format: "dd/MM/yyyy")
     }

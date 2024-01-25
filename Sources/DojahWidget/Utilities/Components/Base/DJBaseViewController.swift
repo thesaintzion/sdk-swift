@@ -98,7 +98,8 @@ public class DJBaseViewController: UIViewController {
                 kviewModel.setNextAuthStep()
             }
         case .userData:
-            break
+            let controller = UserDataViewController()
+            kpush(controller)
         case .phoneNumber:
             break
         case .address:

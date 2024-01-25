@@ -63,7 +63,7 @@ final class NetworkService: NetworkServiceProtocol {
                 
                 let requestBody = try parameters.serializedData()
                 urlRequest.httpBody = requestBody
-                kprint("Request Body:")
+                kprint("\(remotePath.path) Request Body:")
                 kprint(parameters.prettyJson)
             } catch {
                 completion(.failure(.encodingFailure(reason: error.localizedDescription)))
@@ -88,7 +88,7 @@ final class NetworkService: NetworkServiceProtocol {
         }
         
         urlSession.dataTask(with: urlRequest) { [weak self] data, urlResponse, error in
-            self?.printDataResponse(data)
+            self?.printDataResponse(data, path: remotePath)
             
             if let httpURLResponse = urlResponse as? HTTPURLResponse {
                 let statusCode = httpURLResponse.statusCode
@@ -122,7 +122,7 @@ final class NetworkService: NetworkServiceProtocol {
             if let data {
                 do {
                     let response = try data.decode(into: T.self)
-                    kprint("Codable Request Response:")
+                    kprint("\(remotePath.path) Codable Request Response:")
                     kprint(response.prettyJson)
                     completion(.success(response))
                 } catch {
@@ -138,10 +138,10 @@ final class NetworkService: NetworkServiceProtocol {
         }.resume()
     }
     
-    private func printDataResponse(_ data: Data?) {
+    private func printDataResponse(_ data: Data?, path: DJRemotePath) {
         if let data {
             do {
-                kprint("Request Data Response:")
+                kprint("\(path.path) Request Data Response:")
                 kprint(try data.prettyJson())
             } catch {
                 kprint("Unable to read data response as JSON")

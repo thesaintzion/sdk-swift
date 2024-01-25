@@ -120,26 +120,18 @@ class InputValidatorImpl: IInputValidator {
         return ValidationMessage(isValid: true, message: "", validationType: .numeric)
     }
     
-    func validateMileage(_ value: String, max: Double) -> ValidationMessage {
-        if value.isEmpty {
-            return ValidationMessage(message: "Cannot be empty", validationType: .mileage(max))
-        } else if value != value.filter("0123456789".contains) {
-            return ValidationMessage(message: "Invalid value", validationType: .mileage(max))
-        } else if value.double ?? 0 > max {
-            return ValidationMessage(message: "Cannot be above \(max).", validationType: .mileage(max))
+    func validateDOB(_ dob: String) -> ValidationMessage {
+        //Format: dd/mm/yyyy
+        let dobRegex = "^(0[1-9]|1[012])[/](0[1-9]|[12][0-9]|3[01])[/](19|20)\\d\\d$"
+        let dobPredicate = NSPredicate(format: "SELF MATCHES %@", dobRegex)
+        
+        if dob.isEmpty {
+            return ValidationMessage(message: "Cannot be empty", validationType: .dob)
+        } else if !dobPredicate.evaluate(with: dob.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            return ValidationMessage(message: "Invalid date of birth", validationType: .dob)
         }
         
-        return ValidationMessage(isValid: true, message: "", validationType: .mileage(max))
-    }
-    
-    func validateVin(value: String, with maxLength: Int) -> ValidationMessage {
-        if value.isEmpty {
-            return ValidationMessage(message: "Cannot be empty", validationType: .vin(maxLength))
-        } else if value.count > maxLength || value.count < maxLength {
-            return ValidationMessage(message: "Must be \(maxLength) characters.", validationType: .vin(maxLength))
-        }
-        
-        return ValidationMessage(isValid: true, message: "", validationType: .vin(maxLength))
+        return ValidationMessage(isValid: true, message: "", validationType: .dob)
     }
     
     func validate(_ value: String, for type: ValidationType) -> ValidationMessage {
@@ -162,10 +154,8 @@ class InputValidatorImpl: IInputValidator {
             return validateNumeric(value)
         case .address:
             return validateAddress(value)
-        case .mileage(let max):
-            return validateMileage(value, max: max)
-        case .vin(let maxLength):
-            return validateVin(value: value, with: maxLength)
+        case .dob:
+            return validateDOB(value)
         }
     }
     

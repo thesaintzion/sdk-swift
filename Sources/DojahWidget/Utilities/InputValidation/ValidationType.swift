@@ -17,6 +17,5 @@ enum ValidationType {
          amount,
          numeric, 
          address,
-         mileage(Double),
-         vin(Int)
+         dob
 }

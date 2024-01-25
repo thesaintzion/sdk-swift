@@ -27,6 +27,6 @@ protocol IInputValidator {
     
     func validateAmount(_ amount: String) -> ValidationMessage
     
-    func validateMileage(_ value: String, max: Double) -> ValidationMessage
+    func validateDOB(_ dob: String) -> ValidationMessage
     
 }

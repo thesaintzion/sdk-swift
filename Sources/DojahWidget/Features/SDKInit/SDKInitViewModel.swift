@@ -149,6 +149,12 @@ final class SDKInitViewModel {
             steps.append(.init(name: .countries, id: currentID, config: .init(configDefault: "")))
         }
         
+        let userDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .userData })
+        if let userDataPage {
+            currentID += 1
+            steps.append(.init(name: .userData, id: currentID, config: userDataPage.config ?? .init()))
+        }
+        
         let govtDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .governmentData })
         if let govtDataPage {
             currentID += 1
@@ -168,13 +174,12 @@ final class SDKInitViewModel {
             steps.append(.init(name: .id, id: currentID, config: idPage.config ?? .init()))
         }
         
-        let pages = preAuthRes.widget?.pages?.filter { $0.pageName != .governmentData && $0.pageName != .id }
-        if let pages {
-            for page in pages {
-                if let pageName = page.pageName {
-                    currentID += 1
-                    steps.append(.init(name: pageName, id: currentID, config: page.config ?? .init()))
-                }
+        let alreadyAddedPages: [DJPageName?] = [.userData, .governmentData, .governmentDataVerification, .id]
+        let pages = preAuthRes.widget?.pages?.filter { alreadyAddedPages.doesNotContain($0.pageName) } ?? [] //$0.pageName != .governmentData && $0.pageName != .id
+        for page in pages {
+            if let pageName = page.pageName {
+                currentID += 1
+                steps.append(.init(name: pageName, id: currentID, config: page.config ?? .init()))
             }
         }
         
