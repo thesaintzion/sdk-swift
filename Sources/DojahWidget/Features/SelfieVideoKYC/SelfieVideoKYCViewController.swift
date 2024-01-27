@@ -12,9 +12,10 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     private let viewModel: SelfieVideoKYCViewModel
     private var viewState = SelfieVideoKYCViewState.captureRecord
     
-    init(viewModel: SelfieVideoKYCViewModel) {
+    init(viewModel: SelfieVideoKYCViewModel = SelfieVideoKYCViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
     }
     
     @available(*, unavailable)
@@ -66,7 +67,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         spacing: 40
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-    private let attachmentManager = AttachmentManager.shared
+    //private let attachmentManager = AttachmentManager.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +75,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     }
     
     private func setupUI() {
+        viewModel.viewProtocol = self
         with(contentScrollView) {
             addSubview($0)
             
@@ -142,4 +144,8 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         
     }
 
+}
+
+extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {
+    
 }

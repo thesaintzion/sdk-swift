@@ -7,10 +7,17 @@
 
 import Foundation
 
-final class SelfieVideoKYCViewModel {
+final class SelfieVideoKYCViewModel: BaseViewModel {
+    weak var viewProtocol: SelfieVideoKYCViewProtocol?
+    private let remoteDatasource: LivenessRemoteDatasourceProtocol
     let verificationMethod: GovtIDVerificationMethod
     
-    init(verificationMethod: GovtIDVerificationMethod) {
+    init(
+        remoteDatasource: LivenessRemoteDatasourceProtocol = LivenessRemoteDatasource(),
+        verificationMethod: GovtIDVerificationMethod = .selfie
+    ) {
+        self.remoteDatasource = remoteDatasource
         self.verificationMethod = verificationMethod
+        super.init()
     }
 }

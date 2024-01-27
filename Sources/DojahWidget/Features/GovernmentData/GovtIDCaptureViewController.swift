@@ -65,7 +65,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-    private let attachmentManager = AttachmentManager.shared
+    //private let attachmentManager = AttachmentManager.shared
     private let verificationMethod: GovtIDVerificationMethod
     
     init(verificationMethod: GovtIDVerificationMethod) {

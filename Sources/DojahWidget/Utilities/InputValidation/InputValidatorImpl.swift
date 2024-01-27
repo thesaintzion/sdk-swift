@@ -120,14 +120,11 @@ class InputValidatorImpl: IInputValidator {
         return ValidationMessage(isValid: true, message: "", validationType: .numeric)
     }
     
+    //DOB Format: dd/mm/yyyy
     func validateDOB(_ dob: String) -> ValidationMessage {
-        //Format: dd/mm/yyyy
-        let dobRegex = "^(0[1-9]|1[012])[/](0[1-9]|[12][0-9]|3[01])[/](19|20)\\d\\d$"
-        let dobPredicate = NSPredicate(format: "SELF MATCHES %@", dobRegex)
-        
         if dob.isEmpty {
             return ValidationMessage(message: "Cannot be empty", validationType: .dob)
-        } else if !dobPredicate.evaluate(with: dob.trimmingCharacters(in: .whitespacesAndNewlines)) {
+        } else if !dob.isValidDate() {
             return ValidationMessage(message: "Invalid date of birth", validationType: .dob)
         }
         

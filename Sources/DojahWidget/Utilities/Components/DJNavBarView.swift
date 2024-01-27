@@ -44,5 +44,13 @@ final class DJNavBarView: BaseView {
         backImageView.showView(show)
         closeImageView.showView(show)
     }
+    
+    func showNavBackControl(_ show: Bool) {
+        backImageView.showView(show)
+    }
+    
+    func showNavCloseControl(_ show: Bool) {
+        closeImageView.showView(show)
+    }
 
 }

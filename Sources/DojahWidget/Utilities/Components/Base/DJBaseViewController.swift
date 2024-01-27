@@ -20,6 +20,7 @@ public class DJBaseViewController: UIViewController {
         controller.modalPresentationStyle = .overCurrentContext
         return controller
     }()
+    let attachmentManager = AttachmentManager.shared
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,7 +122,7 @@ public class DJBaseViewController: UIViewController {
                 let controller = VerifyOTPViewController()
                 kpush(controller)
             } else {
-                
+                didChooseLiveness()
             }
         case .businessData:
             break
@@ -139,15 +140,42 @@ public class DJBaseViewController: UIViewController {
             break
         }
     }
+    
+    private func didChooseLiveness() {
+        if attachmentManager.hasCameraPermission {
+            showSelfieVideoController()
+        } else {
+            let controller = PermissionViewController(permissionType: .camera) { [weak self] in
+                self?.attachmentManager.requestCameraPermission(success:  { [weak self] in
+                    self?.showSelfieVideoController()
+                })
+            }
+            controller.modalPresentationStyle = .overCurrentContext
+            kpresent(vc: controller)
+        }
+    }
+    
+    private func showSelfieVideoController() {
+        let controller = SelfieVideoKYCViewController()
+        kpush(controller)
+    }
+    
+    func didTapNavBackButton() {
+        kpop()
+    }
+    
+    func didTapNavCloseButton() {
+        kpop()
+    }
 
 }
 
 extension DJBaseViewController: DJNavBarViewDelegate {
     func didTapBack() {
-        kpop()
+        didTapNavBackButton()
     }
     
     func didDismiss() {
-        kpop()
+        didTapNavCloseButton()
     }
 }
