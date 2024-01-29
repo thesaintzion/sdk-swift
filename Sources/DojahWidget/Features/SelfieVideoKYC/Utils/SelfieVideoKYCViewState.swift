@@ -19,4 +19,13 @@ enum SelfieVideoKYCViewState {
             return "Continue"
         }
     }
+    
+    var hintText: String {
+        switch self {
+        case .captureRecord:
+            return "Place your face in the circle and click Capture"
+        case .preview:
+            return "Preview your selfie"
+        }
+    }
 }

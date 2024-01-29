@@ -33,7 +33,8 @@ extension UIView {
         backgroundColor: UIColor? = nil,
         borderWidth: CGFloat? = nil,
         borderColor: UIColor? = nil,
-        radius: CGFloat? = nil
+        radius: CGFloat? = nil,
+        clipsToBounds: Bool = false
     ) {
         self.init()
         if let subviews = subviews {
@@ -60,6 +61,7 @@ extension UIView {
         if let borderColor = borderColor {
             self.borderColor = borderColor
         }
+        self.clipsToBounds = clipsToBounds
     }
     
     var id: String? {
@@ -291,11 +293,12 @@ extension UIView {
     
     func addDottedBorder(
         dashPattern: [NSNumber] = [2, 2],
+        lineWidth: CGFloat = 1,
         strokeColor: UIColor? = nil
     ) {
         let borderLayer = CAShapeLayer()
         borderLayer.strokeColor = (strokeColor ?? borderColor ?? .primary).cgColor
-        borderLayer.lineWidth = 1
+        borderLayer.lineWidth = lineWidth
         borderLayer.lineDashPattern = dashPattern
         borderLayer.frame = bounds
         borderLayer.fillColor = nil
@@ -346,6 +349,18 @@ extension Array where Element == UIView {
     
     func faded(_ fade: Bool = true, alpha: CGFloat = 0.7) {
         forEach { $0.faded(fade, alpha: alpha) }
+    }
+    
+    func centerXInSuperview() {
+        forEach { $0.centerXInSuperview() }
+    }
+    
+    func centerYInSuperview() {
+        forEach { $0.centerYInSuperview() }
+    }
+    
+    func centerInSuperview() {
+        forEach { $0.centerInSuperview() }
     }
 }
 

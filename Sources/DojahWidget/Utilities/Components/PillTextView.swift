@@ -11,6 +11,11 @@ final class PillTextView: BaseView {
 
     private let textLabel: UILabel
     
+    var text: String {
+        get { textLabel.text.orEmpty }
+        set { textLabel.text = newValue }
+    }
+    
     init(
         text: String,
         textColor: UIColor,

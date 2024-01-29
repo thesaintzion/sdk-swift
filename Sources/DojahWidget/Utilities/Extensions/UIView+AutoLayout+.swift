@@ -176,6 +176,11 @@ extension UIView {
         centerYAnchor.constraint(equalTo: constraint).activate()
     }
     
+    func centerIn(_ parentView: UIView) {
+        centerXAnchor.constraint(equalTo: parentView.centerXAnchor).activate()
+        centerYAnchor.constraint(equalTo: parentView.centerYAnchor).activate()
+    }
+    
     func heightEquals(_ view: UIView) {
         heightAnchor.constraint(equalTo: view.heightAnchor).activate()
     }
