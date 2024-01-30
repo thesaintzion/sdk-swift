@@ -7,6 +7,12 @@
 
 import UIKit
 
+func showToast(message: String, type: ToastType = .success) {
+    runOnMainThread {
+        Toast.shared.show(message, type: type)
+    }
+}
+
 //MARK: - Custom UIViewTapGestureRecognizer
 public class UIViewTapGestureRecognizer: UITapGestureRecognizer {
     var action : (()->Void)? = nil
@@ -327,6 +333,26 @@ extension UIView {
     @discardableResult
     func withHStackLeftAlignment() -> HStackView {
         HStackView(subviews: [self, UIView.vspacer()], alignment: .center)
+    }
+    
+    @discardableResult
+    func applyBlurEffect(style: UIBlurEffect.Style = .extraLight, alpha: CGFloat = 0.7) -> UIVisualEffectView {
+        // Create a blur effect
+        let blurEffect = UIBlurEffect(style: style)
+        
+        // Create a visual effect view with the blur effect
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        // Set the frame of the visual effect view to match the view to be blurred
+        blurEffectView.frame = bounds
+        
+        // Set alpha to make the blur effect see-through
+        blurEffectView.alpha = alpha
+        
+        // Add the visual effect view as a subview
+        addSubview(blurEffectView)
+        
+        return blurEffectView
     }
 }
 

@@ -31,7 +31,7 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     }
     
     private lazy var topHintView = PillTextView(
-        text: viewState.hintText, //"Place your face in the circle and click \(viewModel.verificationMethod.kycText)",
+        text: viewState.hintText,
         textColor: .white,
         bgColor: .black
     )
@@ -78,7 +78,10 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     )
     private lazy var bottomHintStackView = bottomHintView.withHStackCentering()
     private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.selfieCaptureDisclaimerItems)
-    private lazy var primaryButton = DJButton(title: "\(viewModel.verificationMethod.kycText)") { [weak self] in
+    private lazy var primaryButton = DJButton(
+        title: "\(viewModel.verificationMethod.kycText)",
+        isEnabled: false
+    ) { [weak self] in
         self?.didTapPrimaryButton()
     }
     private lazy var secondaryButton = DJButton(
@@ -100,7 +103,8 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     private var cameraContainerLayer: CAShapeLayer?
     private var cameraBorderLayer: CAShapeLayer?
-    private var isInitialCameraBorders = true
+    private var isCaptureCameraBorders = true
+    private var selfieImageBlurEffectView: UIVisualEffectView?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,10 +152,8 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
         
         cameraBorderView.addSubview(cameraContainerView)
         cameraContainerView.centerInSuperview()
-        cameraContainerView.addSubviews(selfieImageView, cameraView)
-        [cameraView, selfieImageView].centerInSuperview()
-        cameraView.addSubview(cameraHintView)
-        cameraHintView.centerInSuperview()
+        cameraContainerView.addSubviews(selfieImageView, cameraView, cameraHintView)
+        [cameraView, selfieImageView, cameraHintView].centerInSuperview()
         selfieImageView.showView(false)
         
         runAfter { [weak self] in
@@ -176,6 +178,7 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
                 previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                 previewLayer?.videoGravity = .resizeAspectFill
                 guard let previewLayer else { return }
+                primaryButton.enable()
                 cameraHintView.showView(false)
                 cameraView.clearBackground()
                 previewLayer.frame = cameraView.layer.bounds
@@ -189,7 +192,13 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     }
     
     private func setBorders() {
-        if isInitialCameraBorders {
+        if isCaptureCameraBorders {
+            if let cameraBorderLayer {
+                removeLayer(cameraBorderLayer, from: cameraBorderView)
+            }
+            if let cameraContainerLayer {
+                removeLayer(cameraContainerLayer, from: cameraContainerView)
+            }
             cameraContainerLayer = setDashedBorder(
                 on: cameraContainerView,
                 lineWidth: 2,
@@ -233,7 +242,7 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
         case .captureRecord:
             viewState = .preview
         case .preview:
-            break
+            viewState = .captureRecord
         }
         updateUIState()
     }
@@ -241,11 +250,16 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     private func updateUIState() {
         primaryButton.title = viewState.primaryButtonTitle
         topHintView.text = viewState.hintText
+        isCaptureCameraBorders = viewState == .captureRecord
+        
         switch viewState {
         case .captureRecord:
-            break
+            cameraView.backgroundColor = .djBorder.withAlphaComponent(0.3)
+            [bottomHintStackView, cameraHintView, cameraView].showViews()
+            [disclaimerItemsView, secondaryButton, selfieImageView].showViews(false)
+            startCaptureSession()
         case .preview:
-            isInitialCameraBorders = false
+            startCaptureSession(false)
             [bottomHintStackView, cameraHintView, cameraView].showViews(false)
             [disclaimerItemsView, secondaryButton, selfieImageView].showViews()
         }
@@ -255,16 +269,13 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
         switch viewState {
         case .captureRecord:
             capturePhoto()
-            //attachmentManager.openPhotoLibrary(on: self)
         case .preview:
-            break
-//            let controller = SelfieVideoKYCProcessingViewController(viewModel: viewModel)
-//            kpush(controller)
+            viewModel.analyseImage()
         }
     }
     
     private func didTapSecondaryButton() {
-        
+        updateViewState()
     }
     
     private func capturePhoto() {
@@ -302,18 +313,48 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     }
     
     private func startCaptureSession(_ start: Bool = true) {
+        cameraHintView.showView(!start)
         runOnBackgroundThread { [weak self] in
             start ? self?.captureSession.startRunning() : self?.captureSession.stopRunning()
+        }
+    }
+    
+    override func showLoader(_ show: Bool) {
+        [primaryButton, secondaryButton].enable(!show)
+        with(cameraHintView) {
+            $0.showView(show)
+            $0.backgroundColor = show ? .systemOrange : .black
+            $0.textLabel.text = "Proccessing..."
+        }
+        if show {
+            selfieImageBlurEffectView = selfieImageView.applyBlurEffect(alpha: 0.6)
+        } else {
+            selfieImageBlurEffectView?.removeFromSuperview()
+            selfieImageBlurEffectView = nil
         }
     }
 
 }
 
-extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {}
+extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {
+    func showSelfieImageError(message: String) {
+        with(cameraHintView) {
+            $0.showView()
+            $0.backgroundColor = .djRed
+            $0.textLabel.text = message
+        }
+        [primaryButton, secondaryButton].enable()
+        
+        runAfter { [weak self] in
+            self?.showLoader(false)
+        }
+    }
+}
 
 extension SelfieVideoKYCViewController: AVCapturePhotoCaptureDelegate {
     public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let imageData = photo.fileDataRepresentation(), let uiImage = UIImage(data: imageData) {
+            viewModel.imageData = imageData
             didCaptureImage(uiImage)
         } else {
             kprint("Error capturing photo: \(error?.localizedDescription ?? "Unknown error")")
@@ -322,7 +363,6 @@ extension SelfieVideoKYCViewController: AVCapturePhotoCaptureDelegate {
     }
     
     private func didCaptureImage(_ uiImage: UIImage) {
-        startCaptureSession(false)
         runOnMainThread { [weak self] in
             self?.updateViewState()
             self?.selfieImageView.image = uiImage

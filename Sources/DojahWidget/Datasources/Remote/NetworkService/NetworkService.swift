@@ -53,18 +53,20 @@ final class NetworkService: NetworkServiceProtocol {
         
         if requestMethod == .post, var parameters {
             do {
-                if [.events, .saveIP, .userData].contains(remotePath) {
+                if [.events, .saveIP, .userData, .imageCheck, .verifyImage].contains(remotePath) {
                     parameters = parameters.merge(["verification_id": preference.DJVerificationID])
                 }
                 
-                if remotePath == .events {
+                if [.events, .imageCheck].contains(remotePath) {
                     parameters = parameters.merge(["step_number": preference.DJAuthStep.id])
                 }
                 
                 let requestBody = try parameters.serializedData()
                 urlRequest.httpBody = requestBody
+                
                 kprint("\(remotePath.path) Request Body:")
                 kprint(parameters.prettyJson)
+                
             } catch {
                 completion(.failure(.encodingFailure(reason: error.localizedDescription)))
             }

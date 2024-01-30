@@ -107,6 +107,7 @@ final class UserDataViewController: DJBaseViewController {
     }
     
     private func didTapDOBTextField() {
+        view.endEditing(true)
         let datePickerController = DatePickerController()
         datePickerController.delegate = self
         present(datePickerController, animated: true)

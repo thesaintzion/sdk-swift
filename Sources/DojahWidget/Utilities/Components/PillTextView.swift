@@ -9,7 +9,7 @@ import UIKit
 
 final class PillTextView: BaseView {
 
-    private let textLabel: UILabel
+    let textLabel: UILabel
     
     var text: String {
         get { textLabel.text.orEmpty }

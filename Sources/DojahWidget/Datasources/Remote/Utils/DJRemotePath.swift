@@ -23,6 +23,9 @@ enum DJRemotePath {
     case requestOTP
     case validateOTP
     case userData
+    case imageAnalysis
+    case imageCheck
+    case verifyImage
     
     var path: String {
         switch self {
@@ -56,6 +59,12 @@ enum DJRemotePath {
             return "widget/sms/otp/validate"
         case .userData:
             return "widget/kyc/user-data"
+        case .imageAnalysis:
+            return "widget/kyc/image/analysis"
+        case .imageCheck:
+            return "widget/kyc/image/check"
+        case .verifyImage:
+            return "widget/kyc/image/verify"
         }
     }
     

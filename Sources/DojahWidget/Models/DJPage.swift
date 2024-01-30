@@ -25,7 +25,7 @@ struct DJPageConfig: Codable {
     let version: Int?
     let instruction: String?
     let glassesCheck: Bool?
-    let brightnessThreshold: Int?
+    let brightnessThreshold: Double?
     let ghDL, ghVoter: Bool?
     let keDL, keID, keKRA: Bool?
     let tzNIN: Bool?
@@ -68,7 +68,7 @@ struct DJPageConfig: Codable {
         version: Int? = nil,
         instruction: String? = nil,
         glassesCheck: Bool? = nil,
-        brightnessThreshold: Int? = nil,
+        brightnessThreshold: Double? = nil,
         ghDL: Bool? = nil,
         ghVoter: Bool? = nil,
         keDL: Bool? = nil,

@@ -59,7 +59,9 @@ public class DJBaseViewController: UIViewController {
     
     func bindViewModel() {
         kviewModel?.showLoader = { [weak self] show in
-            self?.showLoader(show)
+            runOnMainThread {
+                self?.showLoader(show)
+            }
         }
         
         kviewModel?.showMessage = { [weak self] config in
@@ -166,6 +168,10 @@ public class DJBaseViewController: UIViewController {
     
     func didTapNavCloseButton() {
         kpop()
+    }
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
 
 }

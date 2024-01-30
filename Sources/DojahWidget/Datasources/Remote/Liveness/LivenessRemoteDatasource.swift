@@ -13,4 +13,46 @@ struct LivenessRemoteDatasource: LivenessRemoteDatasourceProtocol {
     init(service: NetworkServiceProtocol = NetworkService()) {
         self.service = service
     }
+    
+    func performImageAnalysis(
+        params: DJParameters,
+        completion: @escaping DJResultAction<EntityResponse<ImageAnalysisResponse>>
+    ) {
+        service.makeRequest(
+            responseType: EntityResponse<ImageAnalysisResponse>.self,
+            requestMethod: .post,
+            remotePath: .imageAnalysis,
+            parameters: params,
+            headers: nil,
+            completion: completion
+        )
+    }
+    
+    func performImageCheck(
+        params: DJParameters,
+        completion: @escaping DJResultAction<EntityResponse<ImageCheckResponse>>
+    ) {
+        service.makeRequest(
+            responseType: EntityResponse<ImageCheckResponse>.self,
+            requestMethod: .post,
+            remotePath: .imageCheck,
+            parameters: params,
+            headers: nil,
+            completion: completion
+        )
+    }
+    
+    func verifyImage(
+        params: DJParameters,
+        completion: @escaping DJResultAction<EntityResponse<ImageVerificationResponse>>
+    ) {
+        service.makeRequest(
+            responseType: EntityResponse<ImageVerificationResponse>.self,
+            requestMethod: .post,
+            remotePath: .verifyImage,
+            parameters: params,
+            headers: nil,
+            completion: completion
+        )
+    }
 }
