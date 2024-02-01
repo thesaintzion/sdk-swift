@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class GovtIDCaptureViewController: DJBaseViewController {
+final public class GovtIDCaptureViewController: DJBaseViewController {
+    
+    public static func newInstance() -> GovtIDCaptureViewController { GovtIDCaptureViewController() }
     
     private var viewState: GovtIDCaptureViewState = .captureFront
     private lazy var titleLabel = UILabel(
@@ -68,7 +70,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     //private let attachmentManager = AttachmentManager.shared
     private let verificationMethod: GovtIDVerificationMethod
     
-    init(verificationMethod: GovtIDVerificationMethod) {
+    init(verificationMethod: GovtIDVerificationMethod = .govtID) {
         self.verificationMethod = verificationMethod
         super.init(nibName: nil, bundle: nil)
     }
@@ -78,7 +80,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }

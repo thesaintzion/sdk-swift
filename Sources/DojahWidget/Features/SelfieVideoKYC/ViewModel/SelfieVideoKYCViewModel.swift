@@ -35,7 +35,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         showLoader?(true)
         let params = [
             "image": imageData.base64EncodedString(),
-            "image_type": "selfie"
+            "image_type": "selfie" //pass 'id' for government-issued-id
         ]
         imageAnalysisTries += 1
         remoteDatasource.performImageAnalysis(params: params) { [weak self] result in
@@ -99,7 +99,8 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         guard let imageData else { return }
         let params: DJParameters = [
             "image": imageData.base64EncodedString(),
-            "param": "face",
+            "param": "face", // pass 'NG{country alpha2 code}-PASS' when using passport. this is gotten from the selected id from the identification map
+            // pass 'BUSINESS' for business ID
             "selfie_type": "single",
             "doc_type": "image",
             "continue_verification": imageAnalysisTries >= Constants.imageAnalysisMaxTries

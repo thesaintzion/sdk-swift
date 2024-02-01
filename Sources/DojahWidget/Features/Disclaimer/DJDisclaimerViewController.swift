@@ -74,6 +74,14 @@ final class DJDisclaimerViewController: DJBaseViewController {
             self?.viewModel.postStepCompletedEvent()
         }
     }
+    
+    override func didTapNavBackButton() {
+        kpopToRoot()
+    }
+    
+    override func didTapNavCloseButton() {
+        kpopToRoot()
+    }
 }
 
 extension DJDisclaimerViewController: DJDisclaimerViewProtocol {}

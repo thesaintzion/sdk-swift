@@ -96,14 +96,18 @@ public class DJBaseViewController: UIViewController {
     }
     
     func showNextPage() {
+        kprint("navigationController.isNil: \(navigationController.isNil)")
         guard let kviewModel else { return }
         let pageName = kviewModel.preference.DJAuthStep.name
         switch pageName {
         case .countries:
             if kviewModel.preference.DJCanSeeCountryPage {
+                kprint("show countries")
                 let viewController = CountryPickerViewController()
-                kpush(viewController)
+                navigationController?.pushViewController(viewController, animated: true)
+                //kpush(viewController)
             } else {
+                kprint("don't show countries")
                 kviewModel.setNextAuthStep()
             }
         case .userData:
@@ -131,7 +135,8 @@ public class DJBaseViewController: UIViewController {
         case .selfie:
             break
         case .id:
-            break
+            let controller = GovtIDCaptureViewController()
+            kpush(controller)
         case .businessID:
             break
         case .additionalDocument:
@@ -139,7 +144,8 @@ public class DJBaseViewController: UIViewController {
         case .index:
             break
         case .idOptions:
-            break
+            let controller = GovtIDOptionsViewController()
+            kpush(controller)
         }
     }
     
@@ -163,15 +169,13 @@ public class DJBaseViewController: UIViewController {
     }
     
     func didTapNavBackButton() {
+        kviewModel?.setNextAuthStep(step: -1)
         kpop()
     }
     
     func didTapNavCloseButton() {
+        kviewModel?.setNextAuthStep(step: -1)
         kpop()
-    }
-    
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
     }
 
 }

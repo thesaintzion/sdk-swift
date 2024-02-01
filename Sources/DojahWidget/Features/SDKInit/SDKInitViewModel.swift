@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import WebKit
+import IQKeyboardManagerSwift
 
 final class SDKInitViewModel {
     
@@ -33,8 +34,9 @@ final class SDKInitViewModel {
     }
     
     func initialize() {
+        IQKeyboardManager.shared.enable = true
+        
         preference.DJAuthStep = .index
-        //viewProtocol?.showDisclaimer()
         
         viewProtocol?.showLoader(true)
         getUserAgent()

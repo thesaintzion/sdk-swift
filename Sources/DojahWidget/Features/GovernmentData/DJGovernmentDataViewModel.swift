@@ -26,8 +26,10 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         guard let govtDataConfig = preference.DJGovernmentIDConfig else { return }
         let authStep = preference.DJAuthStep
         
+        governmentIDs = GovernmentIDFactory.getGovernmentIDs(preference: preference)
+        
         // Identification Methods
-        if authStep.config.bvn == true, let bvnConfig = govtDataConfig.bvn {
+        /*if authStep.config.bvn == true, let bvnConfig = govtDataConfig.bvn {
             governmentIDs.append(bvnConfig)
         }
         
@@ -97,7 +99,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         
         if authStep.config.cac == true, let cac = govtDataConfig.cac {
             governmentIDs.append(cac)
-        }
+        }*/
         
         //Verification Methods
         if authStep.config.selfie == true, let selfieConfig = govtDataConfig.selfie {

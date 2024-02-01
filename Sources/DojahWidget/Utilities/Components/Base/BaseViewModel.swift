@@ -56,11 +56,14 @@ class BaseViewModel {
         }
     }
     
-    func setNextAuthStep() {
-        let nextStep = preference.DJAuthStep.id + 1
+    func setNextAuthStep(step: Int = 1) {
+        let nextStep = preference.DJAuthStep.id + step
         guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else { return }
         preference.DJAuthStep = authStep
-        showNextPage?()
+        kprint(preference.DJAuthStep.name.rawValue)
+        if step > 0 {
+            showNextPage?()
+        }
     }
     
     func showErrorMessage(_ message: String, doneAction: NoParamHandler? = nil) {

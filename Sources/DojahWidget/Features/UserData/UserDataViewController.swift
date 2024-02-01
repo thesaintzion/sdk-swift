@@ -55,6 +55,11 @@ final class UserDataViewController: DJBaseViewController {
     )
     private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])
     
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        kprint("XXview.endEditing(true)")
+//        view.endEditing(true)
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()

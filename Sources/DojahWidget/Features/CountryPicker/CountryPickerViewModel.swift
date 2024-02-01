@@ -39,6 +39,8 @@ final class CountryPickerViewModel: BaseViewModel {
         postEvent(
             request: .init(name: .stepCompleted, value: "countries"),
             didSucceed: { [weak self] _ in
+                kprint("AuthStep")
+                kprint("\(self?.preference.DJAuthStep.name)")
                 self?.setNextAuthStep()
             }, 
             didFail: { _ in
