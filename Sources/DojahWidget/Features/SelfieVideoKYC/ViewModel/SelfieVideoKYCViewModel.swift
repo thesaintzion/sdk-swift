@@ -131,7 +131,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         }
         
         if checkResponse.match ?? false {
-            faceVerificationDidSucceed()
+            imageCheckDidSucceed()
         } else {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
@@ -147,7 +147,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         }
     }
     
-    private func faceVerificationDidSucceed() {
+    private func imageCheckDidSucceed() {
         postEvent(
             request: .event(name: .stepCompleted, pageName: .governmentDataVerification),
             showLoader: false,

@@ -9,6 +9,7 @@ import Foundation
 
 struct ImageAnalysisResponse: Codable {
     let face: ImageAnalysisFace?
+    let id: ImageAnalysisID?
 }
 
 struct ImageAnalysisFace: Codable {

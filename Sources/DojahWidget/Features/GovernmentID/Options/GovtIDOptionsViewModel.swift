@@ -54,12 +54,17 @@ final class GovtIDOptionsViewModel: BaseViewModel {
             request: .event(name: .stepCompleted, pageName: .idOptions),
             showLoader: false,
             didSucceed: { [weak self] _ in
-                self?.showLoader?(false)
-                self?.setNextAuthStep()
+                self?.didPostCompletedEvent()
             },
             didFail: { [weak self] _ in
                 self?.showLoader?(false)
             }
         )
+    }
+    
+    private func didPostCompletedEvent() {
+        showLoader?(false)
+        setNextAuthStep(showNext: false)
+        showGovtIDPage?(selectedID!)
     }
 }

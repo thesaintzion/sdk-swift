@@ -20,6 +20,9 @@ enum DJGovernmentIDType: String, Codable {
     case customID = "CUSTOM_ID"
     case ngVotersCard = "NG-VCARD"
     case ngNINSlip = "NG-NIN-SLIP"
+    case ngPass = "NG-PASS"
+    case ngDLI = "NG-DLI"
+    case ngNational = "NG-NAT"
     case ghDL = "GH-DL"
     case ghVotersCard = "GH-VOTER"
     case tzNIN = "TZ-NIN"
@@ -61,5 +64,9 @@ enum DJGovernmentIDType: String, Codable {
         default:
             return ""
         }
+    }
+    
+    var isFrontAndBack: Bool {
+        [.dl, .dlID, .nationalID, .ngVotersCard, .ngDLI, .ngNational].contains(self)
     }
 }

@@ -14,7 +14,6 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
     private var viewState = SelfieVideoKYCViewState.captureRecord
     private let captureSession = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
-
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
     init(viewModel: SelfieVideoKYCViewModel = SelfieVideoKYCViewModel()) {

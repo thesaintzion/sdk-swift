@@ -37,8 +37,31 @@ struct DJGovernmentID: Codable {
     var idTypeParam: String {
         idEnum ?? value ?? name ?? ""
     }
+    
+    var idType: DJGovernmentIDType? {
+        DJGovernmentIDType(rawValue: value ?? "")
+    }
 }
 
 extension [DJGovernmentID] {
     var names: [String] { compactMap { $0.name } }
+}
+
+extension DJGovernmentID {
+    static let empty = DJGovernmentID(
+        name: nil,
+        abbr: nil,
+        subtext: nil,
+        subtext2: nil,
+        placeholder: nil,
+        idEnum: nil,
+        spanid: nil,
+        inputType: nil,
+        inputMode: nil,
+        minLength: nil,
+        maxLength: nil,
+        id: nil,
+        value: nil,
+        idName: nil
+    )
 }

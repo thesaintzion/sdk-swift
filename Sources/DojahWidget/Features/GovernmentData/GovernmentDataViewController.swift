@@ -93,20 +93,20 @@ final public class GovernmentDataViewController: DJBaseViewController {
         }
     }
     
-    private func didTapContinueButton() {
-        guard let govtIDVerificationMethod else { return }
-        switch govtIDVerificationMethod {
-        case .govtID:
-            kpush(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
-        case .selfie, .videoKYC:
-            let viewModel = SelfieVideoKYCViewModel(verificationMethod: govtIDVerificationMethod)
-            kpush(SelfieVideoKYCViewController(viewModel: viewModel))
-        case .phoneNumberOTP, .emailOTP:
-            break
-//            let viewModel = OTPVerificationViewModel(verificationMethod: govtIDVerificationMethod)
-//            kpush(OTPVerificationViewController(viewModel: viewModel))
-        }
-    }
+//    private func didTapContinueButton() {
+//        guard let govtIDVerificationMethod else { return }
+//        switch govtIDVerificationMethod {
+//        case .govtID:
+//            kpush(GovtIDCaptureViewController(verificationMethod: govtIDVerificationMethod))
+//        case .selfie, .videoKYC:
+//            let viewModel = SelfieVideoKYCViewModel(verificationMethod: govtIDVerificationMethod)
+//            kpush(SelfieVideoKYCViewController(viewModel: viewModel))
+//        case .phoneNumberOTP, .emailOTP:
+//            break
+////            let viewModel = OTPVerificationViewModel(verificationMethod: govtIDVerificationMethod)
+////            kpush(OTPVerificationViewController(viewModel: viewModel))
+//        }
+//    }
 
 }
 

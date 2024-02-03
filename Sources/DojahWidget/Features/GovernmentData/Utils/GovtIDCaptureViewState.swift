@@ -25,7 +25,7 @@ enum GovtIDCaptureViewState {
         case .previewFront:
             return "Preview the front of your ID"
         case .previewBack:
-            return "Preview the front of your ID"
+            return "Preview the back of your ID"
         }
     }
     
@@ -35,14 +35,10 @@ enum GovtIDCaptureViewState {
             return ""
         case .uploadBack:
             return ""
-        case .captureFront:
+        case .captureFront, .captureBack:
             return "Capture"
-        case .captureBack:
-            return ""
-        case .previewFront:
+        case .previewFront, .previewBack:
             return "Continue"
-        case .previewBack:
-            return ""
         }
     }
     
@@ -52,14 +48,10 @@ enum GovtIDCaptureViewState {
             return ""
         case .uploadBack:
             return ""
-        case .captureFront:
+        case .captureFront, .captureBack:
             return "Upload instead"
-        case .captureBack:
-            return ""
-        case .previewFront:
+        case .previewFront, .previewBack:
             return "Retake"
-        case .previewBack:
-            return ""
         }
     }
 }

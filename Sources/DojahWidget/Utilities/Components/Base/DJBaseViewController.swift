@@ -79,6 +79,12 @@ public class DJBaseViewController: UIViewController {
                 self?.kpop()
             }
         }
+        
+        kviewModel?.showGovtIDPage = { [weak self] govtID in
+            runOnMainThread {
+                self?.showGovernmentIDViewController(govtID)
+            }
+        }
     }
     
     func showLoader(_ show: Bool) {
@@ -104,8 +110,7 @@ public class DJBaseViewController: UIViewController {
             if kviewModel.preference.DJCanSeeCountryPage {
                 kprint("show countries")
                 let viewController = CountryPickerViewController()
-                navigationController?.pushViewController(viewController, animated: true)
-                //kpush(viewController)
+                kpush(viewController)
             } else {
                 kprint("don't show countries")
                 kviewModel.setNextAuthStep()
@@ -176,6 +181,12 @@ public class DJBaseViewController: UIViewController {
     func didTapNavCloseButton() {
         kviewModel?.setNextAuthStep(step: -1)
         kpop()
+    }
+    
+    private func showGovernmentIDViewController(_ govtID: DJGovernmentID) {
+        let viewModel = GovtIDCaptureViewModel(selectedID: govtID)
+        let controller = GovtIDCaptureViewController(viewModel: viewModel)
+        kpush(controller)
     }
 
 }
