@@ -69,4 +69,8 @@ enum DJGovernmentIDType: String, Codable {
     var isFrontAndBack: Bool {
         [.dl, .dlID, .nationalID, .ngVotersCard, .ngDLI, .ngNational].contains(self)
     }
+    
+    var isNGNIN: Bool {
+        [.nin, .ngNINSlip, .vnin].contains(self)
+    }
 }

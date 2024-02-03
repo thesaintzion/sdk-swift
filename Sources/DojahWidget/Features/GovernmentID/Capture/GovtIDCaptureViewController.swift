@@ -46,10 +46,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         numberOfLines: 0, 
         alignment: .center
     )
-    private lazy var clickHereView = DottedBorderView(
+    private lazy var clickHereView = UIView(
         subviews: [clickHereLabel],
         height: 200,
-        backgroundColor: .primaryGrey
+        backgroundColor: .primaryGrey,
+        radius: 5
     )
     private lazy var cameraHintView = PillTextView(
         text: "Loading camera...",
@@ -70,8 +71,6 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         clipsToBounds: false
     )
     private lazy var cameraView = UIView(
-        //height: cameraViewHeight,
-        //width: cameraViewWidth,
         backgroundColor: .djBorder.withAlphaComponent(0.3),
         radius: 3,
         clipsToBounds: true
@@ -79,12 +78,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     private let idImageView = UIImageView(
         image: .res(.driversLicense),
         contentMode: .scaleAspectFill,
-        //height: 250,
         cornerRadius: 3
     )
     private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.idCaptureDisclaimerItems)
-    private let hintView = PillIconTextView(
-        text: "Make sure your International Passport is properly placed, and hold it still for a few seconds",
+    private lazy var hintView = PillIconTextView(
+        text: "Make sure your \(viewModel.selectedID.name ?? "") is properly placed before you capture.",
         font: .light(13),
         icon: .res(.greenInfoCircle),
         iconSize: 18,
@@ -117,6 +115,18 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         setupUI()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        runAfter { [weak self] in
+            self?.clickHereView.addDashedBorder(
+                dashLength: 3,
+                dashSpacing: 3,
+                lineWidth: 1.5,
+                strokeColor: .primary
+            )
+        }
+    }
+    
     private func setupUI() {
         with(contentScrollView) {
             addSubview($0)
@@ -139,18 +149,25 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         }
         
         [clickHereView, disclaimerItemsView, idImageView].showViews(false)
-        clickHereLabel.centerInSuperview()
-        cameraHintView.centerInSuperview()
+        [clickHereLabel, cameraHintView].centerInSuperview()
         cameraView.fillSuperview(padding: .kinit(allEdges: 3))
         idImageView.fillSuperview(padding: .kinit(allEdges: 3))
         [primaryButton, secondaryButton].enable(false)
         
+        bindAttachmentManager()
+        
+        runAfter { [weak self] in
+            self?.setupCameraView()
+        }
+    }
+    
+    private func bindAttachmentManager() {
         attachmentManager.imagePickedHandler = { [weak self] uiimage, imageURL, sourceType in
             self?.didPickImage(uiimage, at: imageURL, using: sourceType)
         }
         
-        runAfter { [weak self] in
-            self?.setupCameraView()
+        attachmentManager.filePickedHandler = { [weak self] fileURL in
+            self?.didPickFile(at: fileURL)
         }
     }
     
@@ -194,7 +211,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     override func addTapGestures() {
         clickHereView.didTap { [weak self] in
             guard let self else { return }
-            self.attachmentManager.openPhotoLibrary(on: self)
+            self.attachmentManager.openDocumentPicker(on: self)
         }
     }
     
@@ -203,15 +220,22 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         at imageURL: URL?,
         using sourceType: UIImagePickerController.SourceType
     ) {
-        idImageView.image = uiimage
-        disclaimerItemsView.showView()
-        viewModel.updateViewState()
+        //idImageView.image = uiimage
+        //disclaimerItemsView.showView()
+        //viewModel.updateViewState()
+    }
+    
+    private func didPickFile(at fileURL: URL) {
+        clickHereLabel.attributedText = AttributedStringBuilder()
+            .text(fileURL.lastPathComponent, attributes: [.textColor(.aSecondaryLabel), .font(.regular(16)), .alignment(.center)])
+            .attributedString
+        viewModel.updateIDData(from: fileURL)
     }
     
     private func didTapPrimaryButton() {
         switch viewState {
         case .uploadFront, .uploadBack:
-            attachmentManager.openCamera(on: self)
+            viewModel.didTapContinue()
         case .captureFront, .captureBack:
             capturePhoto()
         case .previewFront, .previewBack:
@@ -222,21 +246,19 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     private func didTapSecondaryButton() {
         switch viewState {
         case .uploadFront:
-            break
+            viewModel.viewState = .captureFront
         case .uploadBack:
-            break
+            viewModel.viewState = .captureBack
         case .captureFront:
-            break
-            //attachmentManager.openPhotoLibrary(on: self)
+            viewModel.viewState = .uploadFront
         case .captureBack:
-            break
+            viewModel.viewState = .uploadBack
         case .previewFront:
             viewModel.viewState = .captureFront
-            updateUI()
         case .previewBack:
             viewModel.viewState = .captureBack
-            updateUI()
         }
+        updateUI()
     }
     
     override func showLoader(_ show: Bool) {
@@ -284,12 +306,14 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             
             switch $0 {
             case .uploadFront:
-                break
+                startCaptureSession(false)
+                [cameraContainerView, cameraView, cameraHintView, hintView, idImageView, disclaimerItemsView].showViews(false)
+                [clickHereView].showViews()
             case .uploadBack:
-                break
+                clickHereLabel.attributedText = clickHereAttrText
             case .captureFront, .captureBack:
-                [cameraView, cameraHintView, hintView].showViews()
-                [idImageView, disclaimerItemsView].showViews(false)
+                [cameraView, cameraHintView, hintView, cameraContainerView].showViews()
+                [idImageView, disclaimerItemsView, clickHereView].showViews(false)
                 startCaptureSession()
             case .previewFront, .previewBack:
                 startCaptureSession(false)

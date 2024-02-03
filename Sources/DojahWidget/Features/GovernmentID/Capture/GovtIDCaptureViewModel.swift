@@ -14,7 +14,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         static let imageCheckMaxTries = 2
     }
     
-    private let selectedID: DJGovernmentID
+    let selectedID: DJGovernmentID
     private let livenessRemoteDatasource: LivenessRemoteDatasourceProtocol
     weak var viewProtocol: GovtIDCaptureViewProtocol?
     var viewState: GovtIDCaptureViewState = .captureFront
@@ -22,6 +22,9 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     var idBackImageData: Data?
     private var imageAnalysisTries = 0
     private var imageCheckMaxTries = 0
+    private var isFrontAndBackID: Bool {
+        selectedID.idType?.isFrontAndBack ?? false
+    }
     
     init(
         selectedID: DJGovernmentID = .empty,
@@ -34,23 +37,19 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     
     func didTapContinue() {
         switch viewState {
-        case .uploadFront:
-            break
-        case .uploadBack:
-            break
         case .captureFront:
             break
         case .captureBack:
             break
-        case .previewFront:
+        case .previewFront, .uploadFront:
             guard let idFrontImageData else {
-                showToast(message: "Capture a valid image", type: .error)
+                showToast(message: "Capture or choose a valid image", type: .error)
                 return
             }
             analyseImage(idFrontImageData)
-        case .previewBack:
+        case .previewBack, .uploadBack:
             guard let idBackImageData else {
-                showToast(message: "Capture a valid image", type: .error)
+                showToast(message: "Capture or choose a valid image", type: .error)
                 return
             }
             analyseImage(idBackImageData)
@@ -58,8 +57,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     func updateImageData(_ data: Data) {
-        guard let idType = selectedID.idType else { return }
-        if idType.isFrontAndBack {
+        if isFrontAndBackID {
             if viewState == .captureFront {
                 idFrontImageData = data
             } else {
@@ -68,40 +66,19 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         } else {
             idFrontImageData = data
         }
-        
-        /*switch idType {
-        case .nin, .passportID, .ngNINSlip, .vnin:
-            idFrontImageData = data
-        case .dl, .dlID, .nationalID, .ngVotersCard:
-            if viewState == .captureFront {
+    }
+    
+    func updateIDData(from fileURL: URL) {
+        let data = fileURL.dataRepresentation
+        if isFrontAndBackID {
+            if viewState == .uploadFront {
                 idFrontImageData = data
             } else {
                 idBackImageData = data
             }
-        case .residencePermit:
-            break
-        case .ghDL:
-            break
-        case .ghVotersCard:
-            break
-        case .tzNIN:
-            break
-        case .ugID:
-            break
-        case .keDL:
-            break
-        case .keID:
-            break
-        case .keKRA:
-            break
-        case .saDL:
-            break
-        case .saID:
-            break
-        case .cacRCNumber:
-            break
-        default: break
-        }*/
+        } else {
+            idFrontImageData = data
+        }
     }
     
     private func analyseImage(_ imageData: Data) {
@@ -137,21 +114,41 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     private func didGetImageAnalysisResponse(_ response: EntityResponse<ImageAnalysisResponse>) {
-        guard response.entity?.id?.details?.idCards != nil || response.entity?.id?.details?.passport != nil  else {
+        guard let idType = selectedID.idType else { return }
+        
+        if idType.isNGNIN {
+            performImageCheck()
+            return
+        }
+        
+        guard response.entity?.id?.details?.idCards != nil ||
+              response.entity?.id?.details?.passport != nil
+        else {
             runOnMainThread { [weak self] in
-                self?.viewProtocol?.showIDImageError(message: "No ID detected")
+                guard let self else { return }
+                if [.uploadFront, .uploadBack].contains(self.viewState) {
+                    showToast(message: "No ID detected", type: .error)
+                } else {
+                    self.viewProtocol?.showIDImageError(message: "No ID detected")
+                }
             }
             return
         }
-        updateViewState()
+        if isFrontAndBackID {
+            updateViewState()
+        } else {
+            performImageCheck()
+        }
     }
     
     func updateViewState() {
         switch viewState {
         case .uploadFront:
-            break
+            imageAnalysisTries = 0
+            viewState = .uploadBack
         case .uploadBack:
-            break
+            imageAnalysisTries = 0
+            // call /check here
         case .captureFront:
             viewState = .previewFront
         case .captureBack:
@@ -160,7 +157,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             imageAnalysisTries = 0
             viewState = .captureBack
         case .previewBack:
-            break
+            imageAnalysisTries = 0
             //call /check here
         }
         runOnMainThread { [weak self] in
@@ -179,7 +176,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             "doc_type": "image",
             "continue_verification": imageAnalysisTries >= Constants.imageAnalysisMaxTries
         ]
-        if idType.isFrontAndBack, let idBackImageData {
+        if isFrontAndBackID, let idBackImageData {
             params["image2"] = idBackImageData.base64EncodedString()
         }
         

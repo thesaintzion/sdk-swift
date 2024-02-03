@@ -31,10 +31,8 @@ enum GovtIDCaptureViewState {
     
     var primaryButtonTitle: String {
         switch self {
-        case .uploadFront:
-            return ""
-        case .uploadBack:
-            return ""
+        case .uploadFront, .uploadBack:
+            return "Upload"
         case .captureFront, .captureBack:
             return "Capture"
         case .previewFront, .previewBack:
@@ -44,10 +42,8 @@ enum GovtIDCaptureViewState {
     
     var secondaryButtonTitle: String {
         switch self {
-        case .uploadFront:
-            return ""
-        case .uploadBack:
-            return ""
+        case .uploadFront, .uploadBack:
+            return "Capture Instead"
         case .captureFront, .captureBack:
             return "Upload instead"
         case .previewFront, .previewBack:

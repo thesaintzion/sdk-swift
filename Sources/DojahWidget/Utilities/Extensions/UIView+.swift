@@ -313,6 +313,29 @@ extension UIView {
     }
     
     @discardableResult
+    func addDashedBorder(
+        dashLength: NSNumber = 4,
+        dashSpacing: NSNumber = 4,
+        lineWidth: CGFloat = 1,
+        lineDashPhase: CGFloat = 0,
+        strokeColor: UIColor? = .black
+    ) -> CAShapeLayer {
+        let borderLayer = CAShapeLayer()
+        borderLayer.strokeColor = strokeColor?.cgColor
+        borderLayer.lineWidth = lineWidth
+        borderLayer.lineDashPattern = [dashLength, dashSpacing]
+        borderLayer.frame = bounds
+        borderLayer.lineDashPhase = lineDashPhase
+        borderLayer.fillColor = nil
+        borderLayer.path = UIBezierPath(
+            roundedRect: bounds,
+            cornerRadius: layer.cornerRadius
+        ).cgPath
+        layer.addSublayer(borderLayer)
+        return borderLayer
+    }
+    
+    @discardableResult
     func withHStackCentering() -> HStackView {
         let leftSpacerView = UIView.vspacer()
         let rightSpacerView = UIView.vspacer()

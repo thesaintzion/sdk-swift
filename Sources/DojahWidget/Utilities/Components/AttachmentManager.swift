@@ -92,13 +92,23 @@ final class AttachmentManager: NSObject {
         attachmentTypes.forEach { attachmentType in
             switch attachmentType {
             case .camera, .video, .photoLibrary:
-                actionSheet.addAction(UIAlertAction(title: attachmentType.rawValue, style: .default, handler: { _ in
-                    self.authorisationStatus(for: attachmentType, vc: self.viewController!)
-                }))
+                let alertAction = UIAlertAction(
+                    title: attachmentType.rawValue,
+                    style: .default,
+                    handler: { _ in
+                        self.authorisationStatus(for: attachmentType, vc: self.viewController!)
+                    }
+                )
+                actionSheet.addAction(alertAction)
             case .file:
-                actionSheet.addAction(UIAlertAction(title: attachmentType.rawValue, style: .default, handler: { (action) -> Void in
-                    self.documentPicker()
-                }))
+                let alertAction = UIAlertAction(
+                    title: attachmentType.rawValue,
+                    style: .default,
+                    handler: { (action) -> Void in
+                        self.openDocumentPicker(on: vc)
+                    }
+                )
+                actionSheet.addAction(alertAction)
             }
             
         }
@@ -144,7 +154,7 @@ final class AttachmentManager: NSObject {
                 case .camera:
                     self?.openCamera(on: vc)
                 case .video:
-                    self?.videoLibrary()
+                    self?.openVideoLibrary(on: vc)
                 case .photoLibrary:
                     self?.openPhotoLibrary(on: vc)
                 case .file:
@@ -187,22 +197,24 @@ final class AttachmentManager: NSObject {
     }
     
     //MARK: - VIDEO PICKER
-    func videoLibrary() {
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
-            myPickerController.sourceType = .photoLibrary
-            myPickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeVideo as String]
-            viewController?.present(myPickerController, animated: true, completion: nil)
-        } else {
-            runOnMainThread {
-                Toast.shared.show("Your device doesn't have video picking capabilties", type: .error)
+    func openVideoLibrary(on vc: UIViewController) {
+        viewController = vc
+        runOnMainThread { [weak self] in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let myPickerController = UIImagePickerController()
+                myPickerController.delegate = self
+                myPickerController.sourceType = .photoLibrary
+                myPickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeVideo as String]
+                self?.viewController?.present(myPickerController, animated: true, completion: nil)
+            } else {
+                showToast(message: "Your device doesn't have video picking capabilties", type: .error)
             }
         }
     }
     
     //MARK: - FILE PICKER
-    func documentPicker() {
+    func openDocumentPicker(on vc: UIViewController) {
+        viewController = vc
         let docTypes = [
             String(kUTTypePDF),
             String(kUTTypeMP3),
@@ -217,9 +229,11 @@ final class AttachmentManager: NSObject {
             String(kUTTypeData)
         ]
         
-        let documentPicker = UIDocumentPickerViewController(documentTypes: docTypes, in: .import)
-        documentPicker.delegate = self
-        viewController?.present(documentPicker, animated: true)
+        runOnMainThread { [weak self] in
+            let documentPicker = UIDocumentPickerViewController(documentTypes: docTypes, in: .import)
+            documentPicker.delegate = self
+            self?.viewController?.present(documentPicker, animated: true)
+        }
     }
     
     //MARK: - SETTINGS ALERT
