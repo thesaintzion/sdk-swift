@@ -82,7 +82,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     )
     private let disclaimerItemsView = DisclaimerItemsView(items: DJConstants.idCaptureDisclaimerItems)
     private lazy var hintView = PillIconTextView(
-        text: "Make sure your \(viewModel.selectedID.name ?? "") is properly placed before you capture.",
+        text: "Make sure your \(viewModel.idName) is properly placed before you capture.",
         font: .light(13),
         icon: .res(.greenInfoCircle),
         iconSize: 18,
@@ -236,10 +236,12 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         switch viewState {
         case .uploadFront, .uploadBack:
             viewModel.didTapContinue()
-        case .captureFront, .captureBack:
+        case .captureFront, .captureBack, .captureCACDocument:
             capturePhoto()
-        case .previewFront, .previewBack:
+        case .previewFront, .previewBack, .previewCACDocument:
             viewModel.didTapContinue()
+        case .uploadCACDocument:
+            break
         }
     }
     
@@ -257,6 +259,12 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             viewModel.viewState = .captureFront
         case .previewBack:
             viewModel.viewState = .captureBack
+        case .captureCACDocument:
+            break
+        case .uploadCACDocument:
+            break
+        case .previewCACDocument:
+            viewModel.viewState = .captureCACDocument
         }
         updateUI()
     }
@@ -311,14 +319,16 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
                 [clickHereView].showViews()
             case .uploadBack:
                 clickHereLabel.attributedText = clickHereAttrText
-            case .captureFront, .captureBack:
+            case .captureFront, .captureBack, .captureCACDocument:
                 [cameraView, cameraHintView, hintView, cameraContainerView].showViews()
                 [idImageView, disclaimerItemsView, clickHereView].showViews(false)
                 startCaptureSession()
-            case .previewFront, .previewBack:
+            case .previewFront, .previewBack, .previewCACDocument:
                 startCaptureSession(false)
                 [cameraView, cameraHintView, hintView].showViews(false)
                 [idImageView, disclaimerItemsView].showViews()
+            case .uploadCACDocument:
+                break
             }
         }
     }

@@ -59,7 +59,10 @@ class BaseViewModel {
     
     func setNextAuthStep(step: Int = 1, showNext: Bool = true) {
         let nextStep = preference.DJAuthStep.id + step
-        guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else { return }
+        guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else {
+            //call decision endpoint here to finish the flow
+            return
+        }
         preference.DJAuthStep = authStep
         kprint(preference.DJAuthStep.name.rawValue)
         if step > 0 && showNext {

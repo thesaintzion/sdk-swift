@@ -25,6 +25,18 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     private var isFrontAndBackID: Bool {
         selectedID.idType?.isFrontAndBack ?? false
     }
+    private var pageName: DJPageName {
+        preference.DJAuthStep.name
+    }
+    private var isBusinessID: Bool {
+        pageName == .businessID
+    }
+    private var imageCheckParam: String {
+        isBusinessID ? "BUSINESS" : selectedID.idType?.rawValue ?? "ID"
+    }
+    var idName: String {
+        isBusinessID ? "CAC Document" : selectedID.name ?? ""
+    }
     
     init(
         selectedID: DJGovernmentID = .empty,
@@ -33,6 +45,20 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         self.selectedID = selectedID
         self.livenessRemoteDatasource = livenessRemoteDatasource
         super.init()
+        initViewState()
+    }
+    
+    private func initViewState() {
+        switch preference.DJAuthStep.name {
+        case .id:
+            viewState = .captureFront
+        case .businessID:
+            viewState = .captureCACDocument
+        case .additionalDocument:
+            break
+        default:
+            break
+        }
     }
     
     func didTapContinue() {
@@ -41,7 +67,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             break
         case .captureBack:
             break
-        case .previewFront, .uploadFront:
+        case .previewFront, .uploadFront, .previewCACDocument:
             guard let idFrontImageData else {
                 showToast(message: "Capture or choose a valid image", type: .error)
                 return
@@ -53,6 +79,10 @@ final class GovtIDCaptureViewModel: BaseViewModel {
                 return
             }
             analyseImage(idBackImageData)
+        case .captureCACDocument:
+            break
+        case .uploadCACDocument:
+            break
         }
     }
     
@@ -84,9 +114,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     private func analyseImage(_ imageData: Data) {
         if imageAnalysisTries >= Constants.imageAnalysisMaxTries {
             postEvent(
-                request: .event(name: .stepFailed, pageName: .id),
-                showLoader: true,
-                showError: true,
+                request: .event(name: .stepFailed, pageName: pageName),
                 didSucceed: { [weak self] _ in
                     self?.showErrorMessage("No ID Detected & Max tries exceeded")
                 },
@@ -114,9 +142,9 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     private func didGetImageAnalysisResponse(_ response: EntityResponse<ImageAnalysisResponse>) {
-        guard let idType = selectedID.idType else { return }
+        //guard let idType = selectedID.idType else { return }
         
-        if idType.isNGNIN {
+        if (selectedID.idType?.isNGNIN == true) || isBusinessID {
             performImageCheck()
             return
         }
@@ -159,6 +187,12 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         case .previewBack:
             imageAnalysisTries = 0
             //call /check here
+        case .captureCACDocument:
+            viewState = .previewCACDocument
+        case .uploadCACDocument:
+            break
+        case .previewCACDocument:
+            break
         }
         runOnMainThread { [weak self] in
             self?.viewProtocol?.updateUI()
@@ -167,10 +201,10 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     
     private func performImageCheck() {
         imageCheckMaxTries += 1
-        guard let idType = selectedID.idType, let idFrontImageData else { return }
+        guard let idFrontImageData else { return } //let idType = selectedID.idType,
         var params: DJParameters = [
             "image": idFrontImageData.base64EncodedString(),
-            "param": idType.rawValue, // pass 'NG{country alpha2 code}-PASS' when using passport. this is gotten from the selected id from the identification map
+            "param": imageCheckParam, // pass 'NG{country alpha2 code}-PASS' when using passport. this is gotten from the selected id from the identification map
             // pass 'BUSINESS' for business ID
             "selfie_type": "single",
             "doc_type": "image",
@@ -193,7 +227,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     private func didGetImageCheckResponse(_ response: EntityResponse<ImageCheckResponse>) {
         if imageAnalysisTries >= Constants.imageAnalysisMaxTries {
             postEvent(
-                request: .event(name: .stepFailed, pageName: .id),
+                request: .event(name: .stepFailed, pageName: pageName),
                 showLoader: false,
                 showError: false
             )
@@ -211,20 +245,20 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
                 postEvent(
-                    request: .event(name: .stepFailed, pageName: .id),
+                    request: .event(name: .stepFailed, pageName: pageName),
                     showLoader: false,
                     showError: false
                 )
+                setNextAuthStep()
                 // call /decision endpoint or go to the next step
             }
-            //Placeholder code
-            showErrorMessage("ID verification failed")
+            showErrorMessage(checkResponse.reason ?? "\(idName) verification failed")
         }
     }
     
     private func imageCheckDidSucceed() {
         postEvent(
-            request: .event(name: .stepCompleted, pageName: .id),
+            request: .event(name: .stepCompleted, pageName: pageName),
             showLoader: false,
             showError: false
         )
@@ -233,7 +267,8 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             switch result {
             case .success(_):
                 self?.showLoader?(false)
-                self?.showMessage?(.success(message: "ID check successful"))
+                self?.setNextAuthStep()
+                //self?.showMessage?(.success(message: "ID check successful"))
             case let .failure(error):
                 self?.showErrorMessage(error.localizedDescription)
             }

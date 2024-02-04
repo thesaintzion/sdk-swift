@@ -139,13 +139,9 @@ public class DJBaseViewController: UIViewController {
             break
         case .selfie:
             break
-        case .id:
+        case .id, .businessID, .additionalDocument:
             let controller = GovtIDCaptureViewController()
             kpush(controller)
-        case .businessID:
-            break
-        case .additionalDocument:
-            break
         case .index:
             break
         case .idOptions:

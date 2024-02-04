@@ -157,7 +157,33 @@ final class SDKInitViewModel {
             steps.append(.init(name: .userData, id: currentID, config: userDataPage.config ?? .init()))
         }
         
-        let govtDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .governmentData })
+        let pages = preAuthRes.widget?.pages?.filter { $0.pageName != .userData } ?? []
+        guard pages.isNotEmpty else {
+            return steps.map { $0.dictionary }
+        }
+        
+        for page in pages {
+            if let pageName = page.pageName {
+                currentID += 1
+                switch pageName {
+                case .governmentData:
+                    steps.append(.init(name: .governmentData, id: currentID, config: page.config ?? .init()))
+                    let verifications = [page.config?.otp ?? false, page.config?.selfie ?? false]
+                    if verifications.contains(true) {
+                        currentID += 1
+                        steps.append(.init(name: .governmentDataVerification, id: currentID, config: page.config ?? .init()))
+                    }
+                case .id:
+                    steps.append(.init(name: .idOptions, id: currentID, config: .init()))
+                    currentID += 1
+                    steps.append(.init(name: .id, id: currentID, config: page.config ?? .init()))
+                default:
+                    steps.append(.init(name: pageName, id: currentID, config: page.config ?? .init()))
+                }
+            }
+        }
+        
+        /*let govtDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .governmentData })
         if let govtDataPage {
             currentID += 1
             steps.append(.init(name: .governmentData, id: currentID, config: govtDataPage.config ?? .init()))
@@ -177,13 +203,13 @@ final class SDKInitViewModel {
         }
         
         let alreadyAddedPages: [DJPageName?] = [.userData, .governmentData, .governmentDataVerification, .id]
-        let pages = preAuthRes.widget?.pages?.filter { alreadyAddedPages.doesNotContain($0.pageName) } ?? [] //$0.pageName != .governmentData && $0.pageName != .id
+        let pages = preAuthRes.widget?.pages?.filter { alreadyAddedPages.doesNotContain($0.pageName) } ?? []
         for page in pages {
             if let pageName = page.pageName {
                 currentID += 1
                 steps.append(.init(name: pageName, id: currentID, config: page.config ?? .init()))
             }
-        }
+        }*/
         
         kprint(String(describing: steps.dictionaryArray))
         
