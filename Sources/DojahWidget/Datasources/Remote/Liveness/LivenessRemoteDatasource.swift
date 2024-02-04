@@ -55,4 +55,18 @@ struct LivenessRemoteDatasource: LivenessRemoteDatasourceProtocol {
             completion: completion
         )
     }
+    
+    func uploadDocument(
+        params: DJParameters,
+        completion: @escaping DJResultAction<SuccessEntityResponse>
+    ) {
+        service.makeRequest(
+            responseType: SuccessEntityResponse.self,
+            requestMethod: .post,
+            remotePath: .files,
+            parameters: params,
+            headers: nil,
+            completion: completion
+        )
+    }
 }

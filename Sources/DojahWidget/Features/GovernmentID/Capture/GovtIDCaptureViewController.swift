@@ -234,11 +234,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     
     private func didTapPrimaryButton() {
         switch viewState {
-        case .uploadFront, .uploadBack, .uploadCACDocument:
+        case .uploadFront, .uploadBack, .uploadCACDocument, .uploadDocument:
             viewModel.didTapContinue()
-        case .captureFront, .captureBack, .captureCACDocument:
+        case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
             capturePhoto()
-        case .previewFront, .previewBack, .previewCACDocument:
+        case .previewFront, .previewBack, .previewCACDocument, .previewDocument:
             viewModel.didTapContinue()
         }
     }
@@ -263,12 +263,22 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             break
         case .previewCACDocument:
             viewModel.viewState = .captureCACDocument
+        case .captureDocument:
+            viewModel.viewState = .uploadDocument
+        case .uploadDocument:
+            break
+        case .previewDocument:
+            viewModel.viewState = .captureDocument
         }
         updateUI()
     }
     
     override func showLoader(_ show: Bool) {
         [primaryButton, secondaryButton].enable(!show)
+        guard [.uploadFront, .uploadBack, .uploadDocument, .uploadCACDocument].doesNotContain(viewModel.viewState) else {
+            super.showLoader(show)
+            return
+        }
         with(cameraHintView) {
             $0.showView(show)
             $0.backgroundColor = show ? .systemOrange : .black
@@ -311,17 +321,17 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             secondaryButton.title = $0.secondaryButtonTitle
             
             switch $0 {
-            case .uploadFront, .uploadCACDocument:
+            case .uploadFront, .uploadCACDocument, .uploadDocument:
                 startCaptureSession(false)
                 [cameraContainerView, cameraView, cameraHintView, hintView, idImageView, disclaimerItemsView].showViews(false)
                 [uploadView].showViews()
             case .uploadBack:
                 uploadHintLabel.attributedText = uploadHintAttributedText
-            case .captureFront, .captureBack, .captureCACDocument:
+            case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
                 [cameraView, cameraHintView, hintView, cameraContainerView].showViews()
                 [idImageView, disclaimerItemsView, uploadView].showViews(false)
                 startCaptureSession()
-            case .previewFront, .previewBack, .previewCACDocument:
+            case .previewFront, .previewBack, .previewCACDocument, .previewDocument:
                 startCaptureSession(false)
                 [cameraView, cameraHintView, hintView].showViews(false)
                 [idImageView, disclaimerItemsView].showViews()

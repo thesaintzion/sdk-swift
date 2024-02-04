@@ -37,6 +37,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     var idName: String {
         isBusinessID ? "CAC Document" : selectedID.name ?? ""
     }
+    private var documentURL: URL?
     
     init(
         selectedID: DJGovernmentID = .empty,
@@ -55,7 +56,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         case .businessID:
             viewState = .captureCACDocument
         case .additionalDocument:
-            break
+            viewState = .captureDocument
         default:
             break
         }
@@ -63,9 +64,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     
     func didTapContinue() {
         switch viewState {
-        case .captureFront:
-            break
-        case .captureBack:
+        case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
             break
         case .previewFront, .uploadFront, .previewCACDocument, .uploadCACDocument:
             guard let idFrontImageData else {
@@ -79,8 +78,8 @@ final class GovtIDCaptureViewModel: BaseViewModel {
                 return
             }
             analyseImage(idBackImageData)
-        case .captureCACDocument:
-            break
+        case .previewDocument, .uploadDocument:
+            uploadDocument()
         }
     }
     
@@ -97,6 +96,10 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     func updateIDData(from fileURL: URL) {
+        if pageName == .additionalDocument {
+            documentURL = fileURL
+            return
+        }
         let data = fileURL.dataRepresentation
         if isFrontAndBackID {
             if viewState == .uploadFront {
@@ -191,6 +194,12 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             break
         case .previewCACDocument:
             break
+        case .captureDocument:
+            viewState = .previewDocument
+        case .uploadDocument:
+            break
+        case .previewDocument:
+            break
         }
         runOnMainThread { [weak self] in
             self?.viewProtocol?.updateUI()
@@ -254,12 +263,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     private func imageCheckDidSucceed() {
-        postEvent(
-            request: .event(name: .stepCompleted, pageName: pageName),
-            showLoader: false,
-            showError: false
-        )
-        
+        postStepCompletedEvent()
         livenessRemoteDatasource.verifyImage(params: [:]) { [weak self] result in
             switch result {
             case .success(_):
@@ -269,5 +273,42 @@ final class GovtIDCaptureViewModel: BaseViewModel {
                 self?.showErrorMessage(error.localizedDescription)
             }
         }
+    }
+    
+    private func uploadDocument() {
+        guard let fileData = documentURL?.dataRepresentation.base64EncodedString() ?? idFrontImageData?.base64EncodedString() else { return }
+        let params = [
+            "file_base64": fileData,
+            "file_type": documentURL?.pathExtension ?? "image",
+            "file_name": documentURL?.lastPathComponent ?? "jpg",
+            "title": "Untitled"
+        ]
+        showLoader?(true)
+        livenessRemoteDatasource.uploadDocument(params: params) { [weak self] result in
+            self?.showLoader?(false)
+            switch result {
+            case let .success(response):
+                self?.didUploadDocument(response)
+            case let .failure(error):
+                self?.showErrorMessage(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func didUploadDocument(_ response: SuccessEntityResponse) {
+        if response.entity?.success == true {
+            postStepCompletedEvent()
+            setNextAuthStep()
+        } else {
+            showErrorMessage(response.entity?.msg ?? "Document upload failed")
+        }
+    }
+    
+    private func postStepCompletedEvent() {
+        postEvent(
+            request: .event(name: .stepCompleted, pageName: pageName),
+            showLoader: false,
+            showError: false
+        )
     }
 }

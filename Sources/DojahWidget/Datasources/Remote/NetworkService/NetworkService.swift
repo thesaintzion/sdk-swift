@@ -53,7 +53,7 @@ final class NetworkService: NetworkServiceProtocol {
         
         if requestMethod == .post, var parameters {
             do {
-                if [.events, .saveIP, .userData, .imageCheck, .verifyImage].contains(remotePath) {
+                if [.events, .saveIP, .userData, .imageCheck, .verifyImage, .files].contains(remotePath) {
                     parameters = parameters.merge(["verification_id": preference.DJVerificationID])
                 }
                 

@@ -12,6 +12,7 @@ enum GovtIDCaptureViewState {
     case captureFront, captureBack
     case previewFront, previewBack
     case captureCACDocument, uploadCACDocument, previewCACDocument
+    case captureDocument, uploadDocument, previewDocument
     
     var title: String {
         switch self {
@@ -33,27 +34,33 @@ enum GovtIDCaptureViewState {
             return "Upload CAC Document"
         case .previewCACDocument:
             return "Preview CAC Document"
+        case .captureDocument:
+            return "Capture Document"
+        case .uploadDocument:
+            return "Upload Document"
+        case .previewDocument:
+            return "Preview Document"
         }
     }
     
     var primaryButtonTitle: String {
         switch self {
-        case .uploadFront, .uploadBack, .uploadCACDocument:
+        case .uploadFront, .uploadBack, .uploadCACDocument, .uploadDocument:
             return "Upload"
-        case .captureFront, .captureBack, .captureCACDocument:
+        case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
             return "Capture"
-        case .previewFront, .previewBack, .previewCACDocument:
+        case .previewFront, .previewBack, .previewCACDocument, .previewDocument:
             return "Continue"
         }
     }
     
     var secondaryButtonTitle: String {
         switch self {
-        case .uploadFront, .uploadBack, .uploadCACDocument:
+        case .uploadFront, .uploadBack, .uploadCACDocument, .uploadDocument:
             return "Capture Instead"
-        case .captureFront, .captureBack, .captureCACDocument:
+        case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
             return "Upload Instead"
-        case .previewFront, .previewBack, .previewCACDocument:
+        case .previewFront, .previewBack, .previewCACDocument, .previewDocument:
             return "Retake"
         }
     }

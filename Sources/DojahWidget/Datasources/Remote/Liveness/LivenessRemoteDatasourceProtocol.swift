@@ -22,4 +22,9 @@ protocol LivenessRemoteDatasourceProtocol {
         params: DJParameters,
         completion: @escaping DJResultAction<EntityResponse<ImageVerificationResponse>>
     )
+    
+    func uploadDocument(
+        params: DJParameters,
+        completion: @escaping DJResultAction<SuccessEntityResponse>
+    )
 }
