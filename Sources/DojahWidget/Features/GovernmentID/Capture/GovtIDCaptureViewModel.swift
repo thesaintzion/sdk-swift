@@ -67,7 +67,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             break
         case .captureBack:
             break
-        case .previewFront, .uploadFront, .previewCACDocument:
+        case .previewFront, .uploadFront, .previewCACDocument, .uploadCACDocument:
             guard let idFrontImageData else {
                 showToast(message: "Capture or choose a valid image", type: .error)
                 return
@@ -80,8 +80,6 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             }
             analyseImage(idBackImageData)
         case .captureCACDocument:
-            break
-        case .uploadCACDocument:
             break
         }
     }
@@ -250,7 +248,6 @@ final class GovtIDCaptureViewModel: BaseViewModel {
                     showError: false
                 )
                 setNextAuthStep()
-                // call /decision endpoint or go to the next step
             }
             showErrorMessage(checkResponse.reason ?? "\(idName) verification failed")
         }
@@ -268,7 +265,6 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case .success(_):
                 self?.showLoader?(false)
                 self?.setNextAuthStep()
-                //self?.showMessage?(.success(message: "ID check successful"))
             case let .failure(error):
                 self?.showErrorMessage(error.localizedDescription)
             }

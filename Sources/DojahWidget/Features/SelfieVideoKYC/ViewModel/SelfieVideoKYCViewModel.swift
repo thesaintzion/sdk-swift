@@ -140,10 +140,9 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
                     showLoader: false,
                     showError: false
                 )
-                // call /decision endpoint or go to the next step
+                setNextAuthStep()
             }
-            //Placeholder code
-            showErrorMessage("Liveness verification failed")
+            showErrorMessage(checkResponse.reason ?? "Selfie verification failed")
         }
     }
     
@@ -158,7 +157,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             switch result {
             case .success(_):
                 self?.showLoader?(false)
-                self?.showMessage?(.success(message: "Liveness check successful"))
+                self?.setNextAuthStep()
             case let .failure(error):
                 self?.showErrorMessage(error.localizedDescription)
             }

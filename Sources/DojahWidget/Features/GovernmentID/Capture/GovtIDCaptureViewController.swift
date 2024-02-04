@@ -35,19 +35,19 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         font: .medium(16),
         alignment: .center
     )
-    private let clickHereAttrText = AttributedStringBuilder()
+    private let uploadHintAttributedText = AttributedStringBuilder()
         .text("Click here to select ", attributes: [.textColor(.primary), .font(.light(14))])
         .text("from ", attributes: [.textColor(.aLabel), .font(.light(14))])
         .newline()
         .text("your device.", attributes: [.textColor(.aLabel), .font(.light(14))])
         .attributedString
-    private lazy var clickHereLabel = UILabel(
-        attributedText: clickHereAttrText,
+    private lazy var uploadHintLabel = UILabel(
+        attributedText: uploadHintAttributedText,
         numberOfLines: 0, 
         alignment: .center
     )
-    private lazy var clickHereView = UIView(
-        subviews: [clickHereLabel],
+    private lazy var uploadView = UIView(
+        subviews: [uploadHintLabel],
         height: 200,
         backgroundColor: .primaryGrey,
         radius: 5
@@ -104,7 +104,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         self?.didTapSecondaryButton()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [titleLabel, clickHereView, cameraContainerView, hintView, disclaimerItemsView, primaryButton, secondaryButton],
+        subviews: [titleLabel, uploadView, cameraContainerView, hintView, disclaimerItemsView, primaryButton, secondaryButton],
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
@@ -118,7 +118,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         runAfter { [weak self] in
-            self?.clickHereView.addDashedBorder(
+            self?.uploadView.addDashedBorder(
                 dashLength: 3,
                 dashSpacing: 3,
                 lineWidth: 1.5,
@@ -148,8 +148,8 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             )
         }
         
-        [clickHereView, disclaimerItemsView, idImageView].showViews(false)
-        [clickHereLabel, cameraHintView].centerInSuperview()
+        [uploadView, disclaimerItemsView, idImageView].showViews(false)
+        [uploadHintLabel, cameraHintView].centerInSuperview()
         cameraView.fillSuperview(padding: .kinit(allEdges: 3))
         idImageView.fillSuperview(padding: .kinit(allEdges: 3))
         [primaryButton, secondaryButton].enable(false)
@@ -209,7 +209,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     }
     
     override func addTapGestures() {
-        clickHereView.didTap { [weak self] in
+        uploadView.didTap { [weak self] in
             guard let self else { return }
             self.attachmentManager.openDocumentPicker(on: self)
         }
@@ -226,7 +226,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     }
     
     private func didPickFile(at fileURL: URL) {
-        clickHereLabel.attributedText = AttributedStringBuilder()
+        uploadHintLabel.attributedText = AttributedStringBuilder()
             .text(fileURL.lastPathComponent, attributes: [.textColor(.aSecondaryLabel), .font(.regular(16)), .alignment(.center)])
             .attributedString
         viewModel.updateIDData(from: fileURL)
@@ -234,14 +234,12 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     
     private func didTapPrimaryButton() {
         switch viewState {
-        case .uploadFront, .uploadBack:
+        case .uploadFront, .uploadBack, .uploadCACDocument:
             viewModel.didTapContinue()
         case .captureFront, .captureBack, .captureCACDocument:
             capturePhoto()
         case .previewFront, .previewBack, .previewCACDocument:
             viewModel.didTapContinue()
-        case .uploadCACDocument:
-            break
         }
     }
     
@@ -260,7 +258,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         case .previewBack:
             viewModel.viewState = .captureBack
         case .captureCACDocument:
-            break
+            viewModel.viewState = .uploadCACDocument
         case .uploadCACDocument:
             break
         case .previewCACDocument:
@@ -313,22 +311,20 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             secondaryButton.title = $0.secondaryButtonTitle
             
             switch $0 {
-            case .uploadFront:
+            case .uploadFront, .uploadCACDocument:
                 startCaptureSession(false)
                 [cameraContainerView, cameraView, cameraHintView, hintView, idImageView, disclaimerItemsView].showViews(false)
-                [clickHereView].showViews()
+                [uploadView].showViews()
             case .uploadBack:
-                clickHereLabel.attributedText = clickHereAttrText
+                uploadHintLabel.attributedText = uploadHintAttributedText
             case .captureFront, .captureBack, .captureCACDocument:
                 [cameraView, cameraHintView, hintView, cameraContainerView].showViews()
-                [idImageView, disclaimerItemsView, clickHereView].showViews(false)
+                [idImageView, disclaimerItemsView, uploadView].showViews(false)
                 startCaptureSession()
             case .previewFront, .previewBack, .previewCACDocument:
                 startCaptureSession(false)
                 [cameraView, cameraHintView, hintView].showViews(false)
                 [idImageView, disclaimerItemsView].showViews()
-            case .uploadCACDocument:
-                break
             }
         }
     }

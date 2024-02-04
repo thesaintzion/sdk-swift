@@ -61,6 +61,7 @@ class BaseViewModel {
         let nextStep = preference.DJAuthStep.id + step
         guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else {
             //call decision endpoint here to finish the flow
+            showMessage?(.success(message: "We have gone through all verification pages, we should call the '/decision' endpoint now"))
             return
         }
         preference.DJAuthStep = authStep
