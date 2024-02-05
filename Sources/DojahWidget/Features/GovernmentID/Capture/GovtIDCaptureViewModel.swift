@@ -38,6 +38,10 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         isBusinessID ? "CAC Document" : selectedID.name ?? ""
     }
     private var documentURL: URL?
+    private var docType = "image"
+    var isDocumentUpload: Bool {
+        [.uploadFront, .uploadBack, .uploadDocument, .uploadCACDocument].contains(viewState)
+    }
     
     init(
         selectedID: DJGovernmentID = .empty,
@@ -66,24 +70,29 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         switch viewState {
         case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
             break
-        case .previewFront, .uploadFront, .previewCACDocument, .uploadCACDocument:
+        case .previewFront:
             guard let idFrontImageData else {
                 showToast(message: "Capture or choose a valid image", type: .error)
                 return
             }
             analyseImage(idFrontImageData)
-        case .previewBack, .uploadBack:
+        case .previewBack:
             guard let idBackImageData else {
                 showToast(message: "Capture or choose a valid image", type: .error)
                 return
             }
             analyseImage(idBackImageData)
+        case .previewCACDocument, .uploadCACDocument:
+            makeCheckRequest()
         case .previewDocument, .uploadDocument:
             uploadDocument()
+        case .uploadFront, .uploadBack:
+            updateViewState()
         }
     }
     
     func updateImageData(_ data: Data) {
+        docType = "image"
         if isFrontAndBackID {
             if viewState == .captureFront {
                 idFrontImageData = data
@@ -96,11 +105,12 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     func updateIDData(from fileURL: URL) {
+        docType = "pdf"
         if pageName == .additionalDocument {
             documentURL = fileURL
             return
         }
-        let data = fileURL.dataRepresentation
+        let data = fileURL.localFileData
         if isFrontAndBackID {
             if viewState == .uploadFront {
                 idFrontImageData = data
@@ -128,7 +138,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         showLoader?(true)
         let params = [
             "image": imageData.base64EncodedString(),
-            "image_type": "id" //pass 'id' for government-issued-id
+            "image_type": "id"
         ]
         imageAnalysisTries += 1
         livenessRemoteDatasource.performImageAnalysis(params: params) { [weak self] result in
@@ -143,15 +153,14 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     private func didGetImageAnalysisResponse(_ response: EntityResponse<ImageAnalysisResponse>) {
-        //guard let idType = selectedID.idType else { return }
-        
         if (selectedID.idType?.isNGNIN == true) || isBusinessID {
-            performImageCheck()
+            makeCheckRequest()
             return
         }
         
         guard response.entity?.id?.details?.idCards != nil ||
-              response.entity?.id?.details?.passport != nil
+              response.entity?.id?.details?.passport != nil ||
+              response.entity?.id?.details?.document != nil
         else {
             runOnMainThread { [weak self] in
                 guard let self else { return }
@@ -166,7 +175,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         if isFrontAndBackID {
             updateViewState()
         } else {
-            performImageCheck()
+            makeCheckRequest()
         }
     }
     
@@ -174,10 +183,14 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         switch viewState {
         case .uploadFront:
             imageAnalysisTries = 0
-            viewState = .uploadBack
+            if isFrontAndBackID {
+                viewState = .uploadBack
+            } else {
+                makeCheckRequest()
+            }
         case .uploadBack:
             imageAnalysisTries = 0
-            // call /check here
+            makeCheckRequest()
         case .captureFront:
             viewState = .previewFront
         case .captureBack:
@@ -187,18 +200,12 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             viewState = .captureBack
         case .previewBack:
             imageAnalysisTries = 0
-            //call /check here
+            makeCheckRequest()
         case .captureCACDocument:
             viewState = .previewCACDocument
-        case .uploadCACDocument:
-            break
-        case .previewCACDocument:
-            break
         case .captureDocument:
             viewState = .previewDocument
-        case .uploadDocument:
-            break
-        case .previewDocument:
+        case .uploadDocument, .previewDocument, .uploadCACDocument, .previewCACDocument:
             break
         }
         runOnMainThread { [weak self] in
@@ -206,15 +213,19 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         }
     }
     
-    private func performImageCheck() {
+    private func makeCheckRequest() {
         imageCheckMaxTries += 1
-        guard let idFrontImageData else { return } //let idType = selectedID.idType,
+        guard let idFrontImageData else {
+            showToast(message: "Capture or choose a valid image", type: .error)
+            return
+        }
+        if isDocumentUpload {
+            showLoader?(true)
+        }
         var params: DJParameters = [
             "image": idFrontImageData.base64EncodedString(),
-            "param": imageCheckParam, // pass 'NG{country alpha2 code}-PASS' when using passport. this is gotten from the selected id from the identification map
-            // pass 'BUSINESS' for business ID
-            "selfie_type": "single",
-            "doc_type": "image",
+            "param": imageCheckParam,
+            "doc_type": docType,
             "continue_verification": imageAnalysisTries >= Constants.imageAnalysisMaxTries
         ]
         if isFrontAndBackID, let idBackImageData {
@@ -222,16 +233,20 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         }
         
         livenessRemoteDatasource.performImageCheck(params: params) { [weak self] result in
+            guard let self else { return }
+            if self.isDocumentUpload {
+                self.showLoader?(false)
+            }
             switch result {
             case let .success(response):
-                self?.didGetImageCheckResponse(response)
+                self.didGetCheckRequestResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self.showErrorMessage(error.localizedDescription)
             }
         }
     }
     
-    private func didGetImageCheckResponse(_ response: EntityResponse<ImageCheckResponse>) {
+    private func didGetCheckRequestResponse(_ response: EntityResponse<ImageCheckResponse>) {
         if imageAnalysisTries >= Constants.imageAnalysisMaxTries {
             postEvent(
                 request: .event(name: .stepFailed, pageName: pageName),
@@ -247,7 +262,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         }
         
         if checkResponse.match ?? false {
-            imageCheckDidSucceed()
+            checkRequestDidSucceed()
         } else {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
@@ -262,11 +277,13 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         }
     }
     
-    private func imageCheckDidSucceed() {
+    private func checkRequestDidSucceed() {
+        imageAnalysisTries = 0
+        imageCheckMaxTries = 0
         postStepCompletedEvent()
         livenessRemoteDatasource.verifyImage(params: [:]) { [weak self] result in
             switch result {
-            case .success(_):
+            case .success:
                 self?.showLoader?(false)
                 self?.setNextAuthStep()
             case let .failure(error):
@@ -276,7 +293,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     }
     
     private func uploadDocument() {
-        guard let fileData = documentURL?.dataRepresentation.base64EncodedString() ?? idFrontImageData?.base64EncodedString() else { return }
+        guard let fileData = documentURL?.localFileData?.base64EncodedString() ?? idFrontImageData?.base64EncodedString() else { return }
         let params = [
             "file_base64": fileData,
             "file_type": documentURL?.pathExtension ?? "image",

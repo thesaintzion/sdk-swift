@@ -20,11 +20,20 @@ struct ImageVerificationResponse: Codable {
     }
 }
 
-struct Business: Codable {}
+struct Business: Codable {
+    let rcNo, confidence, names: String?
+    let url: String?
+    let date: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case rcNo = "rc_no"
+        case confidence, names, url, date
+    }
+}
 
 struct ImageVerificationValue: Codable {
     let url: String?
-    let confidenceValue: Double?
+    let confidenceValue: String?
 
     enum CodingKeys: String, CodingKey {
         case url

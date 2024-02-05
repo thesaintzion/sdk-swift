@@ -213,9 +213,9 @@ final class AttachmentManager: NSObject {
     }
     
     //MARK: - FILE PICKER
-    func openDocumentPicker(on vc: UIViewController) {
+    func openDocumentPicker(on vc: UIViewController, docTypes: [String]? = nil) {
         viewController = vc
-        let docTypes = [
+        let docTypes = docTypes ?? [
             String(kUTTypePDF),
             String(kUTTypeMP3),
             String(kUTTypePNG),

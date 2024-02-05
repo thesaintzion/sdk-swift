@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import MobileCoreServices
 
 final class GovtIDCaptureViewController: DJBaseViewController {
     
@@ -36,10 +37,10 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         alignment: .center
     )
     private let uploadHintAttributedText = AttributedStringBuilder()
-        .text("Click here to select ", attributes: [.textColor(.primary), .font(.light(14))])
-        .text("from ", attributes: [.textColor(.aLabel), .font(.light(14))])
+        .text("Click here to select ", attributes: [.textColor(.primary), .font(.light(14)), .alignment(.center)])
+        .text("from ", attributes: [.textColor(.aLabel), .font(.light(14)), .alignment(.center)])
         .newline()
-        .text("your device.", attributes: [.textColor(.aLabel), .font(.light(14))])
+        .text("your device.", attributes: [.textColor(.aLabel), .font(.light(14)), .alignment(.center)])
         .attributedString
     private lazy var uploadHintLabel = UILabel(
         attributedText: uploadHintAttributedText,
@@ -211,7 +212,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     override func addTapGestures() {
         uploadView.didTap { [weak self] in
             guard let self else { return }
-            self.attachmentManager.openDocumentPicker(on: self)
+            self.attachmentManager.openDocumentPicker(on: self, docTypes: [String(kUTTypePDF)])
         }
     }
     
@@ -260,13 +261,13 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         case .captureCACDocument:
             viewModel.viewState = .uploadCACDocument
         case .uploadCACDocument:
-            break
+            viewModel.viewState = .captureCACDocument
         case .previewCACDocument:
             viewModel.viewState = .captureCACDocument
         case .captureDocument:
             viewModel.viewState = .uploadDocument
         case .uploadDocument:
-            break
+            viewModel.viewState = .captureDocument
         case .previewDocument:
             viewModel.viewState = .captureDocument
         }
@@ -275,7 +276,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     
     override func showLoader(_ show: Bool) {
         [primaryButton, secondaryButton].enable(!show)
-        guard [.uploadFront, .uploadBack, .uploadDocument, .uploadCACDocument].doesNotContain(viewModel.viewState) else {
+        guard !viewModel.isDocumentUpload else {
             super.showLoader(show)
             return
         }
@@ -324,7 +325,7 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             case .uploadFront, .uploadCACDocument, .uploadDocument:
                 startCaptureSession(false)
                 [cameraContainerView, cameraView, cameraHintView, hintView, idImageView, disclaimerItemsView].showViews(false)
-                [uploadView].showViews()
+                uploadView.showView()
             case .uploadBack:
                 uploadHintLabel.attributedText = uploadHintAttributedText
             case .captureFront, .captureBack, .captureCACDocument, .captureDocument:
