@@ -220,11 +220,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         _ uiimage: UIImage,
         at imageURL: URL?,
         using sourceType: UIImagePickerController.SourceType
-    ) {
-        //idImageView.image = uiimage
-        //disclaimerItemsView.showView()
-        //viewModel.updateViewState()
-    }
+    ) {}
     
     private func didPickFile(at fileURL: URL) {
         uploadHintLabel.attributedText = AttributedStringBuilder()
