@@ -7,6 +7,7 @@
 
 import UIKit
 import Foundation
+import CoreLocation
 
 func runAfter(_ delay: Double = 0.5, action: @escaping () -> Void) {
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
@@ -261,4 +262,20 @@ extension NSObject {
 var inLightMode: Bool {
     guard let currentWindow = UIApplication.shared.windows.first else { return false }
     return currentWindow.traitCollection.userInterfaceStyle == .light
+}
+
+extension CLLocationCoordinate2D {
+    var location: CLLocation {
+        CLLocation(latitude: latitude, longitude: longitude)
+    }
+    
+    var latLngString: String {
+        "Lat: \(latitude), Lng: \(longitude)"
+    }
+}
+
+extension CLLocation {
+    var latLngString: String {
+        coordinate.latLngString
+    }
 }

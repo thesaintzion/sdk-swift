@@ -18,8 +18,9 @@ enum DJSDKError: Error, Equatable {
     case noResponseData
     case tryAgain
     case lowBalance
+    case networkError(String)
     
-    var description: String? {
+    var uiMessage: String {
         switch self {
         case .invalidURL:
             return "Bad Request URL"
@@ -41,6 +42,8 @@ enum DJSDKError: Error, Equatable {
             return "Please try that again."
         case .lowBalance:
             return "Your balance is low, pls visit the dashboard to top up"
+        case let .networkError(reason):
+            return reason
         }
     }
 }

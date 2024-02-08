@@ -39,6 +39,17 @@ final class NetworkService: NetworkServiceProtocol {
             }
         }
         
+        if remotePath == .decision {
+            let params: DJParameters = [
+                "verification_id": preference.DJVerificationID,
+                "session_id": preference.DJRequestHeaders["session"] ?? ""
+            ]
+            
+            urlComponents.queryItems = params.map { key, value in
+                URLQueryItem(name: key, value: String(describing: value))
+            }
+        }
+        
         guard let requestURL = urlComponents.url else {
             completion(.failure(.invalidURL))
             return
@@ -92,6 +103,11 @@ final class NetworkService: NetworkServiceProtocol {
         urlSession.dataTask(with: urlRequest) { [weak self] data, urlResponse, error in
             self?.printDataResponse(data, path: remotePath)
             
+            if let networkError = try? data?.decode(into: NetorkErrorResponse.self).error {
+                completion(.failure(.networkError(networkError.message ?? DJConstants.genericErrorMessage)))
+                return
+            }
+            
             if let httpURLResponse = urlResponse as? HTTPURLResponse {
                 let statusCode = httpURLResponse.statusCode
                 
@@ -122,6 +138,12 @@ final class NetworkService: NetworkServiceProtocol {
             }
             
             if let data {
+                
+                if let networkError = try? data.decode(into: NetorkErrorResponse.self).error {
+                    completion(.failure(.networkError(networkError.message ?? DJConstants.genericErrorMessage)))
+                    return
+                }
+                
                 do {
                     let response = try data.decode(into: T.self)
                     kprint("\(remotePath.path) Codable Request Response:")

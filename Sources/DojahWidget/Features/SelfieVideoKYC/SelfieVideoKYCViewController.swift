@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-final public class SelfieVideoKYCViewController: DJBaseViewController {
+final class SelfieVideoKYCViewController: DJBaseViewController {
 
     private let viewModel: SelfieVideoKYCViewModel
     private var viewState = SelfieVideoKYCViewState.captureRecord
@@ -21,8 +21,6 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
         super.init(nibName: nil, bundle: nil)
         kviewModel = viewModel
     }
-    
-    public static func newInstance() -> SelfieVideoKYCViewController { SelfieVideoKYCViewController() }
     
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
@@ -111,7 +109,7 @@ final public class SelfieVideoKYCViewController: DJBaseViewController {
         setupUI()
     }
     
-    public override func viewDidLayoutSubviews() {
+    override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         runAfter { [weak self] in
             self?.setBorders()

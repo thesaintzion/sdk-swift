@@ -9,18 +9,22 @@ import Foundation
 
 class BaseViewModel {
     let eventsRemoteDatasource: EventsRemoteDatasourceProtocol
+    let decisionRemoteDatasource: DecisionEngineRemoteDatasourceProtocol
     var preference: PreferenceProtocol
     var showLoader: ParamHandler<Bool>?
     var showMessage: ParamHandler<FeedbackConfig>?
     var showNextPage: NoParamHandler?
     var errorDoneAction: NoParamHandler?
+    var verificationDoneAction: NoParamHandler?
     var showGovtIDPage: ParamHandler<DJGovernmentID>?
     
     init(
         eventsRemoteDatasource: EventsRemoteDatasourceProtocol = EventsRemoteDatasource(),
+        decisionRemoteDatasource: DecisionEngineRemoteDatasourceProtocol = DecisionEngineRemoteDatasource(),
         preference: PreferenceProtocol = PreferenceImpl()
     ) {
         self.eventsRemoteDatasource = eventsRemoteDatasource
+        self.decisionRemoteDatasource = decisionRemoteDatasource
         self.preference = preference
     }
     
@@ -50,7 +54,7 @@ class BaseViewModel {
                 }
             case let .failure(error):
                 if showError {
-                    self?.showMessage?(.error(message: error.description ?? "Unable to post event: \(request.name)"))
+                    self?.showMessage?(.error(message: error.uiMessage ?? "Unable to post event: \(request.name)"))
                 }
                 didFail?(error)
             }
@@ -60,8 +64,7 @@ class BaseViewModel {
     func setNextAuthStep(step: Int = 1, showNext: Bool = true) {
         let nextStep = preference.DJAuthStep.id + step
         guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else {
-            //call decision endpoint here to finish the flow
-            showMessage?(.success(message: "We have gone through all verification pages, we should call the '/decision' endpoint now"))
+            makeVerificationDecision()
             return
         }
         preference.DJAuthStep = authStep
@@ -85,5 +88,34 @@ class BaseViewModel {
                 }
             )
         )
+    }
+    
+    private func makeVerificationDecision() {
+        showLoader?(true)
+        decisionRemoteDatasource.makeVerificationDecision { [weak self] result in
+            self?.showLoader?(false)
+            switch result {
+            case let .success(response):
+                self?.didMakeVerificationDecision(response)
+            case let .failure(error):
+                self?.showErrorMessage(error.uiMessage)
+            }
+        }
+    }
+    
+    private func didMakeVerificationDecision(_ response: EntityResponse<DecisionResponse>) {
+        guard let decisionRes = response.entity, let decisionStatus = decisionRes.status else {
+            showErrorMessage(response.entity?.reason ?? "Unable to make verification decision, please try again.")
+            return
+        }
+        preference.DJAuthStep = .index
+        let feedbackConfig = FeedbackConfig(
+            feedbackType: decisionStatus.feedbackType,
+            titleText: "Verification Status",
+            message: decisionStatus.feedbackMessage,
+            showNavControls: false,
+            doneAction: verificationDoneAction
+        )
+        showMessage?(feedbackConfig)
     }
 }

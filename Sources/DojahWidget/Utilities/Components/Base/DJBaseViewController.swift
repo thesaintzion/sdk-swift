@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 public class DJBaseViewController: UIViewController {
     let navView = DJNavBarView()
@@ -21,6 +22,7 @@ public class DJBaseViewController: UIViewController {
         return controller
     }()
     let attachmentManager = AttachmentManager.shared
+    let locationManager = LocationManager.shared
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +87,12 @@ public class DJBaseViewController: UIViewController {
                 self?.showGovernmentIDViewController(govtID)
             }
         }
+        
+        kviewModel?.verificationDoneAction = { [weak self] in
+            runOnMainThread {
+                self?.kpopToRoot()
+            }
+        }
     }
     
     func showLoader(_ show: Bool) {
@@ -121,7 +129,7 @@ public class DJBaseViewController: UIViewController {
         case .phoneNumber:
             break
         case .address:
-            break
+            didChooseAddressVerification()
         case .email:
             break
         case .governmentData:
@@ -166,6 +174,37 @@ public class DJBaseViewController: UIViewController {
     
     private func showSelfieVideoController() {
         let controller = SelfieVideoKYCViewController()
+        kpush(controller)
+    }
+    
+    private func didChooseAddressVerification() {
+        locationManager.didChangeAuthorization = { [weak self] status in
+            self?.didChangeLocationAuthorization(status)
+        }
+        if locationManager.hasLocationPermission {
+            showAddressVerificationController()
+        } else {
+            let controller = PermissionViewController(permissionType: .location) { [weak self] in
+                self?.locationManager.requestAuthorization()
+            }
+            controller.modalPresentationStyle = .overCurrentContext
+            kpresent(vc: controller)
+        }
+    }
+    
+    private func didChangeLocationAuthorization(_ status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse, .authorized:
+            showAddressVerificationController()
+        case .notDetermined, .restricted, .denied:
+            showToast(message: "Location services are required for address verification", type: .error)
+        @unknown default:
+            showToast(message: "Location services are required for address verification", type: .error)
+        }
+    }
+    
+    private func showAddressVerificationController() {
+        let controller = AddressVerificationViewController()
         kpush(controller)
     }
     

@@ -7,9 +7,7 @@
 
 import UIKit
 
-final public class BusinessDataViewController: DJBaseViewController {
-    
-    public static func newInstance() -> BusinessDataViewController { BusinessDataViewController() }
+final class BusinessDataViewController: DJBaseViewController {
 
     private let documentTypeView = DJPickerView(title: "Document type")
     private let documentNumberTextField = DJTextField(title: "Document Number")
@@ -24,7 +22,7 @@ final public class BusinessDataViewController: DJBaseViewController {
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     private var govtID: GovtID?
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }

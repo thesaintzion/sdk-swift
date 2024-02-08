@@ -7,9 +7,7 @@
 
 import UIKit
 
-final public class GovernmentDataViewController: DJBaseViewController {
-    
-    public static func newInstance() -> GovernmentDataViewController { GovernmentDataViewController() }
+final class GovernmentDataViewController: DJBaseViewController {
     
     private let viewModel: DJGovernmentDataViewModel
     
@@ -51,7 +49,7 @@ final public class GovernmentDataViewController: DJBaseViewController {
     private var govtID: GovtID?
     private var govtIDVerificationMethod: GovtIDVerificationMethod?
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import WebKit
 import IQKeyboardManagerSwift
+import GooglePlaces
 
 final class SDKInitViewModel {
     
@@ -35,6 +36,7 @@ final class SDKInitViewModel {
     
     func initialize() {
         IQKeyboardManager.shared.enable = true
+        GMSPlacesClient.provideAPIKey("AIzaSyAztnWnHBWxpPggjiVQeS9nhiBdDHFUmf0")
         
         preference.DJAuthStep = .index
         

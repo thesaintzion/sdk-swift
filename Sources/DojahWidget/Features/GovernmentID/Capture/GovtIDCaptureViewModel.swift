@@ -147,7 +147,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case let .success(response):
                 self?.didGetImageAnalysisResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -241,7 +241,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case let .success(response):
                 self.didGetCheckRequestResponse(response)
             case let .failure(error):
-                self.showErrorMessage(error.localizedDescription)
+                self.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -287,7 +287,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
                 self?.showLoader?(false)
                 self?.setNextAuthStep()
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -307,7 +307,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case let .success(response):
                 self?.didUploadDocument(response)
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }

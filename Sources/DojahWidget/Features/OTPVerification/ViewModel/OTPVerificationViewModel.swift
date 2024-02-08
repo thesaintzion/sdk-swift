@@ -46,7 +46,7 @@ final class OTPVerificationViewModel: BaseViewModel {
                     self?.showErrorMessage("Unable to request for OTP")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -67,7 +67,7 @@ final class OTPVerificationViewModel: BaseViewModel {
                     self?.showErrorMessage("Unable to verify OTP, please try again")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }

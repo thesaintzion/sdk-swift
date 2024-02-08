@@ -9,8 +9,6 @@ import UIKit
 
 final public class GovtIDOptionsViewController: DJBaseViewController {
     
-    public static func newInstance() -> GovtIDOptionsViewController { GovtIDOptionsViewController() }
-    
     private let viewModel: GovtIDOptionsViewModel
     
     init(viewModel: GovtIDOptionsViewModel = GovtIDOptionsViewModel()) {

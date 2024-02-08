@@ -27,6 +27,9 @@ enum DJRemotePath {
     case imageCheck
     case verifyImage
     case files
+    case baseAddress
+    case address
+    case decision
     
     var path: String {
         switch self {
@@ -68,6 +71,12 @@ enum DJRemotePath {
             return "widget/kyc/image/verify"
         case .files:
             return "widget/kyc/files"
+        case .baseAddress:
+            return "widget/kyc/base-address"
+        case .address:
+            return "widget/kyc/address"
+        case .decision:
+            return "widget/decision"
         }
     }
     

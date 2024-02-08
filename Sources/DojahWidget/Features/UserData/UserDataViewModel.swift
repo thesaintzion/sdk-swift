@@ -45,7 +45,7 @@ final class UserDataViewModel: BaseViewModel {
                     }
                 }
             case .failure(let error):
-                self?.showErrorMessage(error.localizedDescription) {
+                self?.showErrorMessage(error.uiMessage) {
                     self?.postStepFailedEvent()
                 }
             }

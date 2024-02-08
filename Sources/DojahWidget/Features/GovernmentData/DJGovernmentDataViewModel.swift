@@ -149,7 +149,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send verificationTypeSelected event")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -166,7 +166,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.showErrorMessage("Unable to lookup Government Data, please try again")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -201,7 +201,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send customerGovernmentDataCollected event")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -217,7 +217,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send governmentImageCollected event")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -232,7 +232,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.showErrorMessage(successResponse.entity?.msg ?? "Unable to send stepCompleted::government-data event")
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }

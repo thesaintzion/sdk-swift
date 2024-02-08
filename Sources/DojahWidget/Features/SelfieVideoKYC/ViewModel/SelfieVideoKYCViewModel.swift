@@ -43,7 +43,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             case let .success(response):
                 self?.didGetImageAnalysisResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -110,7 +110,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             case let .success(response):
                 self?.didGetImageCheckResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
@@ -159,7 +159,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
                 self?.showLoader?(false)
                 self?.setNextAuthStep()
             case let .failure(error):
-                self?.showErrorMessage(error.localizedDescription)
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
