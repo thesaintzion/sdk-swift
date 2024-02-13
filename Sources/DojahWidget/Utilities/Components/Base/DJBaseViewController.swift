@@ -144,7 +144,8 @@ public class DJBaseViewController: UIViewController {
                 didChooseLiveness()
             }
         case .businessData:
-            break
+            let controller = BusinessDataViewController()
+            kpush(controller)
         case .selfie:
             break
         case .id, .businessID, .additionalDocument:
@@ -155,6 +156,8 @@ public class DJBaseViewController: UIViewController {
         case .idOptions:
             let controller = GovtIDOptionsViewController()
             kpush(controller)
+        case .signature:
+            showToast(message: "show signature ui")
         }
     }
     

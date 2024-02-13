@@ -19,7 +19,7 @@ struct DJPage: Codable {
 
 struct DJPageConfig: Codable {
     let bvn, dl, vnin, nin: Bool?
-    let otp, selfie, cac, verification: Bool?
+    let otp, selfie, cac, tin, verification: Bool?
     let passport, voter, national: Bool?
     let type: String?
     let version: Int?
@@ -35,7 +35,7 @@ struct DJPageConfig: Codable {
     
     enum CodingKeys: String, CodingKey {
         case bvn, dl, vnin, nin
-        case otp, selfie, cac, verification
+        case otp, selfie, cac, tin, verification
         case passport, voter, national
         case type, version, instruction
         case glassesCheck, brightnessThreshold
@@ -60,6 +60,7 @@ struct DJPageConfig: Codable {
         otp: Bool? = nil,
         selfie: Bool? = nil,
         cac: Bool? = nil,
+        tin: Bool? = nil,
         verification: Bool? = nil,
         passport: Bool? = nil,
         voter: Bool? = nil,
@@ -88,6 +89,7 @@ struct DJPageConfig: Codable {
         self.otp = otp
         self.selfie = selfie
         self.cac = cac
+        self.tin = tin
         self.verification = verification
         self.passport = passport
         self.voter = voter

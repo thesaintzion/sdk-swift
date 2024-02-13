@@ -29,4 +29,6 @@ protocol IInputValidator {
     
     func validateDOB(_ dob: String) -> ValidationMessage
     
+    func validateAlphaNumeric(_ text: String) -> ValidationMessage
+    
 }

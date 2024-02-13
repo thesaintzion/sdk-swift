@@ -11,8 +11,6 @@ import CoreLocation
 
 final class AddressVerificationViewController: DJBaseViewController {
     
-    public static func newInstance() -> AddressVerificationViewController { AddressVerificationViewController() }
-    
     private let viewModel: AddressVerificationViewModel
     
     init(viewModel: AddressVerificationViewModel = AddressVerificationViewModel()) {

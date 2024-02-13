@@ -131,6 +131,16 @@ class InputValidatorImpl: IInputValidator {
         return ValidationMessage(isValid: true, message: "", validationType: .dob)
     }
     
+    func validateAlphaNumeric(_ text: String) -> ValidationMessage {
+        if text.isEmpty {
+            return ValidationMessage(message: "Cannot be empty", validationType: .alphaNumeric)
+        }
+        
+        //TODO: Implement .alphaNumeric validation rules
+        
+        return ValidationMessage(isValid: true, message: "", validationType: .alphaNumeric)
+    }
+    
     func validate(_ value: String, for type: ValidationType) -> ValidationMessage {
         switch type {
         case .email:
@@ -153,6 +163,8 @@ class InputValidatorImpl: IInputValidator {
             return validateAddress(value)
         case .dob:
             return validateDOB(value)
+        case .alphaNumeric:
+            return validateAlphaNumeric(value)
         }
     }
     

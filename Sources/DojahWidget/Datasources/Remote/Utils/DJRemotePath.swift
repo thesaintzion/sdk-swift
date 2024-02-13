@@ -30,6 +30,8 @@ enum DJRemotePath {
     case baseAddress
     case address
     case decision
+    case cac
+    case tin
     
     var path: String {
         switch self {
@@ -77,6 +79,10 @@ enum DJRemotePath {
             return "widget/kyc/address"
         case .decision:
             return "widget/decision"
+        case .cac:
+            return "widget/kyc/cac"
+        case .tin:
+            return "widget/kyc/tin"
         }
     }
     

@@ -89,4 +89,23 @@ struct GovernmentIDFactory {
         
         return governmentIDs
     }
+    
+    static func getBusinessDocumentTypes(preference: PreferenceProtocol) -> [DJGovernmentID] {
+        guard let govtDataConfig = preference.DJGovernmentIDConfig,
+              let authStep = preference.DJSteps.first(where: { $0.name == .businessData })
+        else { return [] }
+        
+        var governmentIDs = [DJGovernmentID]()
+        
+        if authStep.config.cac == true, let cacConfig = govtDataConfig.cac {
+            governmentIDs.append(cacConfig)
+        }
+        
+        if authStep.config.tin == true, let tinConfig = govtDataConfig.tin {
+            governmentIDs.append(tinConfig)
+        }
+        
+        return governmentIDs
+    }
+    
 }

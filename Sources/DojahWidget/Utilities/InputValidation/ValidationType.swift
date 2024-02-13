@@ -17,5 +17,6 @@ enum ValidationType {
          amount,
          numeric, 
          address,
-         dob
+         dob,
+         alphaNumeric
 }

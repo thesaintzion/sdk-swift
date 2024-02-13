@@ -22,4 +22,5 @@ enum DJPageName: String, Codable {
     case additionalDocument = "additional-document"
     case index
     case idOptions = "id-options"
+    case signature
 }
