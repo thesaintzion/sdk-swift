@@ -157,7 +157,8 @@ public class DJBaseViewController: UIViewController {
             let controller = GovtIDOptionsViewController()
             kpush(controller)
         case .signature:
-            showToast(message: "show signature ui")
+            let controller = SignatureViewController()
+            kpush(controller)
         }
     }
     

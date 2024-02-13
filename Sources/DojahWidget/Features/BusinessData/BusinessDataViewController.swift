@@ -7,7 +7,7 @@
 
 import UIKit
 
-final public class BusinessDataViewController: DJBaseViewController {
+final class BusinessDataViewController: DJBaseViewController {
     
     private let viewModel: BusinessDataViewModel
     
@@ -23,7 +23,7 @@ final public class BusinessDataViewController: DJBaseViewController {
     }
 
     private lazy var documentTypeView = DJPickerView(
-        title: "Document type",
+        title: "Document Type",
         items: viewModel.documentTypes.names,
         itemSelectionHandler: { [weak self] _, index in
             self?.continueButton.enable()
@@ -35,7 +35,7 @@ final public class BusinessDataViewController: DJBaseViewController {
         validationType: .alphaNumeric
     )
     private let businessNameTextField = DJTextField(
-        title: "Business name", 
+        title: "Business Name",
         placeholder: "Business name",
         validationType: .name
     )
@@ -47,11 +47,8 @@ final public class BusinessDataViewController: DJBaseViewController {
         spacing: 40
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-    private var govtID: GovtID?
     
-    public static func newInstance() -> BusinessDataViewController { BusinessDataViewController() }
-    
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }

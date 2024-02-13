@@ -54,7 +54,7 @@ class BaseViewModel {
                 }
             case let .failure(error):
                 if showError {
-                    self?.showMessage?(.error(message: error.uiMessage ?? "Unable to post event: \(request.name)"))
+                    self?.showMessage?(.error(message: error.uiMessage))
                 }
                 didFail?(error)
             }
@@ -94,11 +94,13 @@ class BaseViewModel {
         showLoader?(true)
         decisionRemoteDatasource.makeVerificationDecision { [weak self] result in
             self?.showLoader?(false)
-            switch result {
-            case let .success(response):
-                self?.didMakeVerificationDecision(response)
-            case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+            runAfter {
+                switch result {
+                case let .success(response):
+                    self?.didMakeVerificationDecision(response)
+                case let .failure(error):
+                    self?.showErrorMessage(error.uiMessage)
+                }
             }
         }
     }

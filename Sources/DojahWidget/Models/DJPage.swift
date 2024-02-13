@@ -32,6 +32,7 @@ struct DJPageConfig: Codable {
     let ugID, ugTELCO: Bool?
     let saID, saDL: Bool?
     let configDefault: String?
+    let information: String?
     
     enum CodingKeys: String, CodingKey {
         case bvn, dl, vnin, nin
@@ -50,6 +51,7 @@ struct DJPageConfig: Codable {
         case saID = "sa-id"
         case saDL = "sa-dl"
         case configDefault = "default"
+        case information
     }
     
     init(
@@ -80,7 +82,8 @@ struct DJPageConfig: Codable {
         ugTELCO: Bool? = nil,
         saID: Bool? = nil,
         saDL: Bool? = nil,
-        configDefault: String? = nil
+        configDefault: String? = nil,
+        information: String? = nil
     ) {
         self.bvn = bvn
         self.dl = dl
@@ -110,5 +113,6 @@ struct DJPageConfig: Codable {
         self.saID = saID
         self.saDL = saDL
         self.configDefault = configDefault
+        self.information = information
     }
 }
