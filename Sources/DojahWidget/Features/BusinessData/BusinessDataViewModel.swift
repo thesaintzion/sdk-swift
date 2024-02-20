@@ -77,12 +77,16 @@ final class BusinessDataViewModel: BaseViewModel {
             didSucceed: { [weak self] _ in
                 self?.showLoader?(false)
                 self?.postPageEvent()
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             },
             didFail: { [weak self] _ in
                 self?.showLoader?(false)
                 self?.postPageEvent(success: false)
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             }
         )
     }

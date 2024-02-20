@@ -12,7 +12,7 @@ struct DJEventRequest: Codable {
     let value: String
     
     enum CodingKeys: String, CodingKey {
-        case name = "event_name"
+        case name = "event_type"
         case value = "event_value"
     }
 }

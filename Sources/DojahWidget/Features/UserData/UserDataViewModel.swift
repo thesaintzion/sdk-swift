@@ -59,12 +59,16 @@ final class UserDataViewModel: BaseViewModel {
             showError: false,
             didSucceed: { [weak self] eventRes in
                 self?.showLoader?(false)
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             },
             didFail: { [weak self] error in
                 kprint("couldn't post 'user-data' event")
                 self?.showLoader?(false)
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             }
         )
     }

@@ -72,6 +72,15 @@ final class NetworkService: NetworkServiceProtocol {
                     parameters = parameters.merge(["step_number": preference.DJAuthStep.id])
                 }
                 
+                if remotePath == .events {
+                    parameters = parameters.merge([
+                        "session_id": preference.DJRequestHeaders["session"] ?? "",
+                        "app_id": preference.DJRequestHeaders["app-id"] ?? "",
+                        "cost": 0,
+                        "services": []
+                    ])
+                }
+                
                 let requestBody = try parameters.serializedData()
                 urlRequest.httpBody = requestBody
                 

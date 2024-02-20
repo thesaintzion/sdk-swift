@@ -13,6 +13,7 @@ final class CountryPickerViewModel: BaseViewModel {
     var countryNames: [String] {
         countries.map { "\($0.emoticon)  \($0.countryName)" }
     }
+    private var countrySelected = false
     
     init(countriesLocalDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource()) {
         self.countriesLocalDatasource = countriesLocalDatasource
@@ -26,6 +27,7 @@ final class CountryPickerViewModel: BaseViewModel {
     }
     
     func didSelectCountry(at index: Int) {
+        countrySelected = true
         let country = country(at: index)
         preference.DJCountryCode = country.iso2
         postEvent(
@@ -36,14 +38,23 @@ final class CountryPickerViewModel: BaseViewModel {
     }
     
     func didTapContinue() {
+        if !countrySelected {
+            postEvent(
+                request: .init(name: .countrySelected, value: "Nigeria"),
+                showLoader: false,
+                showError: false
+            )
+        }
         postEvent(
             request: .init(name: .stepCompleted, value: "countries"),
             didSucceed: { [weak self] _ in
-                kprint("AuthStep")
-                kprint("\(self?.preference.DJAuthStep.name)")
-                self?.setNextAuthStep()
-            }, 
-            didFail: { _ in
+                self?.countrySelected = false
+                runAfter {
+                    self?.setNextAuthStep()
+                }
+            },
+            didFail: { [weak self] _ in
+                self?.countrySelected = false
                 kprint("unable to post step_completed for countries")
             }
         )

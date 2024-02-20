@@ -17,7 +17,9 @@ final class DJDisclaimerViewModel: BaseViewModel {
         postEvent(
             request: .init(name: .stepCompleted, value: "index"),
             didSucceed: { [weak self] eventRes in
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             },
             didFail: { error in
                 kprint("couldn't post index event")

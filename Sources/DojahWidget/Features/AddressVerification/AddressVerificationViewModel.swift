@@ -53,7 +53,9 @@ final class AddressVerificationViewModel: BaseViewModel {
         }
         
         guard preference.DJAuthStep.config.verification == true else {
-            setNextAuthStep()
+            runAfter { [weak self] in
+                self?.setNextAuthStep()
+            }
             return
         }
         
@@ -93,7 +95,9 @@ final class AddressVerificationViewModel: BaseViewModel {
             return
         }
         postStepEvent(name: .stepCompleted)
-        setNextAuthStep()
+        runAfter { [weak self] in
+            self?.setNextAuthStep()
+        }
     }
     
     private func postStepEvent(name: DJEventName) {

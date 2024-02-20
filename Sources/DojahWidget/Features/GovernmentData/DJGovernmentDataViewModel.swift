@@ -245,6 +245,8 @@ final class DJGovernmentDataViewModel: BaseViewModel {
             else { return }
             preference.DJOTPVerificationInfo = phoneNumber
         }
-        setNextAuthStep()
+        runAfter { [weak self] in
+            self?.setNextAuthStep()
+        }
     }
 }

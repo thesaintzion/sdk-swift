@@ -271,7 +271,9 @@ final class GovtIDCaptureViewModel: BaseViewModel {
                     showLoader: false,
                     showError: false
                 )
-                setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             }
             showErrorMessage(checkResponse.reason ?? "\(idName) verification failed")
         }
@@ -285,7 +287,9 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             switch result {
             case .success:
                 self?.showLoader?(false)
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             case let .failure(error):
                 self?.showErrorMessage(error.uiMessage)
             }

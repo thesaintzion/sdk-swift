@@ -140,7 +140,9 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
                     showLoader: false,
                     showError: false
                 )
-                setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             }
             showErrorMessage(checkResponse.reason ?? "Selfie verification failed")
         }
@@ -157,7 +159,9 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             switch result {
             case .success(_):
                 self?.showLoader?(false)
-                self?.setNextAuthStep()
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
             case let .failure(error):
                 self?.showErrorMessage(error.uiMessage)
             }
