@@ -40,7 +40,7 @@ final class UserDataViewController: DJBaseViewController {
     )
     private let dobTextField = DJTextField(
         title: "Date of birth",
-        placeholder: "dd/mm/yyyy",
+        placeholder: DJConstants.dateFormat,
         validationType: .dob,
         editable: false,
         rightIcon: .res(.calendar)
@@ -125,6 +125,6 @@ extension UserDataViewController: TermsAndPrivacyViewDelegate {
 
 extension UserDataViewController: DatePickerViewDelegate {
     func didChooseDate(_ date: Date) {
-        dobTextField.text = date.string(format: "dd/MM/yyyy")
+        dobTextField.text = date.string(format: DJConstants.dateFormat)
     }
 }

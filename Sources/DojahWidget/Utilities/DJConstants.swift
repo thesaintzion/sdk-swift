@@ -39,4 +39,6 @@ enum DJConstants {
     static let monthDays = Array(1...31)
     
     static let years = Array(1990...current(.year)).reversed()
+    
+    static let dateFormat = "dd-MM-yyyy"
 }
