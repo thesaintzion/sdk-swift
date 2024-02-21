@@ -177,7 +177,7 @@ final class NetworkService: NetworkServiceProtocol {
                 kprint("\(path.path) Request Data Response:")
                 kprint(try data.prettyJson())
             } catch {
-                kprint("Unable to read data response as JSON")
+                kprint("Unable to read data response as JSON for \(path.path)")
             }
         }
     }

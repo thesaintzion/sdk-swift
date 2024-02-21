@@ -13,7 +13,7 @@ final class GovtIDOptionsViewModel: BaseViewModel {
     
     init() {
         super.init()
-        identificationTypes = GovernmentIDFactory.getGovernmentIDs(preference: preference)
+        identificationTypes = GovernmentIDFactory.getGovernmentIDs(for: .id, preference: preference)
     }
     
     func didChooseIdentificationType(at index: Int) {

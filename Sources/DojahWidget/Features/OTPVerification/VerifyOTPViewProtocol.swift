@@ -9,5 +9,4 @@ import Foundation
 
 protocol VerifyOTPViewProtocol: BaseViewProtocol {
     func startCountdownTimer()
-    func showSuccess()
 }

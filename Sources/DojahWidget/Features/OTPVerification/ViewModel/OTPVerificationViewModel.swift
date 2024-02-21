@@ -41,7 +41,9 @@ final class OTPVerificationViewModel: BaseViewModel {
             case let .success(entityResponse):
                 if let response = entityResponse.entity, let otpReference = response.first?.referenceID {
                     self?.otpReference = otpReference
-                    self?.viewProtocol?.startCountdownTimer()
+                    runAfter(0.15) {
+                        self?.viewProtocol?.startCountdownTimer()
+                    }
                 } else {
                     self?.showErrorMessage("Unable to request for OTP")
                 }
@@ -62,7 +64,7 @@ final class OTPVerificationViewModel: BaseViewModel {
             switch result {
             case let .success(entityResponse):
                 if entityResponse.entity?.valid ?? false {
-                    self?.viewProtocol?.showSuccess()
+                    self?.postStepCompletedEvent()
                 } else {
                     self?.showErrorMessage("Unable to verify OTP, please try again")
                 }
@@ -72,14 +74,20 @@ final class OTPVerificationViewModel: BaseViewModel {
         }
     }
     
-    private func showErrorMessage(_ message: String) {
-        showMessage?(
-            .error(
-                message: message,
-                doneAction: { [weak self] in
-                    //self?.viewProtocol?.errorAction()
+    private func postStepCompletedEvent() {
+        postEvent(
+            request: .event(name: .stepCompleted, pageName: .governmentDataVerification),
+            showLoader: false,
+            showError: false,
+            didSucceed: { [weak self] _ in
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
                 }
-            )
+            }, didFail: { [weak self] _ in
+                runAfter { [weak self] in
+                    self?.setNextAuthStep()
+                }
+            }
         )
     }
 }

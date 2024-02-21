@@ -55,7 +55,6 @@ final class GovernmentDataViewController: DJBaseViewController {
     }
     
     private func setupUI() {
-        viewModel.getGovernmentIDConfiguration()
         viewModel.viewProtocol = self
         
         with(contentScrollView) {

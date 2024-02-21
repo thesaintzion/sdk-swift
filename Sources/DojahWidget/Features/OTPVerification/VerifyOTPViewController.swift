@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class VerifyOTPViewController: DJBaseViewController {
+final public class VerifyOTPViewController: DJBaseViewController {
+    
+    public static func newInstance() -> VerifyOTPViewController { VerifyOTPViewController() }
 
     private let viewModel: OTPVerificationViewModel
     
@@ -72,7 +74,7 @@ final class VerifyOTPViewController: DJBaseViewController {
         subviews: [attrLabel, otpView, resendCodeButton, continueButton],
         spacing: 20
     )
-    private let timerLimit: Int = 600
+    private let timerLimit: Int = 600 // 10 minutes
     private var timer: Timer?
     private var duration: Int = 0
     private var remainingTime: String {
@@ -82,7 +84,7 @@ final class VerifyOTPViewController: DJBaseViewController {
         return "Resend code in \(timeFormat)"
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         viewModel.viewProtocol = self
@@ -139,16 +141,5 @@ extension VerifyOTPViewController: VerifyOTPViewProtocol {
                 self.stopCountdownTimer()
             }
         }
-    }
-    
-    func showSuccess() {
-        let config: FeedbackConfig = .success(
-            titleText: "Verification Success",
-            message: "Your Government Data has been successfully verified, you will now be redirected.",
-            doneAction: { [weak self] in
-                self?.popToViewController(ofClass: DJDisclaimerViewController.self)
-            }
-        )
-        showFeedbackController(config: config)
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 struct GovernmentIDFactory {
-    static func getGovernmentIDs(preference: PreferenceProtocol) -> [DJGovernmentID] {
+    static func getGovernmentIDs(for pageName: DJPageName, preference: PreferenceProtocol) -> [DJGovernmentID] {
         guard let govtDataConfig = preference.DJGovernmentIDConfig,
-              let authStep = preference.DJSteps.first(where: { $0.name == .id })
+              let authStep = preference.DJSteps.first(where: { $0.name == pageName })
         else { return [] }
         
         var governmentIDs = [DJGovernmentID]()
@@ -88,6 +88,24 @@ struct GovernmentIDFactory {
         }
         
         return governmentIDs
+    }
+    
+    static func getVerificationMethods(for pageName: DJPageName, preference: PreferenceProtocol) -> [DJGovernmentID] {
+        guard let govtDataConfig = preference.DJGovernmentIDConfig,
+              let authStep = preference.DJSteps.first(where: { $0.name == pageName })
+        else { return [] }
+        
+        var methods = [DJGovernmentID]()
+        
+        if authStep.config.selfie == true, let selfieConfig = govtDataConfig.selfie {
+            methods.append(selfieConfig)
+        }
+        
+        if authStep.config.otp == true, let otpConfig = govtDataConfig.otp {
+            methods.append(otpConfig)
+        }
+        
+        return methods
     }
     
     static func getBusinessDocumentTypes(preference: PreferenceProtocol) -> [DJGovernmentID] {
