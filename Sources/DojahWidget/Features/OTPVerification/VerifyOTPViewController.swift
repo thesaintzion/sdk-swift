@@ -7,9 +7,7 @@
 
 import UIKit
 
-final public class VerifyOTPViewController: DJBaseViewController {
-    
-    public static func newInstance() -> VerifyOTPViewController { VerifyOTPViewController() }
+final class VerifyOTPViewController: DJBaseViewController {
 
     private let viewModel: OTPVerificationViewModel
     
@@ -84,7 +82,7 @@ final public class VerifyOTPViewController: DJBaseViewController {
         return "Resend code in \(timeFormat)"
     }
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         viewModel.viewProtocol = self
