@@ -10,7 +10,10 @@ import Lottie
 
 final class LoaderViewController: UIViewController {
     
-    private let animationView = LottieAnimationView(name: "circle-loader", bundle: Bundle.module).withSize(width: 200, height: 150)
+    private let animationView = LottieAnimationView(
+        name: "circle-loader",
+        bundle: Bundle.module
+    ).withSize(width: 200, height: 150)
     private let messageLabel = UILabel(
         text: "Please wait, your information is\nbeing processed",
         font: .regular(16),
@@ -29,7 +32,13 @@ final class LoaderViewController: UIViewController {
         setUserInterfaceStyle()
         setBackgroundColor(.black.withAlphaComponent(0.3))
         
-        with(contentView) {
+        with(animationView) {
+            addSubview($0)
+            $0.centerInSuperview()
+            $0.loopMode = .loop
+        }
+        
+        /*with(contentView) {
             addSubview($0)
             $0.centerYInSuperview()
             $0.anchor(
@@ -40,7 +49,7 @@ final class LoaderViewController: UIViewController {
         }
         contentStackView.fillSuperview(padding: .kinit(left: 20, bottom: 40, right: 20))
         
-        animationView.loopMode = .loop
+        animationView.loopMode = .loop*/
     }
     
     override func viewWillAppear(_ animated: Bool) {

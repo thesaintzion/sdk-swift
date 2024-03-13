@@ -94,4 +94,8 @@ class DJCountryDB: Object {
         }
         return flagString
     }
+    
+    var emoticonCountryName: String {
+        "\(emoticon)  \(countryName)"
+    }
 }

@@ -102,7 +102,11 @@ final class AddressVerificationViewController: DJBaseViewController {
         
         locationManager.startUpdatingLocation()
         
-        addressTextField.textField.addTarget(self, action: #selector(addressTextfieldDidChange), for: .editingChanged)
+        addressTextField.textField.addTarget(
+            self,
+            action: #selector(addressTextfieldDidChange),
+            for: .editingChanged
+        )
     }
     
     override func addTapGestures() {
