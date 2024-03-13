@@ -16,18 +16,32 @@ final class DJNavBarView: BaseView {
     weak var delegate: DJNavBarViewDelegate?
     private let backImageView = UIImageView(image: .res(.backTextIcon), height: 24, width: 64)
     private let closeImageView = UIImageView(image: .res(.xmarkFilledIcon), size: 18)
-    private let orchestrateImageView = UIImageView(image: .res(.orchestrateIcon), height: 20)
-    private lazy var contentStackView = HStackView(
-        subviews: [backImageView, orchestrateImageView, closeImageView],
+    private let appImageView = UIImageView(image: .res(.circleIcon), contentMode: .scaleAspectFit)
+    //TODO: Remove this code when new app icons are certified
+    /*private lazy var contentStackView = HStackView(
+        subviews: [backImageView, appImageView, closeImageView],
         alignment: .center
-    )
+    )*/
     
     override func setup() {
-        with(contentStackView) {
+        //TODO: Remove this code when new app icons are certified
+        /*with(contentStackView) {
             addSubview($0)
             $0.fillSuperview()
+        }*/
+        
+        addSubviews(backImageView, closeImageView, appImageView)
+        with(appImageView) {
+            $0.centerXInSuperview()
+            $0.anchor(top: topAnchor, bottom: bottomAnchor)
+            backImageView.centerVertically(to: $0.centerYAnchor)
+            backImageView.anchor(leading: leadingAnchor)
+            closeImageView.centerVertically(to: $0.centerYAnchor)
+            closeImageView.anchor(trailing: trailingAnchor)
         }
+        
         addTapGestures()
+        setAppImage()
     }
     
     private func addTapGestures() {
@@ -51,6 +65,12 @@ final class DJNavBarView: BaseView {
     
     func showNavCloseControl(_ show: Bool) {
         closeImageView.showView(show)
+    }
+    
+    private func setAppImage() {
+        if let appLogoURL = preference.DJAppConfig?.logo {
+            appImageView.setImageFromURL(appLogoURL, placeholder: .res(.circleIcon))
+        }
     }
 
 }

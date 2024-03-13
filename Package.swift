@@ -15,7 +15,8 @@ let package = Package(
         .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.3.3"),
         .package(url: "https://github.com/realm/realm-swift.git", from: "10.44.0"),
         .package(url: "https://github.com/hackiftekhar/IQKeyboardManager.git", from: "6.5.0"),
-        .package(url: "https://github.com/googlemaps/ios-places-sdk", from: "8.3.0")
+        .package(url: "https://github.com/googlemaps/ios-places-sdk", from: "8.3.0"),
+        .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,6 +29,7 @@ let package = Package(
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "IQKeyboardManagerSwift", package: "IQKeyboardManager"),
+                .product(name: "Kingfisher", package: "Kingfisher"),
                 .product(name: "GooglePlaces", package: "ios-places-sdk")
             ],
             resources: [

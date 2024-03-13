@@ -9,7 +9,11 @@ import UIKit
 
 final class DisclaimerCell: BaseTableViewCell {
 
-    private let checkImageView = UIImageView(image: .res(.purpleSuccessTickIcon), size: 14)
+    private let checkImageView = UIImageView(
+        image: .res(.purpleSuccessTickIcon).withRenderingMode(.alwaysTemplate),
+        tintColor: .primary,
+        size: 14
+    )
     let infoLabel = UILabel(
         text: "", 
         numberOfLines: 0,

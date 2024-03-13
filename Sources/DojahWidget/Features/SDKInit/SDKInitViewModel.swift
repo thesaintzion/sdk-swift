@@ -36,8 +36,7 @@ final class SDKInitViewModel {
     
     func initialize() {
         IQKeyboardManager.shared.enable = true
-        //Dojah: AIzaSyCGc1Yvx5sbnMklpcwg6A8bkKuDzNMbWu4
-        //GIGM: AIzaSyAztnWnHBWxpPggjiVQeS9nhiBdDHFUmf0
+        
         GMSPlacesClient.provideAPIKey("AIzaSyCGc1Yvx5sbnMklpcwg6A8bkKuDzNMbWu4")
         
         preference.DJAuthStep = .index

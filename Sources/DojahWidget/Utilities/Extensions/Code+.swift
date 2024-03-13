@@ -9,6 +9,8 @@ import UIKit
 import Foundation
 import CoreLocation
 
+let preference: PreferenceProtocol = PreferenceImpl()
+
 func runAfter(_ delay: Double = 0.5, action: @escaping () -> Void) {
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
         action()
@@ -57,32 +59,6 @@ extension URL {
         try? JSONDecoder().decode(type, from: Data(contentsOf: self))
     }
 }
-
-//MARK: - Current Date Year and Month
-
-//func currentYear() -> String {
-//    let date = Date()
-//    let calendar = Calendar.current
-//    let currentYear = calendar.component(.year, from: date) // gets current year (i.e. 2017)
-//    
-//    return "\(currentYear)"
-//}
-//
-//func currentMonth() -> String {
-//    let date = Date()
-//    let calendar = Calendar.current
-//    let currentMonth = calendar.component(.month, from: date) // gets current month (i.e. 10)
-//    
-//    return "\(currentMonth)"
-//}
-
-//func currentYearFirstTwoDigits() -> Int {
-//    return Int(currentYear()[0,1])!
-//}
-//
-//func currentYearLastTwoDigits() -> Int {
-//    return Int(currentYear()[2,3])!
-//}
 
 extension Sequence {
     func distinctBy<A: Hashable>(by selector: (Iterator.Element) -> A) -> [Iterator.Element] {
