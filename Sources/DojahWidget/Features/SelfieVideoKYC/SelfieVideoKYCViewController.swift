@@ -134,7 +134,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
                 leading: $0.kleadingAnchor,
                 bottom: $0.kbottomAnchor,
                 trailing: $0.ktrailingAnchor,
-                padding: .kinit(top: 40, bottom: 20)
+                padding: .kinit(top: 60, bottom: 20)
             )
             contentStackView.setCustomSpacing(15, after: selfieImageStackView)
             contentStackView.setCustomSpacing(15, after: secondaryButton)
@@ -320,11 +320,11 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         [primaryButton, secondaryButton].enable(!show)
         with(cameraHintView) {
             $0.showView(show)
-            $0.backgroundColor = show ? .systemOrange : .black
+            $0.backgroundColor = show ? .primary : .black
             $0.textLabel.text = "Proccessing..."
         }
         if show {
-            selfieImageBlurEffectView = selfieImageView.applyBlurEffect(alpha: 0.6)
+            selfieImageBlurEffectView = selfieImageView.applyBlurEffect(alpha: 0.8)
         } else {
             selfieImageBlurEffectView?.removeFromSuperview()
             selfieImageBlurEffectView = nil
@@ -335,15 +335,19 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
 
 extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {
     func showSelfieImageError(message: String) {
-        with(cameraHintView) {
-            $0.showView()
-            $0.backgroundColor = .djRed
-            $0.textLabel.text = message
-        }
-        [primaryButton, secondaryButton].enable()
-        
-        runAfter { [weak self] in
-            self?.showLoader(false)
+        showToast(message: message, type: .error)
+        runOnMainThread { [weak self] in
+            guard let self else { return }
+            with(self.cameraHintView) {
+                $0.showView()
+                $0.backgroundColor = .red
+                $0.textLabel.text = message
+            }
+            [self.primaryButton, self.secondaryButton].enable()
+            
+            runAfter(2) {
+                self.showLoader(false)
+            }
         }
     }
 }

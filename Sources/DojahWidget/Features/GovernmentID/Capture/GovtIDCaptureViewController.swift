@@ -58,16 +58,15 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         textColor: .white,
         bgColor: .black
     )
-    private let cameraContainerHeight: CGFloat = 250
-    private let cameraViewHeight: CGFloat = 247
     private lazy var cameraContainerWidth = min((view.width - 100), 400)
     private lazy var cameraViewWidth = cameraContainerWidth - 3
     private lazy var cameraContainerView = UIView(
         subviews: [cameraView, idImageView, cameraHintView],
-        height: cameraContainerHeight,
+        height: 300,
         width: cameraContainerWidth,
-        borderWidth: 2,
-        borderColor: .primary,
+        //TODO: Remove this when tests have been confirmed
+        //borderWidth: 2,
+        //borderColor: .primary,
         radius: 5,
         clipsToBounds: false
     )

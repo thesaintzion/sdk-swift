@@ -9,7 +9,7 @@ import UIKit
 
 final class DJPickerView: BaseView {
 
-    private let titleLabel = UILabel(text: "", font: .light(13))
+    private let titleLabel = UILabel(text: "", font: .regular(13))
     private let leftIconImageView = UIImageView()
     private let valueLabel = UILabel(text: "")
     private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)

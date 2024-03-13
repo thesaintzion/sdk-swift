@@ -14,7 +14,9 @@ final class LoaderViewController: UIViewController {
         name: "circle-loader",
         bundle: Bundle.module
     ).withSize(width: 200, height: 150)
-    private let messageLabel = UILabel(
+    
+    //TODO: Remove this code when tests are confirmed
+    /*private let messageLabel = UILabel(
         text: "Please wait, your information is\nbeing processed",
         font: .regular(16),
         numberOfLines: 0,
@@ -25,12 +27,11 @@ final class LoaderViewController: UIViewController {
         subviews: [contentStackView],
         backgroundColor: .white,
         radius: 10
-    )
+    )*/
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUserInterfaceStyle()
-        setBackgroundColor(.black.withAlphaComponent(0.3))
         
         with(animationView) {
             addSubview($0)
