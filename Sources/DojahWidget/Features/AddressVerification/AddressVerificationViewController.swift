@@ -27,20 +27,34 @@ final class AddressVerificationViewController: DJBaseViewController {
     private let addressTextField = DJTextField(
         title: "Input address",
         placeholder: "3-9 Olu Koleosho Street, off Simbiat Abiola Way.",
-        editable: false,
         rightIcon: .res(.chevronDown)
+    )
+    private lazy var resultsTableView = UITableView(
+        cells: [UITableViewCell.self],
+        delegate: self,
+        datasource: self,
+        scrollable: true
+    )
+    private lazy var searchResultsView = UIView(
+        subviews: [resultsTableView],
+        height: 300,
+        backgroundColor: .white,
+        borderWidth: 1,
+        borderColor: .djBorder,
+        radius: 5
     )
     private lazy var continueButton = DJButton(title: "Continue", isEnabled: false) { [weak self] in
         self?.viewModel.didTapContinue()
     }
     private lazy var contentStackView = VStackView(
-        subviews: [addressTextField, continueButton],
-        spacing: 20
+        subviews: [addressTextField, searchResultsView, continueButton],
+        spacing: 40
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.viewProtocol = self
         setupUI()
     }
     
@@ -70,20 +84,40 @@ final class AddressVerificationViewController: DJBaseViewController {
             )
         }
         
+        with(searchResultsView) {
+            $0.applyShadow(radius: 5)
+            $0.showView(false)
+        }
+        
+        with(resultsTableView) {
+            $0.fillSuperview(padding: .kinit(topBottom: 10))
+            $0.clearBackground()
+        }
+        
+        contentStackView.setCustomSpacing(5, after: addressTextField)
+        
         locationManager.didUpdateLocation = { [weak self] location in
             self?.viewModel.currentLocation = location
         }
         
         locationManager.startUpdatingLocation()
+        
+        addressTextField.textField.addTarget(self, action: #selector(addressTextfieldDidChange), for: .editingChanged)
     }
     
     override func addTapGestures() {
         super.addTapGestures()
-        addressTextField.didTap { [weak self] in
+        //TODO: Remove this after changes are confirmed
+        /*addressTextField.didTap { [weak self] in
             self?.showPlacesAutocomplete()
-        }
+        }*/
     }
     
+    @objc private func addressTextfieldDidChange() {
+        viewModel.findAddress(addressTextField.text)
+    }
+    
+    //TODO: Remove this after changes are confirmed
     private func showPlacesAutocomplete() {
         let autocompleteController = GMSAutocompleteViewController()
         autocompleteController.delegate = self
@@ -121,11 +155,45 @@ final class AddressVerificationViewController: DJBaseViewController {
         addressTextField.text = place.formattedAddress ?? ""
         continueButton.enable()
     }
+    
+    private func didChoosePlacePrediction(_ prediction: GMSAutocompletePrediction) {
+        addressTextField.text = prediction.attributedFullText.string
+        viewModel.didChoosePlacePrediction(prediction)
+    }
 
 }
 
-//MARK: - GMSAutocompleteViewControllerDelegate
+extension AddressVerificationViewController: AddressVerificationViewProtocol {
+    func showPlacesResults() {
+        searchResultsView.showView(viewModel.placePredictions.isNotEmpty)
+        resultsTableView.reloadData()
+    }
+    
+    func enableContinueButton(_ enable: Bool) {
+        continueButton.enable(enable)
+    }
+}
 
+extension AddressVerificationViewController: UITableViewConformable {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.placePredictions.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let prediction = viewModel.placePredictions[indexPath.row]
+        return with(tableView.deque(cell: UITableViewCell.self, at: indexPath)) {
+            $0.clearBackground()
+            $0.textLabel?.numberOfLines = 0
+            $0.textLabel?.attributedText = prediction.attributedFullText
+            $0.didTap { [weak self] in
+                self?.didChoosePlacePrediction(prediction)
+            }
+        }
+    }
+}
+
+//MARK: - GMSAutocompleteViewControllerDelegate
+//TODO: Remove this after changes are confirmed
 extension AddressVerificationViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         dismiss(animated: true) { [weak self] in

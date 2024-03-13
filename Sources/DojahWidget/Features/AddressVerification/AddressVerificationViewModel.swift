@@ -11,8 +11,12 @@ import CoreLocation
 
 final class AddressVerificationViewModel: BaseViewModel {
     private let remoteDatasource: AddressVerificationRemoteDatasourceProtocol
+    weak var viewProtocol: AddressVerificationViewProtocol?
     var selectedPlace: GMSPlace?
     var currentLocation: CLLocation?
+    private lazy var autocompleteSessionToken = GMSAutocompleteSessionToken()
+    private lazy var placesClient = GMSPlacesClient.shared()
+    var placePredictions = [GMSAutocompletePrediction]()
     
     init(remoteDatasource: AddressVerificationRemoteDatasourceProtocol = AddressVerificationRemoteDatasource()) {
         self.remoteDatasource = remoteDatasource
@@ -106,5 +110,52 @@ final class AddressVerificationViewModel: BaseViewModel {
             showLoader: false,
             showError: false
         )
+    }
+    
+    func findAddress(_ text: String) {
+        placesClient.findAutocompletePredictions(
+            fromQuery: text,
+            filter: nil,
+            sessionToken: autocompleteSessionToken
+        ) { [weak self] results, error in
+            
+            if let error = error {
+                kprint("Autocomplete findAutocompletePredictions error: \(error)")
+            }
+            
+            if let results, results.isNotEmpty {
+                self?.placePredictions = results
+                kprint("Prediction Results")
+                kprint("\(results.map { $0.attributedFullText.string })")
+                runOnMainThread {
+                    self?.viewProtocol?.showPlacesResults()
+                }
+            }
+        }
+    }
+    
+    func didChoosePlacePrediction(_ prediction: GMSAutocompletePrediction) {
+        placesClient.fetchPlace(
+            fromPlaceID: prediction.placeID,
+            placeFields: .all,
+            sessionToken: autocompleteSessionToken
+        ) { [weak self] gmsPlace, error in
+            if let error = error {
+                kprint("Autocomplete fetchPlace error: \(error)")
+                self?.enableContinueButton(false)
+            }
+            
+            if let gmsPlace {
+                kprint("Autocomplete fetchPlace success: PlaceID: \(gmsPlace.placeID.orEmpty)")
+                self?.selectedPlace = gmsPlace
+                self?.enableContinueButton()
+            }
+        }
+    }
+    
+    private func enableContinueButton(_ enable: Bool = true) {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.enableContinueButton(enable)
+        }
     }
 }

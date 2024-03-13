@@ -212,7 +212,12 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     override func addTapGestures() {
         uploadView.didTap { [weak self] in
             guard let self else { return }
-            self.attachmentManager.openDocumentPicker(on: self, docTypes: [String(kUTTypePDF)])
+            //self.attachmentManager.openDocumentPicker(on: self, docTypes: [String(kUTTypePDF)])
+            self.attachmentManager.showOptions(
+                on: self,
+                attachmentTypes: [.photoLibrary, .files],
+                docTypes: [String(kUTTypePDF), String(kUTTypePNG), String(kUTTypeJPEG), String(kUTTypeImage)]
+            )
         }
     }
     
@@ -220,7 +225,13 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         _ uiimage: UIImage,
         at imageURL: URL?,
         using sourceType: UIImagePickerController.SourceType
-    ) {}
+    ) {
+        guard let imageURL, let imageData = uiimage.pngData() else { return }
+        uploadHintLabel.attributedText = AttributedStringBuilder()
+            .text(imageURL.lastPathComponent, attributes: [.textColor(.aSecondaryLabel), .font(.regular(16)), .alignment(.center)])
+            .attributedString
+        viewModel.updateImageData(imageData)
+    }
     
     private func didPickFile(at fileURL: URL) {
         uploadHintLabel.attributedText = AttributedStringBuilder()

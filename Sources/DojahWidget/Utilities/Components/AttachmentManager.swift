@@ -38,7 +38,7 @@ final class AttachmentManager: NSObject {
     var dismissHandler: NoParamHandler?
     
     enum AttachmentType: String {
-        case camera = "Camera", video = "Video", photoLibrary = "Photo Library", file = "Files"
+        case camera = "Camera", video = "Video", photoLibrary = "Photo Library", files = "Files"
         
         var alertTitle: String {
             "Dojah Widget SDK does not have access to your \(rawValue). Enable access in your Settings app."
@@ -81,7 +81,11 @@ final class AttachmentManager: NSObject {
     
     //MARK: - showAttachmentActionSheet
     // This function is used to show the attachment sheet for image, video, photo and file.
-    func showOptions(on vc: UIViewController, attachmentTypes: [AttachmentType] = [.camera, .photoLibrary]) {
+    func showOptions(
+        on vc: UIViewController,
+        attachmentTypes: [AttachmentType] = [.camera, .photoLibrary],
+        docTypes: [String]? = nil
+    ) {
         viewController = vc
         let actionSheet = UIAlertController(
             title: "Add a File",
@@ -100,12 +104,12 @@ final class AttachmentManager: NSObject {
                     }
                 )
                 actionSheet.addAction(alertAction)
-            case .file:
+            case .files:
                 let alertAction = UIAlertAction(
                     title: attachmentType.rawValue,
                     style: .default,
                     handler: { (action) -> Void in
-                        self.openDocumentPicker(on: vc)
+                        self.openDocumentPicker(on: vc, docTypes: docTypes)
                     }
                 )
                 actionSheet.addAction(alertAction)
@@ -157,7 +161,7 @@ final class AttachmentManager: NSObject {
                     self?.openVideoLibrary(on: vc)
                 case .photoLibrary:
                     self?.openPhotoLibrary(on: vc)
-                case .file:
+                case .files:
                     break
                 }
             }

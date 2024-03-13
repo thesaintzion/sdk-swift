@@ -8,11 +8,13 @@
 import UIKit
 import Lottie
 
-final class FeedbackViewController: DJBaseViewController {
+final public class FeedbackViewController: DJBaseViewController {
+    
+    public static func newInstance() -> FeedbackViewController { FeedbackViewController() }
     
     private let config: FeedbackConfig
     
-    init(config: FeedbackConfig) {
+    init(config: FeedbackConfig = .success(feedbackType: .warning)) {
         self.config = config
         super.init(nibName: nil, bundle: nil)
     }
@@ -39,7 +41,7 @@ final class FeedbackViewController: DJBaseViewController {
         alignment: .center
     )
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         navView.showNavControls(config.showNavControls)
         with(contentStackView) {

@@ -29,7 +29,7 @@ enum FeedbackType {
         case .failure:
             return "error-2"
         case .warning:
-            return "warning"
+            return "success"
         }
     }
 }
