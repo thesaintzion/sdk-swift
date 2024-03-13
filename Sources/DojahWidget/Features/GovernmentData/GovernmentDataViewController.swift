@@ -107,4 +107,11 @@ extension GovernmentDataViewController: GovernmentDataViewProtocol {
     func errorAction() {
         kpop()
     }
+    
+    func updateVerificationMethods() {
+        with(verificationMethodView) {
+            $0.selectionItems = viewModel.governmentIDVerificationMethods.names
+            $0.updateValue("")
+        }
+    }
 }

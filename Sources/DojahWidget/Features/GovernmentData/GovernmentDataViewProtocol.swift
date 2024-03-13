@@ -10,4 +10,5 @@ import Foundation
 protocol GovernmentDataViewProtocol: BaseViewProtocol {
     func showGovtIDNumberTextField()
     func errorAction()
+    func updateVerificationMethods()
 }

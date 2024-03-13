@@ -12,6 +12,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     private let governmentDataRemoteDatasource: GovernmentDataRemoteDatasourceProtocol
     var governmentIDs = [DJGovernmentID]()
     var governmentIDVerificationMethods = [DJGovernmentID]()
+    var allGovernmentIDVerificationMethods = [DJGovernmentID]()
     var selectedGovernmentID: DJGovernmentID?
     var selectedGovernmentIDVerificationMethod: DJGovernmentID?
     var idNumber = ""
@@ -21,7 +22,8 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         self.governmentDataRemoteDatasource = remoteDatasource
         super.init()
         governmentIDs = GovernmentIDFactory.getGovernmentIDs(for: .governmentData, preference: preference)
-        governmentIDVerificationMethods = GovernmentIDFactory.getVerificationMethods(for: .governmentData, preference: preference)
+        allGovernmentIDVerificationMethods = GovernmentIDFactory.getVerificationMethods(for: .governmentData, preference: preference)
+        governmentIDVerificationMethods = allGovernmentIDVerificationMethods
     }
     
     func didChooseGovernmentData(at index: Int, type: GovernmentDataType) {
@@ -29,11 +31,22 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         case .id:
             selectedGovernmentID = governmentIDs[index]
             viewProtocol?.showGovtIDNumberTextField()
+            refreshVerificationMethods()
         case .verificationMethod:
             selectedGovernmentIDVerificationMethod = governmentIDVerificationMethods[index]
             preference.DJSelectedGovernmentIDVerificationMethod = selectedGovernmentIDVerificationMethod
             sendVerificationMethodSelectedEvent()
         }
+    }
+    
+    private func refreshVerificationMethods() {
+        selectedGovernmentIDVerificationMethod = nil
+        if [.dl, .dlID, .ngDLI].contains(selectedGovernmentID?.idType) {
+            governmentIDVerificationMethods = allGovernmentIDVerificationMethods.filter { $0.name?.insensitiveContains("selfie") ?? false }
+        } else {
+            governmentIDVerificationMethods = allGovernmentIDVerificationMethods
+        }
+        viewProtocol?.updateVerificationMethods()
     }
     
     private func sendVerificationMethodSelectedEvent() {

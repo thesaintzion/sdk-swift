@@ -30,7 +30,7 @@ final class SignatureViewController: DJBaseViewController {
     private lazy var infoLabel = UILabel(
         text: viewModel.signatureInformation,
         numberOfLines: 0,
-        alignment: .center
+        alignment: .left
     )
     private let nameTextField = DJTextField(
         title: "Input name to sign and confirm",
