@@ -12,7 +12,6 @@ import IQKeyboardManagerSwift
 import GooglePlaces
 
 final class SDKInitViewModel {
-    
     weak var viewProtocol: SDKInitViewProtocol?
     private let widgetID: String
     private var preference: PreferenceProtocol
@@ -129,6 +128,7 @@ final class SDKInitViewModel {
             return
         }
         self.authResponse = authResponse
+        cacheWidgetID()
         guard let preAuthRes else { return }
         preference.DJRequestHeaders = [
             "authorization": UUID().uuidString,
@@ -186,34 +186,6 @@ final class SDKInitViewModel {
             }
         }
         
-        /*let govtDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .governmentData })
-        if let govtDataPage {
-            currentID += 1
-            steps.append(.init(name: .governmentData, id: currentID, config: govtDataPage.config ?? .init()))
-            let verifications = [govtDataPage.config?.otp ?? false, govtDataPage.config?.selfie ?? false]
-            if verifications.contains(true) {
-                currentID += 1
-                steps.append(.init(name: .governmentDataVerification, id: currentID, config: govtDataPage.config ?? .init()))
-            }
-        }
-        
-        let idPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .id })
-        if let idPage {
-            currentID += 1
-            steps.append(.init(name: .idOptions, id: currentID, config: .init()))
-            currentID += 1
-            steps.append(.init(name: .id, id: currentID, config: idPage.config ?? .init()))
-        }
-        
-        let alreadyAddedPages: [DJPageName?] = [.userData, .governmentData, .governmentDataVerification, .id]
-        let pages = preAuthRes.widget?.pages?.filter { alreadyAddedPages.doesNotContain($0.pageName) } ?? []
-        for page in pages {
-            if let pageName = page.pageName {
-                currentID += 1
-                steps.append(.init(name: pageName, id: currentID, config: page.config ?? .init()))
-            }
-        }*/
-        
         kprint(String(describing: steps.dictionaryArray))
         
         return steps.map { $0.dictionary }
@@ -268,5 +240,11 @@ final class SDKInitViewModel {
         } else {
             kprint("Unable to get UserAgent")
         }
+    }
+    
+    private func cacheWidgetID() {
+        let widgetIDAlreadyCached = preference.WidgetIDCache.first { $0.widgetID.insensitiveEquals(widgetID) }
+        guard let authResponse, widgetIDAlreadyCached == nil  else { return }
+        preference.WidgetIDCache.append(.init(companyName: authResponse.companyName ?? "", widgetID: widgetID))
     }
 }

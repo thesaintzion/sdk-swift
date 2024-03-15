@@ -49,4 +49,7 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultPrimitive(key: .DJOTPVerificationInfo, default: "")
     var DJOTPVerificationInfo: String
+    
+    @UserDefaultCodable(key: .WidgetIDCache, default: [])
+    var WidgetIDCache: [WidgetIDCache]
 }

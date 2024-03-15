@@ -14,4 +14,8 @@ public final class DojahWidgetSDK {
         let controller = SDKInitViewController(viewModel: viewModel)
         navController.pushViewController(controller, animated: true)
     }
+    
+    public static func getCachedWidgetIDs() -> [WidgetIDCache] {
+        preference.WidgetIDCache
+    }
 }
