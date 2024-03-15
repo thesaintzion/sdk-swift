@@ -88,12 +88,26 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.lookupEntity = response
                     self?.postGovernmentDataCollectedEvent()
                 } else {
-                    self?.showErrorMessage("Unable to lookup Government Data, please try again")
+                    self?.postStepFailedEvent()
+                    self?.showErrorMessage(.invalidIDNotFoundGovernmentData(idType))
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.postStepFailedEvent()
+                if error == .invalidIDNotFoundThirdParty {
+                    self?.showErrorMessage(.invalidIDNotFoundThirdPartyMessage(idType))
+                } else {
+                    self?.showErrorMessage(error.uiMessage)
+                }
             }
         }
+    }
+    
+    private func postStepFailedEvent() {
+        postEvent(
+            request: .stepFailed(errorCode: .invalidIDNotFound),
+            showLoader: false,
+            showError: false
+        )
     }
     
     private func showErrorMessage(_ message: String) {

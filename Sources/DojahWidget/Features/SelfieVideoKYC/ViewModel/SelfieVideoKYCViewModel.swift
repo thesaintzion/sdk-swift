@@ -43,7 +43,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             case let .success(response):
                 self?.didGetImageAnalysisResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.imageAnalysisOrCheckDidFail(error: error)
             }
         }
     }
@@ -82,16 +82,15 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         }
         
         performImageCheck()
-        
-        /*if analysisResponse.face?.faceDetected == true &&
-            analysisResponse.face?.multifaceDetected == false &&
-            analysisResponse.face?.quality?.brightness ?? 0 >= preference.DJAuthStep.config.brightnessThreshold ?? 40 &&
-            preference.DJAuthStep.config.glassesCheck ?? true == (analysisResponse.face?.details?.eyeglasses?.value ?? false || analysisResponse.face?.details?.sunglasses?.value ?? false)
-        {
-            performImageCheck()
+    }
+    
+    private func imageAnalysisOrCheckDidFail(error: DJSDKError) {
+        postCheckFailedEvent()
+        if error == .imageCheckOrAnalysisError {
+            showErrorMessage(.selfieVideoCouldNotBeCaptured)
         } else {
-            showLoader?(false)
-        }*/
+            showErrorMessage(error.uiMessage)
+        }
     }
     
     private func performImageCheck() {
@@ -110,7 +109,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             case let .success(response):
                 self?.didGetImageCheckResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.imageAnalysisOrCheckDidFail(error: error)
             }
         }
     }
@@ -126,7 +125,8 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         
         guard let checkResponse = response.entity else {
             showLoader?(false)
-            showToast(message: DJConstants.genericErrorMessage, type: .error)
+            postCheckFailedEvent()
+            showErrorMessage(.selfieVideoCouldNotBeCaptured)
             return
         }
         
@@ -136,7 +136,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
                 postEvent(
-                    request: .event(name: .stepFailed, pageName: .governmentDataVerification),
+                    request: .stepFailed(errorCode: .imageCheckFailedAfterMaxRetries),
                     showLoader: false,
                     showError: false
                 )
@@ -144,8 +144,17 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
                     self?.setNextAuthStep()
                 }
             }
+            postCheckFailedEvent()
             showErrorMessage(checkResponse.reason ?? "Selfie verification failed")
         }
+    }
+    
+    private func postCheckFailedEvent() {
+        postEvent(
+            request: .event(name: .stepFailed, pageName: .governmentDataVerification),
+            showLoader: false,
+            showError: false
+        )
     }
     
     private func imageCheckDidSucceed() {

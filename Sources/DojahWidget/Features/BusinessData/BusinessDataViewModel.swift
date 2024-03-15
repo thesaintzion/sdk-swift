@@ -57,7 +57,7 @@ final class BusinessDataViewModel: BaseViewModel {
                 self?.didGetVerificationResponse(response, businessDataType: businessDataType)
             case let .failure(error):
                 self?.showLoader?(false)
-                self?.postPageEvent(success: false)
+                self?.postStepFailedEvent()
                 self?.showErrorMessage(error.uiMessage)
             }
         }
@@ -65,7 +65,8 @@ final class BusinessDataViewModel: BaseViewModel {
     
     private func didGetVerificationResponse(_ response: EntityResponse<BusinessDataResponse>, businessDataType: BusinessDataType) {
         guard let businessDataResponse = response.entity else {
-            postPageEvent(success: false)
+            postStepFailedEvent()
+            showErrorMessage(.invalidIDNotFoundBusinessData(businessDataType))
             return
         }
         let values = [businessDataResponse.business, businessDataType.rawValue, preference.DJCountryCode, businessDataResponse.companyName]
@@ -76,14 +77,14 @@ final class BusinessDataViewModel: BaseViewModel {
             showError: false,
             didSucceed: { [weak self] _ in
                 self?.showLoader?(false)
-                self?.postPageEvent()
+                self?.postStepCompletedEvent()
                 runAfter { [weak self] in
                     self?.setNextAuthStep()
                 }
             },
             didFail: { [weak self] _ in
                 self?.showLoader?(false)
-                self?.postPageEvent(success: false)
+                self?.postStepFailedEvent()
                 runAfter { [weak self] in
                     self?.setNextAuthStep()
                 }
@@ -91,9 +92,17 @@ final class BusinessDataViewModel: BaseViewModel {
         )
     }
     
-    private func postPageEvent(success: Bool = true) {
+    private func postStepCompletedEvent() {
         postEvent(
-            request: .event(name: success ? .stepCompleted : .stepFailed, pageName: .businessData),
+            request: .event(name: .stepCompleted, pageName: .businessData),
+            showLoader: false,
+            showError: false
+        )
+    }
+    
+    private func postStepFailedEvent() {
+        postEvent(
+            request: .stepFailed(errorCode: .invalidIDNotFound),
             showLoader: false,
             showError: false
         )

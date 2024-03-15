@@ -19,31 +19,51 @@ enum DJSDKError: Error, Equatable {
     case tryAgain
     case lowBalance
     case networkError(String)
+    case invalidOTPEntered
+    case OTPCouldNotBeSent
+    case invalidIDNotFoundThirdParty
+    case invalidIDNotFoundThirdPartyMessage(DJGovernmentIDType)
+    case invalidIDNotFoundGovernmentData(DJGovernmentIDType)
+    case invalidIDNotFoundBusinessData(BusinessDataType)
+    case selfieVideoCouldNotBeCaptured
+    case govtIDCouldNotBeCaptured
+    case imageCheckOrAnalysisError
     
     var uiMessage: String {
         switch self {
-        case .invalidURL:
+        //TODO: This code might be useful later
+        /*case .invalidURL:
             return "Bad Request URL"
+        case let .networkError(reason):
+            return reason
         case .requestFailure(reason: let reason):
             return "Unable to perform request, please try again.\nReason: \(reason)"
         case .decodingFailure(reason: let reason):
             return "Unable to read data from server, please try again.\nReason: \(reason)"
         case .encodingFailure(reason: let reason):
-            return "Unable to send request data, please try again.\nReason: \(reason)"
-        case .resourceNotFound:
-            return "Unable to locate resource on the server, please try again or contact customer support."
-        case .serverFailure:
-            return "Unable to contact the server, please try again."
+            return "Unable to send request data, please try again.\nReason: \(reason)"*/
+        case .invalidURL, .resourceNotFound, .serverFailure, .tryAgain, .lowBalance, .noResponseData, .requestFailure, .decodingFailure, .encodingFailure, .networkError:
+            return "An error occured. Try again later"
         case .unableToLoadLocalJSON:
             return "Unable to load local JSON file."
-        case .noResponseData:
-            return "No response data returned for network request."
-        case .tryAgain:
-            return "Please try that again."
-        case .lowBalance:
-            return "Your balance is low, pls visit the dashboard to top up"
-        case let .networkError(reason):
-            return reason
+        case .invalidOTPEntered:
+            return "OTP Could not be sent, Pls try again"
+        case .OTPCouldNotBeSent:
+            return "Invalid OTP entered. Please, input the correct OTP"
+        case .invalidIDNotFoundThirdParty:
+            return "invalidIDNotFound"
+        case let .invalidIDNotFoundThirdPartyMessage(idType):
+            return "\(idType.rawValue) is currently not available. Please try another means of identification"
+        case let .invalidIDNotFoundGovernmentData(idType):
+            return "Invalid \(idType.rawValue). Input a valid \(idType.rawValue) or try another means of Identification"
+        case let .invalidIDNotFoundBusinessData(idType):
+            return "Invalid \(idType.rawValue). Input a valid \(idType.rawValue) or try another means of Identification"
+        case .selfieVideoCouldNotBeCaptured:
+            return "Please move to a well lit environment and try again"
+        case .govtIDCouldNotBeCaptured:
+            return "Document is not clear enough, please try again"
+        case .imageCheckOrAnalysisError:
+            return "imageCheckOrAnalysisError"
         }
     }
 }

@@ -25,11 +25,11 @@ enum FeedbackType {
     var lottieAnimationName: String {
         switch self {
         case .success:
-            return "success"
+            return "check_1"
         case .failure:
-            return "error-2"
+            return "error"
         case .warning:
-            return "success"
+            return "check_1"
         }
     }
 }

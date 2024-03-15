@@ -12,10 +12,6 @@ final class CountryPickerViewModel: BaseViewModel {
     private let countriesLocalDatasource: CountriesLocalDatasourceProtocol
     private var allCountries = [DJCountryDB]()
     var countries = [DJCountryDB]()
-    //TODO: Remove this code after country selection tests have been confirmed
-    /*var countryNames: [String] {
-        countries.map { "\($0.emoticon)  \($0.countryName)" }
-    }*/
     private var countrySelected = false
     private var selectedCountry: DJCountryDB?
     
@@ -26,11 +22,6 @@ final class CountryPickerViewModel: BaseViewModel {
         super.init()
         preference.DJCountryCode = "NG"
     }
-    
-    //TODO: Remove this code after country selection tests have been confirmed
-    /*func country(at index: Int) -> DJCountryDB {
-        countries[index]
-    }*/
     
     func filterCountries(_ text: String) {
         if text.isEmpty {
@@ -55,18 +46,6 @@ final class CountryPickerViewModel: BaseViewModel {
         )
         countries = allCountries
     }
-    
-    //TODO: Remove this code after country selection tests have been confirmed
-    /*func didSelectCountry(at index: Int) {
-        countrySelected = true
-        let country = country(at: index)
-        preference.DJCountryCode = country.iso2
-        postEvent(
-            request: .init(name: .countrySelected, value: country.countryName),
-            showLoader: false,
-            showError: false
-        )
-    }*/
     
     func didTapContinue() {
         if !countrySelected {

@@ -109,45 +109,8 @@ final class AddressVerificationViewController: DJBaseViewController {
         )
     }
     
-    override func addTapGestures() {
-        super.addTapGestures()
-        //TODO: Remove this after changes are confirmed
-        /*addressTextField.didTap { [weak self] in
-            self?.showPlacesAutocomplete()
-        }*/
-    }
-    
     @objc private func addressTextfieldDidChange() {
         viewModel.findAddress(addressTextField.text)
-    }
-    
-    //TODO: Remove this after changes are confirmed
-    private func showPlacesAutocomplete() {
-        let autocompleteController = GMSAutocompleteViewController()
-        autocompleteController.delegate = self
-        autocompleteController.modalPresentationStyle = .overCurrentContext
-        
-        // Specify the place data types to return.
-        let fields = GMSPlaceField(rawValue: UInt64(GMSPlaceField.all.rawValue))
-        
-        // Specify a filter.
-        let filter = GMSAutocompleteFilter()
-        filter.type = .noFilter
-        //filter.countries = ["ng", "gh"] // available in only selected countries???
-        
-        with(autocompleteController) {
-            $0.autocompleteFilter = filter
-            $0.placeFields = fields
-            $0.primaryTextColor = .aLabel
-            $0.secondaryTextColor = .aSecondaryLabel
-            $0.primaryTextHighlightColor = .primary
-            $0.tableCellSeparatorColor = .aSeparator
-            $0.tableCellBackgroundColor = .aSystemBackground
-            $0.tintColor = .primary
-        }
-        
-        // Display the autocomplete view controller.
-        present(autocompleteController, animated: true, completion: nil)
     }
     
     private func didChooseGooglePlace(_ place: GMSPlace?) {
@@ -194,33 +157,4 @@ extension AddressVerificationViewController: UITableViewConformable {
             }
         }
     }
-}
-
-//MARK: - GMSAutocompleteViewControllerDelegate
-//TODO: Remove this after changes are confirmed
-extension AddressVerificationViewController: GMSAutocompleteViewControllerDelegate {
-    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        dismiss(animated: true) { [weak self] in
-            self?.didChooseGooglePlace(place)
-        }
-    }
-    
-    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
-        kprint("Error: \(error.localizedDescription)")
-    }
-    
-    // User canceled the operation.
-    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    // Turn the network activity indicator on and off again.
-    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-    }
-    
-    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-    }
-    
 }

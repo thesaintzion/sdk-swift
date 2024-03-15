@@ -17,19 +17,8 @@ final class DJNavBarView: BaseView {
     private let backImageView = UIImageView(image: .res(.backTextIcon), height: 24, width: 64)
     private let closeImageView = UIImageView(image: .res(.xmarkFilledIcon), size: 18)
     private let appImageView = UIImageView(image: .res(.circleIcon), contentMode: .scaleAspectFit)
-    //TODO: Remove this code when new app icons are certified
-    /*private lazy var contentStackView = HStackView(
-        subviews: [backImageView, appImageView, closeImageView],
-        alignment: .center
-    )*/
     
     override func setup() {
-        //TODO: Remove this code when new app icons are certified
-        /*with(contentStackView) {
-            addSubview($0)
-            $0.fillSuperview()
-        }*/
-        
         addSubviews(backImageView, closeImageView, appImageView)
         with(appImageView) {
             $0.centerXInSuperview()

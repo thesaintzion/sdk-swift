@@ -64,9 +64,6 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         subviews: [cameraView, idImageView, cameraHintView],
         height: 300,
         width: cameraContainerWidth,
-        //TODO: Remove this when tests have been confirmed
-        //borderWidth: 2,
-        //borderColor: .primary,
         radius: 5,
         clipsToBounds: false
     )
@@ -211,7 +208,6 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     override func addTapGestures() {
         uploadView.didTap { [weak self] in
             guard let self else { return }
-            //self.attachmentManager.openDocumentPicker(on: self, docTypes: [String(kUTTypePDF)])
             self.attachmentManager.showOptions(
                 on: self,
                 attachmentTypes: [.photoLibrary, .files],

@@ -31,10 +31,6 @@ final class CountryPickerViewController: DJBaseViewController {
         title: "Select a country",
         value: "Nigeria",
         leftIconConfig: iconConfig
-        //TODO: Remove this code after country selection tests have been confirmed
-        //items: viewModel.countryNames,
-        //showSelectedItem: false,
-        //itemSelectionHandler: didChooseCountry
     )
     private lazy var countriesTableView = UITableView(
         cells: [UITableViewCell.self],
@@ -67,16 +63,6 @@ final class CountryPickerViewController: DJBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //TODO: Remove this code after country selection tests have been confirmed
-        /*with(contentStackView) {
-            addSubview($0)
-            $0.anchor(
-                top: navView.bottomAnchor,
-                leading: safeAreaLeadingAnchor,
-                trailing: safeAreaTrailingAnchor,
-                padding: .kinit(topBottom: 50, leftRight: 16)
-            )
-        }*/
         viewModel.viewProtocol = self
         with(contentScrollView) {
             addSubview($0)
@@ -143,12 +129,6 @@ final class CountryPickerViewController: DJBaseViewController {
     @objc private func searchTextfieldDidChange() {
         viewModel.filterCountries(searchTextField.text)
     }
-    
-    //TODO: Remove this code after country selection tests have been confirmed
-    /*private func didChooseCountry(name: String, index: Int) {
-        countryPickerView.updateInfo(country: viewModel.country(at: index))
-        viewModel.didSelectCountry(at: index)
-    }*/
     
     private func didChooseCountry(_ country: DJCountryDB) {
         countryPickerView.updateInfo(country: country)

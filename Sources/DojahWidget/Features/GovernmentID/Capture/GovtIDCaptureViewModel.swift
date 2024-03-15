@@ -147,8 +147,17 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case let .success(response):
                 self?.didGetImageAnalysisResponse(response)
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.imageAnalysisOrCheckOrDocumentUploadDidFail(error)
             }
+        }
+    }
+    
+    private func imageAnalysisOrCheckOrDocumentUploadDidFail(_ error: DJSDKError) {
+        postStepFailedEvent()
+        if [.imageCheckOrAnalysisError, .govtIDCouldNotBeCaptured].contains(error) {
+            showErrorMessage(.govtIDCouldNotBeCaptured)
+        } else {
+            showErrorMessage(error.uiMessage)
         }
     }
     
@@ -241,7 +250,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case let .success(response):
                 self.didGetCheckRequestResponse(response)
             case let .failure(error):
-                self.showErrorMessage(error.uiMessage)
+                self.imageAnalysisOrCheckOrDocumentUploadDidFail(error)
             }
         }
     }
@@ -267,7 +276,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
                 postEvent(
-                    request: .event(name: .stepFailed, pageName: pageName),
+                    request: .stepFailed(errorCode: .imageCheckFailedAfterMaxRetries),
                     showLoader: false,
                     showError: false
                 )
@@ -311,7 +320,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             case let .success(response):
                 self?.didUploadDocument(response)
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.imageAnalysisOrCheckOrDocumentUploadDidFail(error)
             }
         }
     }
@@ -321,13 +330,22 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             postStepCompletedEvent()
             setNextAuthStep()
         } else {
-            showErrorMessage(response.entity?.msg ?? "Document upload failed")
+            postStepFailedEvent()
+            showErrorMessage(.govtIDCouldNotBeCaptured)
         }
     }
     
     private func postStepCompletedEvent() {
         postEvent(
             request: .event(name: .stepCompleted, pageName: pageName),
+            showLoader: false,
+            showError: false
+        )
+    }
+    
+    private func postStepFailedEvent() {
+        postEvent(
+            request: .event(name: .stepFailed, pageName: pageName),
             showLoader: false,
             showError: false
         )

@@ -8,7 +8,7 @@
 import Foundation
 
 enum DJConstants {
-    static let genericErrorMessage = "It looks like something isn't connecting right. Please try again"
+    static let genericErrorMessage = "An error occured. Try again later"
     static let disclaimerItems = [
         "You must be in a well lit environment before getting started.",
         "Avoid wearing anything that hinders or hides your face from being seen.",
@@ -41,4 +41,5 @@ enum DJConstants {
     static let years = Array(1990...current(.year)).reversed()
     
     static let dateFormat = "dd-MM-yyyy"
+    
 }

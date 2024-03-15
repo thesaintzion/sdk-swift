@@ -45,10 +45,10 @@ final class OTPVerificationViewModel: BaseViewModel {
                         self?.viewProtocol?.startCountdownTimer()
                     }
                 } else {
-                    self?.showErrorMessage("Unable to request for OTP")
+                    self?.showErrorMessage(.OTPCouldNotBeSent)
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.showErrorMessage(.OTPCouldNotBeSent)
             }
         }
     }
@@ -66,9 +66,11 @@ final class OTPVerificationViewModel: BaseViewModel {
                 if entityResponse.entity?.valid ?? false {
                     self?.postStepCompletedEvent()
                 } else {
-                    self?.showErrorMessage("Unable to verify OTP, please try again")
+                    self?.sendStepFailedEventForInvalidOTP()
+                    self?.showErrorMessage(.invalidOTPEntered)
                 }
             case let .failure(error):
+                self?.sendStepFailedEventForInvalidOTP()
                 self?.showErrorMessage(error.uiMessage)
             }
         }
@@ -88,6 +90,14 @@ final class OTPVerificationViewModel: BaseViewModel {
                     self?.setNextAuthStep()
                 }
             }
+        )
+    }
+    
+    private func sendStepFailedEventForInvalidOTP() {
+        postEvent(
+            request: .stepFailed(errorCode: .invalidOTP),
+            showLoader: false,
+            showError: false
         )
     }
 }

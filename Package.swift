@@ -46,7 +46,8 @@ let package = Package(
                 .copy("Resources/Animations/error.json"),
                 .copy("Resources/Animations/circle-loader.json"),
                 .copy("Resources/Animations/successfully-done-2.json"),
-                .copy("Resources/Animations/successfully-send.json")
+                .copy("Resources/Animations/successfully-send.json"),
+                .copy("Resources/Animations/check_1.json")
             ]
         ),
         .testTarget(name: "DojahWidgetTests", dependencies: ["DojahWidget"]),

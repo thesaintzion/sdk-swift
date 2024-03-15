@@ -125,6 +125,13 @@ final class NetworkService: NetworkServiceProtocol {
                         completion(.failure(.lowBalance))
                         return
                     }
+                    
+                    if statusCode == 424 {
+                        let isGovtIDLookup = [.bvnLookup, .ninLookup, .driversLicenseLookup, .vninLookup, .tin].contains(remotePath)
+                        completion(.failure(isGovtIDLookup ? .invalidIDNotFoundThirdParty : .serverFailure))
+                        return
+                    }
+                    
                     kprint("400: Network Error:")
                     kprint("\(String(describing: error))")
                     completion(.failure(.resourceNotFound))
@@ -135,6 +142,16 @@ final class NetworkService: NetworkServiceProtocol {
                     kprint("500: Network Error:")
                     kprint("\(String(describing: error))")
                     completion(.failure(.serverFailure))
+                    return
+                }
+                
+                if statusCode != 200 {
+                    if [.imageCheck, .imageAnalysis].contains(remotePath) {
+                        completion(.failure(.imageCheckOrAnalysisError))
+                    }
+                    if remotePath == .files {
+                        completion(.failure(.govtIDCouldNotBeCaptured))
+                    }
                     return
                 }
             }

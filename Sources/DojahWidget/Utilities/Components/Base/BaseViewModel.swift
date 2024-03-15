@@ -90,6 +90,10 @@ class BaseViewModel {
         )
     }
     
+    func showErrorMessage(_ sdkError: DJSDKError, doneAction: NoParamHandler? = nil) {
+        showErrorMessage(sdkError.uiMessage, doneAction: doneAction)
+    }
+    
     private func makeVerificationDecision() {
         showLoader?(true)
         decisionRemoteDatasource.makeVerificationDecision { [weak self] result in
