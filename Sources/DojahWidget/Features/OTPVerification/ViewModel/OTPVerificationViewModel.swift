@@ -15,7 +15,8 @@ final class OTPVerificationViewModel: BaseViewModel {
         verificationMethod == .phoneNumberOTP
     }
     var verificationInfo: String {
-        preference.DJOTPVerificationInfo
+        let lastDigits = String(preference.DJOTPVerificationInfo.suffix(4))
+        return "XXXXXXX\(lastDigits)"
     }
     var otp = ""
     private var otpReference = ""
@@ -47,7 +48,7 @@ final class OTPVerificationViewModel: BaseViewModel {
                 } else {
                     self?.showErrorMessage(.OTPCouldNotBeSent)
                 }
-            case let .failure(error):
+            case .failure:
                 self?.showErrorMessage(.OTPCouldNotBeSent)
             }
         }

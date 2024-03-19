@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class OTPVerificationViewController: DJBaseViewController {
+/*final class OTPVerificationViewController: DJBaseViewController {
     
     private let viewModel: OTPVerificationViewModel
     
@@ -60,4 +60,4 @@ final class OTPVerificationViewController: DJBaseViewController {
 //        kpush(VerifyOTPViewController(viewModel: viewModel))
     }
 
-}
+}*/
