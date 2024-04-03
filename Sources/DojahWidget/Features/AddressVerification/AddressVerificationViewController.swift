@@ -139,6 +139,14 @@ extension AddressVerificationViewController: AddressVerificationViewProtocol {
     func enableContinueButton(_ enable: Bool) {
         continueButton.enable(enable)
     }
+    
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.hideMessage()
+    }
 }
 
 extension AddressVerificationViewController: UITableViewConformable {

@@ -22,7 +22,14 @@ final class GovernmentDataViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
+    /*private let hintIconTextView = PillIconTextView(
+        text: "Fill the form as it appears on your valid ID",
+        icon: .res(.greenInfoCircle),
+        iconSize: 18,
+        textColor: .djGreen,
+        bgColor: .djLightGreen
+    )
+    private lazy var hintContainerView = hintIconTextView.withHStackCentering()*/
     private lazy var govtIDView = DJPickerView(
         title: "Government Identification",
         items: viewModel.governmentIDs.names,
@@ -45,7 +52,7 @@ final class GovernmentDataViewController: DJBaseViewController {
         subviews: [govtIDView, govtIDNumberTextField, verificationMethodView, continueButton],
         spacing: 20
     )
-    private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])
+    private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     private var govtID: GovtID?
     private var govtIDVerificationMethod: GovtIDVerificationMethod?
     
@@ -68,14 +75,15 @@ final class GovernmentDataViewController: DJBaseViewController {
                 padding: .kinit(leftRight: 20)
             )
             
-            fillFormView.centerXInSuperview()
-            fillFormView.anchor(
+            /*hintContainerView.anchor(
                 top: $0.ktopAnchor,
+                leading: $0.kleadingAnchor,
+                trailing: $0.ktrailingAnchor,
                 padding: .kinit(top: 40)
-            )
+            )*/
             
             contentStackView.anchor(
-                top: fillFormView.bottomAnchor,
+                top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
                 bottom: $0.kbottomAnchor,
                 trailing: $0.ktrailingAnchor,
@@ -88,6 +96,8 @@ final class GovernmentDataViewController: DJBaseViewController {
         govtIDNumberTextField.textDidChange = { [weak self] text in
             self?.viewModel.idNumber = text
         }
+        
+        navView.showSuccessMessage("Fill the form as it appears on your valid ID")
     }
     
 }
@@ -113,5 +123,30 @@ extension GovernmentDataViewController: GovernmentDataViewProtocol {
             $0.selectionItems = viewModel.governmentIDVerificationMethods.names
             $0.updateValue("")
         }
+    }
+    
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+        /*with(hintIconTextView) {
+            $0.text = message
+            $0.backgroundColor = .djLightRed
+            $0.iconTextView.textColor = .djRed
+            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
+            $0.iconTextView.icontTint = .djRed
+        }*/
+    }
+    
+    func removeErrorMessage() {
+        /*with(hintIconTextView) {
+            $0.text = "Fill the form as it appears on your valid ID"
+            $0.backgroundColor = .djLightGreen
+            $0.iconTextView.textColor = .djGreen
+            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
+            $0.iconTextView.icontTint = .djGreen
+        }*/
+    }
+    
+    func hideMessage() {
+        navView.showSuccessMessage("Fill the form as it appears on your valid ID")
     }
 }

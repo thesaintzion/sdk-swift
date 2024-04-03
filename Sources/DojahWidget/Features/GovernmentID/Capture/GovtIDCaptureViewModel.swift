@@ -155,7 +155,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
     private func imageAnalysisOrCheckOrDocumentUploadDidFail(_ error: DJSDKError) {
         postStepFailedEvent()
         if [.imageCheckOrAnalysisError, .govtIDCouldNotBeCaptured].contains(error) {
-            showErrorMessage(.govtIDCouldNotBeCaptured)
+            showErrorMessage(DJSDKError.govtIDCouldNotBeCaptured.uiMessage)
         } else {
             showErrorMessage(error.uiMessage)
         }
@@ -331,7 +331,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             setNextAuthStep()
         } else {
             postStepFailedEvent()
-            showErrorMessage(.govtIDCouldNotBeCaptured)
+            showErrorMessage(DJSDKError.govtIDCouldNotBeCaptured.uiMessage)
         }
     }
     
@@ -349,5 +349,18 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             showLoader: false,
             showError: false
         )
+    }
+    
+    private func hideMessage() {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.hideMessage()
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        showLoader?(false)
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showErrorMessage(message)
+        }
     }
 }

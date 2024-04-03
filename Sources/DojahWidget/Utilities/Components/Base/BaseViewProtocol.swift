@@ -9,8 +9,14 @@ import Foundation
 
 protocol BaseViewProtocol: AnyObject {
     func errorDoneAction()
+    func showErrorMessage(_ message: String)
+    func showSuccessMessage(_ message: String)
+    func hideMessage()
 }
 
 extension BaseViewProtocol {
     func errorDoneAction() {}
+    func showErrorMessage(_ message: String) {}
+    func showSuccessMessage(_ message: String) {}
+    func hideMessage() {}
 }

@@ -22,6 +22,7 @@ final class UserDataViewModel: BaseViewModel {
         lastName: String,
         dob: String
     ) {
+        hideMessage()
         let params: DJParameters = [
             "mobile": "",
             "country": preference.DJCountryCode,
@@ -40,19 +41,18 @@ final class UserDataViewModel: BaseViewModel {
                 if res.entity?.success == true {
                     self?.postStepCompletedEvent()
                 } else {
-                    self?.showErrorMessage(res.entity?.msg ?? DJConstants.genericErrorMessage) {
-                        self?.postStepFailedEvent()
-                    }
+                    self?.postStepFailedEvent()
+                    self?.showErrorMessage(res.entity?.msg ?? DJConstants.genericErrorMessage)
                 }
             case .failure(let error):
-                self?.showErrorMessage(error.uiMessage) {
-                    self?.postStepFailedEvent()
-                }
+                self?.postStepFailedEvent()
+                self?.showErrorMessage(error.uiMessage)
             }
         }
     }
     
     private func postStepCompletedEvent() {
+        hideMessage()
         postEvent(
             request: .event(name: .stepCompleted, pageName: .userData),
             showLoader: false,
@@ -76,13 +76,20 @@ final class UserDataViewModel: BaseViewModel {
     private func postStepFailedEvent() {
         postEvent(
             request: .event(name: .stepFailed, pageName: .userData),
-            showError: false,
-            didSucceed: { [weak self] _ in
-                self?.errorDoneAction?()
-            },
-            didFail: { [weak self] _ in
-                self?.errorDoneAction?()
-            }
+            showError: false
         )
+    }
+    
+    private func hideMessage() {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.hideMessage()
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        showLoader?(false)
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showErrorMessage(message)
+        }
     }
 }

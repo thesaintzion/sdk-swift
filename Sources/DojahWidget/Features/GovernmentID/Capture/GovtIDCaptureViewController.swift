@@ -341,6 +341,14 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             }
         }
     }
+    
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.hideMessage()
+    }
 }
 
 extension GovtIDCaptureViewController: AVCapturePhotoCaptureDelegate {

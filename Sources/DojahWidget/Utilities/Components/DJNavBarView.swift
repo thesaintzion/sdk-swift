@@ -17,20 +17,37 @@ final class DJNavBarView: BaseView {
     private let backImageView = UIImageView(image: .res(.backTextIcon), height: 24, width: 64)
     private let closeImageView = UIImageView(image: .res(.xmarkFilledIcon), size: 18)
     private let appImageView = UIImageView(image: .res(.circleIcon), contentMode: .scaleAspectFit)
+    let hintIconTextView = PillIconTextView(
+        text: "Fill the form as it appears on your valid ID",
+        icon: .res(.greenInfoCircle),
+        iconSize: 18,
+        textColor: .djGreen,
+        bgColor: .djLightGreen
+    )
+    private lazy var hintContainerView = hintIconTextView.withHStackCentering()
+    private lazy var hintParentView = VStackView(subviews: [hintContainerView, UIView.vspacer(1)])
     
     override func setup() {
-        addSubviews(backImageView, closeImageView, appImageView)
+        addSubviews(backImageView, closeImageView, appImageView, hintParentView)
         with(appImageView) {
             $0.centerXInSuperview()
-            $0.anchor(top: topAnchor, bottom: bottomAnchor)
+            $0.anchor(top: topAnchor)
             backImageView.centerVertically(to: $0.centerYAnchor)
             backImageView.anchor(leading: leadingAnchor)
             closeImageView.centerVertically(to: $0.centerYAnchor)
             closeImageView.anchor(trailing: trailingAnchor)
+            hintParentView.anchor(
+                top: $0.bottomAnchor,
+                leading: leadingAnchor,
+                bottom: bottomAnchor,
+                trailing: trailingAnchor,
+                padding: .kinit(top: 30, left: 10, right: 10)
+            )
         }
         
         addTapGestures()
         setAppImage()
+        hintContainerView.showView(false)
     }
     
     private func addTapGestures() {
@@ -60,6 +77,32 @@ final class DJNavBarView: BaseView {
         if let appLogoURL = preference.DJAppConfig?.logo {
             appImageView.setImageFromURL(appLogoURL, placeholder: .res(.circleIcon))
         }
+    }
+    
+    func showErrorMessage(_ message: String) {
+        with(hintIconTextView) {
+            $0.text = message
+            $0.backgroundColor = .djLightRed
+            $0.iconTextView.textColor = .djRed
+            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
+            $0.iconTextView.icontTint = .djRed
+        }
+        hintContainerView.showView()
+    }
+    
+    func showSuccessMessage(_ message: String) {
+        with(hintIconTextView) {
+            $0.text = message
+            $0.backgroundColor = .djLightGreen
+            $0.iconTextView.textColor = .djGreen
+            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
+            $0.iconTextView.icontTint = .djGreen
+        }
+        hintContainerView.showView()
+    }
+    
+    func hideMessage() {
+        hintContainerView.showView(false)
     }
 
 }

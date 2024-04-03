@@ -28,6 +28,7 @@ final class OTPVerificationViewModel: BaseViewModel {
     
     func requestOTP() {
         showLoader?(true)
+        hideMessage()
         let params: DJParameters = [
             "destination": preference.DJOTPVerificationInfo,
             "length" : 4,
@@ -46,16 +47,17 @@ final class OTPVerificationViewModel: BaseViewModel {
                         self?.viewProtocol?.startCountdownTimer()
                     }
                 } else {
-                    self?.showErrorMessage(.OTPCouldNotBeSent)
+                    self?.showErrorMessage(DJSDKError.OTPCouldNotBeSent.uiMessage)
                 }
             case .failure:
-                self?.showErrorMessage(.OTPCouldNotBeSent)
+                self?.showErrorMessage(DJSDKError.OTPCouldNotBeSent.uiMessage)
             }
         }
     }
     
     func verifyOTP() {
         showLoader?(true)
+        hideMessage()
         let params = [
             "code": otp,
             "reference_id": otpReference
@@ -68,7 +70,7 @@ final class OTPVerificationViewModel: BaseViewModel {
                     self?.postStepCompletedEvent()
                 } else {
                     self?.sendStepFailedEventForInvalidOTP()
-                    self?.showErrorMessage(.invalidOTPEntered)
+                    self?.showErrorMessage(DJSDKError.invalidOTPEntered.uiMessage)
                 }
             case let .failure(error):
                 self?.sendStepFailedEventForInvalidOTP()
@@ -100,5 +102,18 @@ final class OTPVerificationViewModel: BaseViewModel {
             showLoader: false,
             showError: false
         )
+    }
+    
+    private func hideMessage() {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.hideMessage()
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        showLoader?(false)
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showErrorMessage(message)
+        }
     }
 }

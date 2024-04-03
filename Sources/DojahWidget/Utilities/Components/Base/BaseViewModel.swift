@@ -117,9 +117,9 @@ class BaseViewModel {
         preference.DJAuthStep = .index
         let feedbackConfig = FeedbackConfig(
             feedbackType: decisionStatus.feedbackType,
-            titleText: "Verification Status",
+            titleText: decisionStatus.feedbackTitle,
             message: decisionStatus.feedbackMessage,
-            showNavControls: false,
+            showNavControls: true,
             doneAction: verificationDoneAction
         )
         showMessage?(feedbackConfig)

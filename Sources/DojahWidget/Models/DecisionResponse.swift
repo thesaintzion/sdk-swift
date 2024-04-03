@@ -38,9 +38,20 @@ enum DecisionStatus: String, Codable {
     var feedbackMessage: String {
         switch self {
         case .approved:
-            return "Verification Successful"
+            return "Your identification has been successfully verified."
         case .pending:
-            return "Your verification is awaiting approval"
+            return "Your identification process is awaiting approval."
+        case .failed:
+            return "Your identification cannot be verified."
+        }
+    }
+    
+    var feedbackTitle: String {
+        switch self {
+        case .approved:
+            return "Verification successful"
+        case .pending:
+            return "Verification awaiting approval"
         case .failed:
             return "Verification failed"
         }

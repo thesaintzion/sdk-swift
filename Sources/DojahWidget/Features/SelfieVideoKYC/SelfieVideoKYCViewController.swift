@@ -335,7 +335,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
 
 extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {
     func showSelfieImageError(message: String) {
-        showToast(message: message, type: .error)
+        //showToast(message: message, type: .error)
         runOnMainThread { [weak self] in
             guard let self else { return }
             with(self.cameraHintView) {
@@ -359,7 +359,7 @@ extension SelfieVideoKYCViewController: AVCapturePhotoCaptureDelegate {
             didCaptureImage(uiImage)
         } else {
             kprint("Error capturing photo: \(error?.localizedDescription ?? "Unknown error")")
-            Toast.shared.show("Error taking photo, please try again", type: .error)
+            //Toast.shared.show("Error taking photo, please try again", type: .error)
         }
     }
     

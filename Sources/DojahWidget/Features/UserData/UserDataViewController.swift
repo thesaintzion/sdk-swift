@@ -22,7 +22,7 @@ final class UserDataViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
+    //private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private let firstNameTextField = DJTextField(
         title: "First name",
         placeholder: "First name",
@@ -53,7 +53,7 @@ final class UserDataViewController: DJBaseViewController {
         subviews: [firstNameTextField, lastNameTextField, middleNameTextField, dobTextField, continueButton, termsView],
         spacing: 20
     )
-    private lazy var contentScrollView = UIScrollView(children: [fillFormView, contentStackView])
+    private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,20 +73,22 @@ final class UserDataViewController: DJBaseViewController {
                 padding: .kinit(leftRight: 20)
             )
             
-            fillFormView.centerXInSuperview()
+            /*fillFormView.centerXInSuperview()
             fillFormView.anchor(
                 top: $0.ktopAnchor,
                 padding: .kinit(top: 40)
-            )
+            )*/
             
             contentStackView.anchor(
-                top: fillFormView.bottomAnchor, 
+                top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
                 bottom: $0.kbottomAnchor,
                 trailing: $0.ktrailingAnchor,
                 padding: .kinit(top: 50, bottom: 20)
             )
         }
+        
+        navView.showSuccessMessage("Fill the form as it appears on your valid ID")
     }
     
     private func didTapContinueButton() {
@@ -115,7 +117,15 @@ final class UserDataViewController: DJBaseViewController {
 
 }
 
-extension UserDataViewController: UserDataViewProtocol {}
+extension UserDataViewController: UserDataViewProtocol {
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.showSuccessMessage("Fill the form as it appears on your valid ID")
+    }
+}
 
 extension UserDataViewController: TermsAndPrivacyViewDelegate {
     func didTapTerms() {}

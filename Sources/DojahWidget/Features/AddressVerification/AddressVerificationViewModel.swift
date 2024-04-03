@@ -24,8 +24,9 @@ final class AddressVerificationViewModel: BaseViewModel {
     }
     
     func didTapContinue() {
+        hideMessage()
         guard let selectedPlace else {
-            showToast(message: "Choose a valid address", type: .error)
+            showErrorMessage("Choose a valid address")
             return
         }
         
@@ -105,6 +106,7 @@ final class AddressVerificationViewModel: BaseViewModel {
     }
     
     private func postStepEvent(name: DJEventName) {
+        hideMessage()
         postEvent(
             request: .event(name: name, pageName: .address), 
             showLoader: false,
@@ -156,6 +158,19 @@ final class AddressVerificationViewModel: BaseViewModel {
     private func enableContinueButton(_ enable: Bool = true) {
         runOnMainThread { [weak self] in
             self?.viewProtocol?.enableContinueButton(enable)
+        }
+    }
+    
+    private func hideMessage() {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.hideMessage()
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        showLoader?(false)
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showErrorMessage(message)
         }
     }
 }

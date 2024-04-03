@@ -120,20 +120,26 @@ final class NetworkService: NetworkServiceProtocol {
             if let httpURLResponse = urlResponse as? HTTPURLResponse {
                 let statusCode = httpURLResponse.statusCode
                 
+                kprint("Status Code: \(statusCode)")
+                kprint("Error: \(String(describing: error))")
+                
                 if (400...499).contains(statusCode) {
                     if statusCode == 402 {
                         completion(.failure(.lowBalance))
                         return
                     }
                     
+                    let isGovtIDLookup = [.bvnLookup, .ninLookup, .driversLicenseLookup, .vninLookup, .tin].contains(remotePath)
                     if statusCode == 424 {
-                        let isGovtIDLookup = [.bvnLookup, .ninLookup, .driversLicenseLookup, .vninLookup, .tin].contains(remotePath)
-                        completion(.failure(isGovtIDLookup ? .invalidIDNotFoundThirdParty : .serverFailure))
+                        completion(.failure(isGovtIDLookup ? .invalidIDThirdPartyFailure : .serverFailure))
                         return
                     }
                     
-                    kprint("400: Network Error:")
-                    kprint("\(String(describing: error))")
+                    if [404, 400].contains(statusCode) && isGovtIDLookup {
+                        completion(.failure(.invalidIDNotFoundThirdParty))
+                        return
+                    }
+                    
                     completion(.failure(.resourceNotFound))
                     return
                 }

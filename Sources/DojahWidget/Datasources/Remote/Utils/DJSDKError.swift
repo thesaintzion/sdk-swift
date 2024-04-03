@@ -22,6 +22,7 @@ enum DJSDKError: Error, Equatable {
     case invalidOTPEntered
     case OTPCouldNotBeSent
     case invalidIDNotFoundThirdParty
+    case invalidIDThirdPartyFailure
     case invalidIDNotFoundThirdPartyMessage(DJGovernmentIDType)
     case invalidIDNotFoundGovernmentData(DJGovernmentIDType)
     case invalidIDNotFoundBusinessData(BusinessDataType)
@@ -64,6 +65,8 @@ enum DJSDKError: Error, Equatable {
             return "Document is not clear enough, please try again"
         case .imageCheckOrAnalysisError:
             return "imageCheckOrAnalysisError"
+        case .invalidIDThirdPartyFailure:
+            return "invalidIDThirdPartyFailure"
         }
     }
 }

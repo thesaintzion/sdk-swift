@@ -24,19 +24,26 @@ final public class FeedbackViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private lazy var animationView = LottieAnimationView(name: config.feedbackType.lottieAnimationName, bundle: Bundle.module).withHeight(200)
-    private lazy var titleLabel = UILabel(text: config.titleText, font: .semibold(20), alignment: .center)
+    private lazy var animationView = LottieAnimationView(
+        name: config.feedbackType.lottieAnimationName,
+        bundle: Bundle.module
+    ).withHeight(200)
+    private lazy var titleLabel = UILabel(
+        text: config.titleText,
+        font: .semibold(20),
+        alignment: .center
+    )
     private lazy var messageLabel = UILabel(
         text: config.message,
         font: .regular(16),
         numberOfLines: 0,
         alignment: .center
     )
-    private lazy var doneButton = DJButton(title: "Done") { [weak self] in
+    /*private lazy var doneButton = DJButton(title: "Done") { [weak self] in
         self?.didTapDoneButton()
-    }
+    }*/
     private lazy var contentStackView = VStackView(
-        subviews: [titleLabel, animationView, messageLabel, doneButton],
+        subviews: [titleLabel, animationView, messageLabel],
         spacing: 10,
         alignment: .center
     )
@@ -54,7 +61,7 @@ final public class FeedbackViewController: DJBaseViewController {
             )
         }
         
-        with(doneButton) {
+        /*with(doneButton) {
             addSubview($0)
             $0.anchor(
                 leading: safeAreaLeadingAnchor,
@@ -62,15 +69,20 @@ final public class FeedbackViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(topBottom: 50, leftRight: 20)
             )
-        }
+        }*/
         
         with(animationView) {
             $0.loopMode = .loop
             $0.play()
         }
+        
     }
     
-    private func didTapDoneButton() {
+    override func didTapNavBackButton() {
+        config.doneAction?()
+    }
+    
+    override func didTapNavCloseButton() {
         config.doneAction?()
     }
 

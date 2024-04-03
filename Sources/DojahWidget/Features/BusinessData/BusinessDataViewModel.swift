@@ -20,13 +20,15 @@ final class BusinessDataViewModel: BaseViewModel {
     }
     
     func didChooseDocumentType(at index: Int) {
+        hideMessage()
         selectedDocument = documentTypes[index]
         viewProtocol?.updateNumberTextfield()
     }
     
     func verifyBusiness(name: String, number: String) {
+        hideMessage()
         guard let selectedDocument else {
-            showToast(message: "Choose a document type", type: .error)
+            showErrorMessage("Choose a document type")
             return
         }
         
@@ -38,7 +40,7 @@ final class BusinessDataViewModel: BaseViewModel {
         )
         
         guard let businessDataType = BusinessDataType(rawValue: selectedDocument.idEnum.orEmpty) else {
-            showToast(message: DJConstants.genericErrorMessage, type: .error)
+            showErrorMessage(DJConstants.genericErrorMessage)
             return
         }
         
@@ -64,9 +66,10 @@ final class BusinessDataViewModel: BaseViewModel {
     }
     
     private func didGetVerificationResponse(_ response: EntityResponse<BusinessDataResponse>, businessDataType: BusinessDataType) {
+        hideMessage()
         guard let businessDataResponse = response.entity else {
             postStepFailedEvent()
-            showErrorMessage(.invalidIDNotFoundBusinessData(businessDataType))
+            showErrorMessage(DJSDKError.invalidIDNotFoundBusinessData(businessDataType).uiMessage)
             return
         }
         let values = [businessDataResponse.business, businessDataType.rawValue, preference.DJCountryCode, businessDataResponse.companyName]
@@ -106,5 +109,18 @@ final class BusinessDataViewModel: BaseViewModel {
             showLoader: false,
             showError: false
         )
+    }
+    
+    private func hideMessage() {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.hideMessage()
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        showLoader?(false)
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showErrorMessage(message)
+        }
     }
 }

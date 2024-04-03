@@ -27,6 +27,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     }
     
     func didChooseGovernmentData(at index: Int, type: GovernmentDataType) {
+        hideMessage()
         switch type {
         case .id:
             selectedGovernmentID = governmentIDs[index]
@@ -61,6 +62,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     func didTapContinue() {
         guard let selectedGovernmentID else { return }
         showLoader?(true)
+        hideMessage()
         let eventRequest = DJEventRequest(
             name: .verificationTypeSelected,
             value: "\(selectedGovernmentID.idTypeParam),\(idNumber)"
@@ -80,6 +82,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     }
     
     private func lookupGovernmentData() {
+        hideMessage()
         guard let idEnum = selectedGovernmentID?.idEnum, let idType = DJGovernmentIDType(rawValue: idEnum) else { return }
         governmentDataRemoteDatasource.lookupID(number: idNumber, idType: idType) { [weak self] result in
             switch result {
@@ -89,12 +92,14 @@ final class DJGovernmentDataViewModel: BaseViewModel {
                     self?.postGovernmentDataCollectedEvent()
                 } else {
                     self?.postStepFailedEvent()
-                    self?.showErrorMessage(.invalidIDNotFoundGovernmentData(idType))
+                    self?.showErrorMessage(DJSDKError.invalidIDNotFoundGovernmentData(idType).uiMessage)
                 }
             case let .failure(error):
                 self?.postStepFailedEvent()
-                if error == .invalidIDNotFoundThirdParty {
-                    self?.showErrorMessage(.invalidIDNotFoundThirdPartyMessage(idType))
+                if error == .invalidIDThirdPartyFailure {
+                    self?.showErrorMessage(DJSDKError.invalidIDNotFoundThirdPartyMessage(idType).uiMessage)
+                } else if error == .invalidIDNotFoundThirdParty {
+                    self?.showErrorMessage(DJSDKError.invalidIDNotFoundGovernmentData(idType).uiMessage)
                 } else {
                     self?.showErrorMessage(error.uiMessage)
                 }
@@ -110,16 +115,25 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         )
     }
     
+    private func hideMessage() {
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.hideMessage()
+        }
+    }
+    
     private func showErrorMessage(_ message: String) {
         showLoader?(false)
-        showMessage?(
+        runOnMainThread { [weak self] in
+            self?.viewProtocol?.showErrorMessage(message)
+        }
+        /*showMessage?(
             .error(
                 message: message,
                 doneAction: { [weak self] in
                     self?.viewProtocol?.errorAction()
                 }
             )
-        )
+        )*/
     }
     
     private func postGovernmentDataCollectedEvent() {

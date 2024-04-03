@@ -103,4 +103,12 @@ extension BusinessDataViewController: BusinessDataViewProtocol {
         }
         businessNameTextField.showView()
     }
+    
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.hideMessage()
+    }
 }

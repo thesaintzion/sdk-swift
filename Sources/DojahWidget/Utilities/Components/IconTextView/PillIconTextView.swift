@@ -9,7 +9,7 @@ import UIKit
 
 final class PillIconTextView: BaseView {
     
-    private var iconTextView: IconTextView!
+    var iconTextView: IconTextView!
     
     var text: String? {
         get { iconTextView.text }

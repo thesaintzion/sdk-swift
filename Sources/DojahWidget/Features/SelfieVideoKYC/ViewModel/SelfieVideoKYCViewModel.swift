@@ -52,7 +52,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         guard [.governmentDataVerification, .governmentData].contains(preference.DJAuthStep.name),
               let analysisResponse = response.entity else {
             showLoader?(false)
-            showToast(message: DJConstants.genericErrorMessage, type: .error)
+            viewProtocol?.showSelfieImageError(message: DJConstants.genericErrorMessage)
             return
         }
         
@@ -87,9 +87,9 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
     private func imageAnalysisOrCheckDidFail(error: DJSDKError) {
         postCheckFailedEvent()
         if error == .imageCheckOrAnalysisError {
-            showErrorMessage(.selfieVideoCouldNotBeCaptured)
+            viewProtocol?.showSelfieImageError(message: DJSDKError.selfieVideoCouldNotBeCaptured.uiMessage)
         } else {
-            showErrorMessage(error.uiMessage)
+            viewProtocol?.showSelfieImageError(message: error.uiMessage)
         }
     }
     
@@ -126,7 +126,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         guard let checkResponse = response.entity else {
             showLoader?(false)
             postCheckFailedEvent()
-            showErrorMessage(.selfieVideoCouldNotBeCaptured)
+            viewProtocol?.showSelfieImageError(message: DJSDKError.selfieVideoCouldNotBeCaptured.uiMessage)
             return
         }
         
@@ -145,7 +145,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
                 }
             }
             postCheckFailedEvent()
-            showErrorMessage(checkResponse.reason ?? "Selfie verification failed")
+            viewProtocol?.showSelfieImageError(message: checkResponse.reason ?? "Selfie verification failed")
         }
     }
     
@@ -172,7 +172,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
                     self?.setNextAuthStep()
                 }
             case let .failure(error):
-                self?.showErrorMessage(error.uiMessage)
+                self?.viewProtocol?.showSelfieImageError(message: error.uiMessage)
             }
         }
     }
