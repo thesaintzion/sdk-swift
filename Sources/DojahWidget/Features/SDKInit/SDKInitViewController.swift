@@ -69,6 +69,18 @@ extension SDKInitViewController: SDKInitViewProtocol {
         showFeedbackController(config: config)
     }
     
+    func showCountryNotSupportedError() {
+        let config: FeedbackConfig = .init(
+            feedbackType: .countryNotSupported,
+            titleText: "",
+            message: "Verification is not allowed in\nyour country",
+            doneAction: { [weak self] in
+                self?.kpopToRoot()
+            }
+        )
+        showFeedbackController(config: config)
+    }
+    
     func showDisclaimer() {
         let controller = DJDisclaimerViewController()
         kpush(controller)

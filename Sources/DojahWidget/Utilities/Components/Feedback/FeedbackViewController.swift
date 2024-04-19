@@ -28,6 +28,11 @@ final public class FeedbackViewController: DJBaseViewController {
         name: config.feedbackType.lottieAnimationName,
         bundle: Bundle.module
     ).withHeight(200)
+    private lazy var iconImageView = UIImageView(
+        image: config.feedbackType.icon,
+        tintColor: .djRed,
+        size: 80
+    )
     private lazy var titleLabel = UILabel(
         text: config.titleText,
         font: .semibold(20),
@@ -39,11 +44,8 @@ final public class FeedbackViewController: DJBaseViewController {
         numberOfLines: 0,
         alignment: .center
     )
-    /*private lazy var doneButton = DJButton(title: "Done") { [weak self] in
-        self?.didTapDoneButton()
-    }*/
     private lazy var contentStackView = VStackView(
-        subviews: [titleLabel, animationView, messageLabel],
+        subviews: [titleLabel, animationView, iconImageView, messageLabel],
         spacing: 10,
         alignment: .center
     )
@@ -61,21 +63,15 @@ final public class FeedbackViewController: DJBaseViewController {
             )
         }
         
-        /*with(doneButton) {
-            addSubview($0)
-            $0.anchor(
-                leading: safeAreaLeadingAnchor,
-                bottom: poweredView.topAnchor,
-                trailing: safeAreaTrailingAnchor,
-                padding: .kinit(topBottom: 50, leftRight: 20)
-            )
-        }*/
-        
         with(animationView) {
             $0.loopMode = .loop
             $0.play()
         }
         
+        let countryNotSupported = config.feedbackType == .countryNotSupported
+        iconImageView.showView(countryNotSupported)
+        animationView.showView(!countryNotSupported)
+        messageLabel.font = countryNotSupported ? .medium(16) : .regular(16)
     }
     
     override func didTapNavBackButton() {

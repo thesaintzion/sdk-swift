@@ -19,11 +19,11 @@ struct DJIPAddressEntity: Codable {
     let proxy: Bool?
     let lat: Double?
     let city, district, timezone, org: String?
-    let country, status, regionName: String?
+    let country, countryCode, status, regionName: String?
 
     enum CodingKeys: String, CodingKey {
         case lon, zip, mobile, hosting
         case entityAs = "as"
-        case isp, query, proxy, lat, city, district, timezone, org, country, status, regionName
+        case isp, query, proxy, lat, city, district, timezone, org, country, countryCode, status, regionName
     }
 }

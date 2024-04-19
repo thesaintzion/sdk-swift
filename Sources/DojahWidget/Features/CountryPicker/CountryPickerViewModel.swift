@@ -14,6 +14,7 @@ final class CountryPickerViewModel: BaseViewModel {
     var countries = [DJCountryDB]()
     private var countrySelected = false
     private var selectedCountry: DJCountryDB?
+    private lazy var preAuthCountries = preference.preAuthResponse?.widget?.countries
     
     init(countriesLocalDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource()) {
         self.countriesLocalDatasource = countriesLocalDatasource
@@ -45,6 +46,21 @@ final class CountryPickerViewModel: BaseViewModel {
             showError: false
         )
         countries = allCountries
+        checkSupportedCountry(using: country.iso2)
+    }
+    
+    func checkSupportedCountry(using iso2: String) {
+        guard let preAuthCountries, preAuthCountries.isNotEmpty, preAuthCountries.contains(iso2) else {
+            showCountryNotSupportedError()
+            return
+        }
+        viewProtocol?.enableContinueButton(true)
+        viewProtocol?.hideMessage()
+    }
+    
+    private func showCountryNotSupportedError() {
+        viewProtocol?.enableContinueButton(false)
+        viewProtocol?.showErrorMessage(DJSDKError.countryNotSupported.uiMessage)
     }
     
     func didTapContinue() {

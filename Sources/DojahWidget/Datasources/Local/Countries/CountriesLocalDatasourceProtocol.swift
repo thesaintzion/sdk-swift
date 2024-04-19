@@ -11,4 +11,5 @@ protocol CountriesLocalDatasourceProtocol {
     func saveCountries(_ countries: [DJCountryDB]) throws
     func getCountries() -> [DJCountryDB]
     func getCountry(iso2: String) -> DJCountryDB?
+    func getCountryByName(_ name: String) -> DJCountryDB?
 }

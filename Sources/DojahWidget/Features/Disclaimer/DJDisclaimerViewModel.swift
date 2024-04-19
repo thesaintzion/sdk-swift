@@ -13,6 +13,18 @@ final class DJDisclaimerViewModel: BaseViewModel {
         preference.DJCanSeeCountryPage
     }
     
+    func checkSupportedCountry() {
+        guard let countries = preference.preAuthResponse?.widget?.countries, countries.isNotEmpty, countries.contains(preference.DJIPCountry) else {
+            showCountryNotSupportedError()
+            return
+        }
+    }
+    
+    private func showCountryNotSupportedError() {
+        viewProtocol?.enableContinueButton(false)
+        viewProtocol?.showErrorMessage(DJSDKError.countryNotSupported.uiMessage)
+    }
+    
     func postStepCompletedEvent() {
         postEvent(
             request: .init(name: .stepCompleted, value: "index"),

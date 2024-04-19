@@ -23,4 +23,5 @@ enum PreferenceKey: String {
     case DJSelectedGovernmentIDVerificationMethod
     case DJOTPVerificationInfo
     case WidgetIDCache
+    case DJPreAuthResponse
 }

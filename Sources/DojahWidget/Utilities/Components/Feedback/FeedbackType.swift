@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 enum FeedbackType {
-    case success, failure, warning
+    case success, failure, warning, countryNotSupported
     
     var icon: UIImage {
         switch self {
@@ -17,6 +17,8 @@ enum FeedbackType {
             return .res(.purpleSuccessCheckmark)
         case .failure:
             return .res(.xCircle)
+        case .countryNotSupported:
+            return .res(.globeIcon)
         case .warning:
             return .res(.xCircle)
         }
@@ -26,7 +28,7 @@ enum FeedbackType {
         switch self {
         case .success:
             return "check_1"
-        case .failure:
+        case .failure, .countryNotSupported:
             return "error"
         case .warning:
             return "check_1"

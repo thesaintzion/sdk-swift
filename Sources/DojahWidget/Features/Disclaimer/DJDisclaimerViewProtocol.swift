@@ -7,4 +7,6 @@
 
 import Foundation
 
-protocol DJDisclaimerViewProtocol: BaseViewProtocol {}
+protocol DJDisclaimerViewProtocol: BaseViewProtocol {
+    func enableContinueButton(_ enable: Bool)
+}

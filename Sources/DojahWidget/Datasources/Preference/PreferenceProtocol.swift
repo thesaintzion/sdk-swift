@@ -11,6 +11,7 @@ protocol PreferenceProtocol {
     var DJWidgetID: String { get set }
     var DJConfigurationInitialized: Bool { get set }
     var DJAppConfig: DJAppConfig? { get set }
+    var preAuthResponse: DJPreAuthResponse? { get set }
     var DJRequestHeaders: DJHeaderParameters { get set }
     var DJUserAgent: String { get set }
     var DJIPCountry: String { get set }

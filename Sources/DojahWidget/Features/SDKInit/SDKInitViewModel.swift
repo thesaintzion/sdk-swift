@@ -96,6 +96,7 @@ final class SDKInitViewModel {
             return
         }
         self.preAuthRes = preAuthRes
+        preference.preAuthResponse = preAuthRes
         if let appConfig = preAuthRes.appConfig {
             preference.DJAppConfig = appConfig
         }
@@ -214,7 +215,9 @@ final class SDKInitViewModel {
         authenticationRemoteDatasource.saveIPAddress(params: parameters) { [weak self] result in
             switch result {
             case let .success(ipAddressResponse):
-                self?.didSaveIPAddress(response: ipAddressResponse)
+                runOnMainThread {
+                    self?.didSaveIPAddress(response: ipAddressResponse)
+                }
             case let .failure(error):
                 self?.initializationDidFail(error: error)
             }
@@ -226,10 +229,18 @@ final class SDKInitViewModel {
             initializationDidFail()
             return
         }
-        preference.DJIPCountry = country
-        runOnMainThread { [weak self] in
-            self?.viewProtocol?.showDisclaimer()
+        
+        guard let dbCountry = countriesDatasource.getCountryByName(country),
+              let preAuthCountries = preference.preAuthResponse?.widget?.countries,
+              preAuthCountries.isNotEmpty,
+              preAuthCountries.contains(dbCountry.iso2)
+        else {
+            viewProtocol?.showCountryNotSupportedError()
+            return
         }
+        
+        preference.DJIPCountry = dbCountry.iso2
+        viewProtocol?.showDisclaimer()
     }
     
     private func getUserAgent() {

@@ -11,4 +11,5 @@ protocol SDKInitViewProtocol: AnyObject {
     func showLoader(_ show: Bool)
     func showSDKInitFailedView()
     func showDisclaimer()
+    func showCountryNotSupportedError()
 }

@@ -23,4 +23,8 @@ struct CountriesLocalDatasource: CountriesLocalDatasourceProtocol {
         realm.get(pk: iso2)
     }
     
+    func getCountryByName(_ name: String) -> DJCountryDB? {
+        getCountries().first { $0.countryName.insensitiveEquals(name) }
+    }
+    
 }

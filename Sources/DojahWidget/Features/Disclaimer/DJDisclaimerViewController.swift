@@ -57,6 +57,8 @@ final class DJDisclaimerViewController: DJBaseViewController {
     private func setupUI() {
         addSubviews(navView, contentStackView)
         
+        viewModel.viewProtocol = self
+        
         contentStackView.anchor(
             top: navView.bottomAnchor,
             leading: safeAreaLeadingAnchor,
@@ -67,6 +69,8 @@ final class DJDisclaimerViewController: DJBaseViewController {
         disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 20))
         
         addTapGestures()
+        
+        viewModel.checkSupportedCountry()
     }
     
     internal override func addTapGestures() {
@@ -84,4 +88,16 @@ final class DJDisclaimerViewController: DJBaseViewController {
     }
 }
 
-extension DJDisclaimerViewController: DJDisclaimerViewProtocol {}
+extension DJDisclaimerViewController: DJDisclaimerViewProtocol {
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.hideMessage()
+    }
+    
+    func enableContinueButton(_ enable: Bool) {
+        continueButton.enable(enable)
+    }
+}

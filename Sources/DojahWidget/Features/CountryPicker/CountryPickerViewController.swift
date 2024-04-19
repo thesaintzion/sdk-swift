@@ -146,6 +146,18 @@ extension CountryPickerViewController: CountryPickerViewProtocol {
     func refreshCountries() {
         countriesTableView.reloadData()
     }
+    
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.hideMessage()
+    }
+    
+    func enableContinueButton(_ enable: Bool) {
+        continueButton.enable(enable)
+    }
 }
 
 extension CountryPickerViewController: UITableViewConformable {

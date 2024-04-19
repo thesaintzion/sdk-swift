@@ -17,6 +17,9 @@ struct PreferenceImpl: PreferenceProtocol {
     @UserDefaultCodable(key: .DJAppConfig, default: nil)
     var DJAppConfig: DJAppConfig?
     
+    @UserDefaultCodable(key: .DJPreAuthResponse, default: nil)
+    var preAuthResponse: DJPreAuthResponse?
+    
     @UserDefaultCodable(key: .DJRequestHeaders, default: [:])
     var DJRequestHeaders: DJHeaderParameters
     

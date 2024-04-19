@@ -29,6 +29,7 @@ enum DJSDKError: Error, Equatable {
     case selfieVideoCouldNotBeCaptured
     case govtIDCouldNotBeCaptured
     case imageCheckOrAnalysisError
+    case countryNotSupported
     
     var uiMessage: String {
         switch self {
@@ -48,9 +49,9 @@ enum DJSDKError: Error, Equatable {
         case .unableToLoadLocalJSON:
             return "Unable to load local JSON file."
         case .invalidOTPEntered:
-            return "OTP Could not be sent, Pls try again"
-        case .OTPCouldNotBeSent:
             return "Invalid OTP entered. Please, input the correct OTP"
+        case .OTPCouldNotBeSent:
+            return "OTP Could not be sent, Please try again"
         case .invalidIDNotFoundThirdParty:
             return "invalidIDNotFound"
         case let .invalidIDNotFoundThirdPartyMessage(idType):
@@ -67,6 +68,8 @@ enum DJSDKError: Error, Equatable {
             return "imageCheckOrAnalysisError"
         case .invalidIDThirdPartyFailure:
             return "invalidIDThirdPartyFailure"
+        case .countryNotSupported:
+            return "Widget is not supported in your country"
         }
     }
 }

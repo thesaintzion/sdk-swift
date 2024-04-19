@@ -9,4 +9,5 @@ import Foundation
 
 protocol CountryPickerViewProtocol: BaseViewProtocol {
     func refreshCountries()
+    func enableContinueButton(_ enable: Bool)
 }
