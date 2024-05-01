@@ -24,7 +24,7 @@ final class PhoneNumberViewController: DJBaseViewController {
     
     private let phoneNumberTextField = DJPhoneNumberTextField()
     private lazy var continueButton = DJButton(title: "Continue", isEnabled: false) { [weak self] in
-        self?.didTapContinueButton()
+        self?.viewModel.didTapContinue()
     }
     private lazy var contentStackView = VStackView(
         subviews: [phoneNumberTextField, continueButton],
@@ -65,14 +65,15 @@ final class PhoneNumberViewController: DJBaseViewController {
     private func configurePhoneNumberTextfield() {
         with(phoneNumberTextField) {
             $0.updateDatasource(viewModel.countries.emoticonPhoneCodes)
+            
             $0.didChooseCountry = { [weak self] index in
                 self?.viewModel.didChooseCountry(index: index)
             }
+            
+            $0.textDidChange = { [weak self] number in
+                self?.viewModel.numberDidChange(number)
+            }
         }
-    }
-    
-    private func didTapContinueButton() {
-        
     }
 
 }
@@ -88,5 +89,9 @@ extension PhoneNumberViewController: PhoneNumberViewProtocol {
     
     func updateCountryDetails(phoneCode: String, flag: UIImage) {
         phoneNumberTextField.updateCountryDetails(phoneCode: phoneCode, flag: flag)
+    }
+    
+    func enableContinueButton(_ enable: Bool) {
+        continueButton.enable(enable)
     }
 }

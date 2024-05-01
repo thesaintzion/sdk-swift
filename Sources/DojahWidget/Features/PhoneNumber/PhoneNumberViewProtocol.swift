@@ -10,4 +10,5 @@ import UIKit
 
 protocol PhoneNumberViewProtocol: BaseViewProtocol {
     func updateCountryDetails(phoneCode: String, flag: UIImage)
+    func enableContinueButton(_ enable: Bool)
 }

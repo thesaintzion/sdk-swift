@@ -20,22 +20,17 @@ final class OTPVerificationViewModel: BaseViewModel {
     }
     var otp = ""
     private var otpReference = ""
-    private var destination: String = ""
     
-    init(
-        destination: String = "",
-        otpRemoteDatasource: OTPRemoteDatasourceProtocol = OTPRemoteDatasource()
-    ) {
+    init(otpRemoteDatasource: OTPRemoteDatasourceProtocol = OTPRemoteDatasource()) {
         self.otpRemoteDatasource = otpRemoteDatasource
         super.init()
-        self.destination = destination.isEmpty ? preference.DJOTPVerificationInfo : destination
     }
     
     func requestOTP() {
         showLoader?(true)
         hideMessage()
         let params: DJParameters = [
-            "destination": destination,
+            "destination": preference.DJOTPVerificationInfo,
             "length" : 4,
             "channel" : "sms",
             "sender_id": "kedesa",

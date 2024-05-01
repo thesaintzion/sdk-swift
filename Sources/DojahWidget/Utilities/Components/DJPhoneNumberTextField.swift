@@ -43,6 +43,7 @@ final class DJPhoneNumberTextField: BaseView {
         spacing: 5
     )
     var didChooseCountry: ParamHandler<Int>?
+    var textDidChange: ParamHandler<String>? = nil
     private lazy var dropdownView: DropDown = {
         with(DropDown()) {
             $0.textFont = .regular(15)
@@ -82,6 +83,7 @@ final class DJPhoneNumberTextField: BaseView {
                 ]
             )
             $0.delegate = self
+            $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         }
         
         flagStackView.didTap { [weak self] in
@@ -105,6 +107,10 @@ final class DJPhoneNumberTextField: BaseView {
     func updateCountryDetails(phoneCode: String, flag: UIImage) {
         flagIconImageView.image = flag
         codeLabel.text = phoneCode
+    }
+    
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        textDidChange?(textField.text.orEmpty)
     }
 
 }

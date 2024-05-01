@@ -102,6 +102,6 @@ class DJCountryDB: Object {
 
 extension [DJCountryDB] {
     var emoticonPhoneCodes: [String] {
-        map { "\($0.emoticon) \($0.phoneCode)" }
+        map { "\($0.emoticon) \($0.phoneCode)(\($0.iso2))" }
     }
 }

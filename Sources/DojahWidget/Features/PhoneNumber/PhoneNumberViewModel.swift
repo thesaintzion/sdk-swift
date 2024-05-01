@@ -12,6 +12,7 @@ final class PhoneNumberViewModel: BaseViewModel {
     private let countriesLocalDatasource: CountriesLocalDatasourceProtocol
     var countries = [DJCountryDB]()
     private var selectedCountry: DJCountryDB?
+    private var number: String = ""
     
     init(countriesLocalDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource()) {
         self.countriesLocalDatasource = countriesLocalDatasource
@@ -27,5 +28,14 @@ final class PhoneNumberViewModel: BaseViewModel {
             phoneCode: selectedCountry.phoneCode,
             flag: selectedCountry.flag
         )
+    }
+    
+    func numberDidChange(_ number: String) {
+        self.number = number
+        viewProtocol?.enableContinueButton(self.number.isNotEmpty)
+    }
+    
+    func didTapContinue() {
+        preference.DJOTPVerificationInfo = number
     }
 }
