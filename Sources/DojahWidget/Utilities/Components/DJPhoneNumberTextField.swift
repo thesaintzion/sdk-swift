@@ -1,5 +1,5 @@
 //
-//  DJPhoneNumberView.swift
+//  DJPhoneNumberTextField.swift
 //  
 //
 //  Created by Isaac Iniongun on 31/10/2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class DJPhoneNumberView: BaseView {
+final class DJPhoneNumberTextField: BaseView {
     
     private let titleLabel = UILabel(text: "Enter phone number", font: .light(13))
     private let flagIconImageView = UIImageView(
@@ -42,13 +42,13 @@ final class DJPhoneNumberView: BaseView {
         subviews: [titleLabel, contentView],
         spacing: 5
     )
+    var didChooseCountry: ParamHandler<Int>?
     private lazy var dropdownView: DropDown = {
         with(DropDown()) {
-            $0.dataSource = Country.allCases.names
             $0.textFont = .regular(15)
             $0.direction = .bottom
             $0.selectionAction = { [weak self] index, _ in
-                self?.didChooseCountry(index: index)
+                self?.didChooseCountry?(index)
             }
         }
     }()
@@ -72,8 +72,16 @@ final class DJPhoneNumberView: BaseView {
         }
         
         with(textField) {
-            $0.placeholder = "000-000-0000"
             $0.font = .regular(15)
+            $0.keyboardType = .numberPad
+            $0.attributedPlaceholder = NSAttributedString(
+                string: "000-000-0000",
+                attributes: [
+                    .font: UIFont.regular(14),
+                    .foregroundColor: UIColor.aPlaceholderText
+                ]
+            )
+            $0.delegate = self
         }
         
         flagStackView.didTap { [weak self] in
@@ -90,12 +98,23 @@ final class DJPhoneNumberView: BaseView {
         }
     }
     
-    private func didChooseCountry(index: Int) {
-        guard let country = Country(rawValue: index) else { return }
-        with(country) {
-            flagIconImageView.image = $0.flag
-            codeLabel.text = $0.phoneCode
-        }
+    func updateDatasource(_ datasource: [String]) {
+        dropdownView.dataSource = datasource
+    }
+    
+    func updateCountryDetails(phoneCode: String, flag: UIImage) {
+        flagIconImageView.image = flag
+        codeLabel.text = phoneCode
     }
 
+}
+
+extension DJPhoneNumberTextField: UITextFieldDelegate {
+    public func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        textField.restrictInputToDigits(string: string)
+    }
 }

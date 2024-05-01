@@ -30,7 +30,6 @@ final public class FeedbackViewController: DJBaseViewController {
     ).withHeight(200)
     private lazy var iconImageView = UIImageView(
         image: config.feedbackType.icon,
-        tintColor: .djRed,
         size: 80
     )
     private lazy var titleLabel = UILabel(

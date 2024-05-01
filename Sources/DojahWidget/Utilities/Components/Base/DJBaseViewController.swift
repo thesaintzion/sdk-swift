@@ -127,7 +127,8 @@ public class DJBaseViewController: UIViewController {
             let controller = UserDataViewController()
             kpush(controller)
         case .phoneNumber:
-            break
+            let controller = PhoneNumberViewController()
+            kpush(controller)
         case .address:
             didChooseAddressVerification()
         case .email:

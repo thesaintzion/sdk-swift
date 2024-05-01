@@ -22,7 +22,6 @@ final class UserDataViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //private let fillFormView = IconInfoView(text: "Fill the form as it appears on your valid ID")
     private let firstNameTextField = DJTextField(
         title: "First name",
         placeholder: "First name",
@@ -72,12 +71,6 @@ final class UserDataViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(leftRight: 20)
             )
-            
-            /*fillFormView.centerXInSuperview()
-            fillFormView.anchor(
-                top: $0.ktopAnchor,
-                padding: .kinit(top: 40)
-            )*/
             
             contentStackView.anchor(
                 top: $0.ktopAnchor,

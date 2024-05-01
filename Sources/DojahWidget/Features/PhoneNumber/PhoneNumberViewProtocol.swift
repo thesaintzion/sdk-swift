@@ -1,0 +1,13 @@
+//
+//  PhoneNumberViewProtocol.swift
+//
+//
+//  Created by Isaac Iniongun on 01/05/2024.
+//
+
+import Foundation
+import UIKit
+
+protocol PhoneNumberViewProtocol: BaseViewProtocol {
+    func updateCountryDetails(phoneCode: String, flag: UIImage)
+}
