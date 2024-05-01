@@ -139,8 +139,7 @@ public class DJBaseViewController: UIViewController {
         case .governmentDataVerification:
             guard let verificationMode = kviewModel.preference.DJSelectedGovernmentIDVerificationMethod?.verificationModeParam else { return }
             if verificationMode == "OTP" {
-                let controller = VerifyOTPViewController()
-                kpush(controller)
+                showOtpVerification()
             } else {
                 didChooseLiveness()
             }
@@ -161,6 +160,11 @@ public class DJBaseViewController: UIViewController {
             let controller = SignatureViewController()
             kpush(controller)
         }
+    }
+    
+    func showOtpVerification() {
+        let controller = VerifyOTPViewController()
+        kpush(controller)
     }
     
     private func didChooseLiveness() {

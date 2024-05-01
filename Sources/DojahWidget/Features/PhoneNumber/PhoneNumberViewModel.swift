@@ -37,5 +37,34 @@ final class PhoneNumberViewModel: BaseViewModel {
     
     func didTapContinue() {
         preference.DJOTPVerificationInfo = number
+        if preference.DJAuthStep.config.verification ?? false {
+            viewProtocol?.showVerifyController()
+        } else {
+            logPhoneNumberValidationEvent()
+        }
+    }
+    
+    private func logPhoneNumberValidationEvent() {
+        postEvent(
+            request: .init(name: .phoneNumberValidation, value: "\(number),Successful"),
+            showLoader: true,
+            showError: true,
+            didSucceed: { [weak self] _ in
+                self?.logStepCompleted()
+            }, didFail: { [weak self] _ in
+                self?.logStepCompleted()
+            }
+        )
+    }
+    
+    private func logStepCompleted() {
+        postEvent(
+            request: .event(name: .stepCompleted, pageName: .phoneNumber),
+            showLoader: false,
+            showError: false
+        )
+        runAfter { [weak self] in
+            self?.setNextAuthStep()
+        }
     }
 }

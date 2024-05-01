@@ -20,6 +20,13 @@ final class OTPVerificationViewModel: BaseViewModel {
     }
     var otp = ""
     private var otpReference = ""
+    private var otpRequestChannel: Any {
+        if preference.DJAuthStep.name == .phoneNumber {
+            return ["sms", "whatsapp", "voice"]
+        } else {
+            return "sms"
+        }
+    }
     
     init(otpRemoteDatasource: OTPRemoteDatasourceProtocol = OTPRemoteDatasource()) {
         self.otpRemoteDatasource = otpRemoteDatasource
@@ -32,7 +39,7 @@ final class OTPVerificationViewModel: BaseViewModel {
         let params: DJParameters = [
             "destination": preference.DJOTPVerificationInfo,
             "length" : 4,
-            "channel" : "sms",
+            "channel" : otpRequestChannel,
             "sender_id": "kedesa",
             "priority": true
         ]
@@ -67,7 +74,7 @@ final class OTPVerificationViewModel: BaseViewModel {
             switch result {
             case let .success(entityResponse):
                 if entityResponse.entity?.valid ?? false {
-                    self?.postStepCompletedEvent()
+                    self?.didVerifyOTP()
                 } else {
                     self?.sendStepFailedEventForInvalidOTP()
                     self?.showErrorMessage(DJSDKError.invalidOTPEntered.uiMessage)
@@ -79,9 +86,30 @@ final class OTPVerificationViewModel: BaseViewModel {
         }
     }
     
+    private func didVerifyOTP() {
+        if preference.DJAuthStep.name == .phoneNumber {
+            logPhoneNumberValidationEvent()
+        } else {
+            postStepCompletedEvent()
+        }
+    }
+    
+    private func logPhoneNumberValidationEvent() {
+        postEvent(
+            request: .init(name: .phoneNumberValidation, value: "\(preference.DJOTPVerificationInfo),Successful"),
+            showLoader: true,
+            showError: true,
+            didSucceed: { [weak self] _ in
+                self?.postStepCompletedEvent()
+            }, didFail: { [weak self] _ in
+                self?.postStepCompletedEvent()
+            }
+        )
+    }
+    
     private func postStepCompletedEvent() {
         postEvent(
-            request: .event(name: .stepCompleted, pageName: .governmentDataVerification),
+            request: .event(name: .stepCompleted, pageName: preference.DJAuthStep.name),
             showLoader: false,
             showError: false,
             didSucceed: { [weak self] _ in

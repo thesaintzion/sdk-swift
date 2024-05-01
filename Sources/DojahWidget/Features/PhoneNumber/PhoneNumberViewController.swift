@@ -94,4 +94,8 @@ extension PhoneNumberViewController: PhoneNumberViewProtocol {
     func enableContinueButton(_ enable: Bool) {
         continueButton.enable(enable)
     }
+    
+    func showVerifyController() {
+        showOtpVerification()
+    }
 }
