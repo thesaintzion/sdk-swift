@@ -24,4 +24,18 @@ struct EventsRemoteDatasource: EventsRemoteDatasourceProtocol {
             completion: completion
         )
     }
+    
+    func postEmailCollectedEvent(
+        request: DJEventRequest,
+        completion: @escaping DJResultAction<EntityResponse<EmailCollectedEventResponse>>
+    ) {
+        service.makeRequest(
+            responseType: EntityResponse<EmailCollectedEventResponse>.self,
+            requestMethod: .post,
+            remotePath: .events,
+            parameters: request.dictionary,
+            headers: nil,
+            completion: completion
+        )
+    }
 }

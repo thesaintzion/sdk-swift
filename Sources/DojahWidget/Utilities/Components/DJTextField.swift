@@ -78,6 +78,7 @@ final class DJTextField: BaseView {
                 ]
             )
             $0.font = .regular(15)
+            $0.autocapitalizationType = .none
             $0.delegate = self
             $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
             $0.enableUserInteraction(editable)
@@ -146,6 +147,7 @@ final class DJTextField: BaseView {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        hideError()
         textDidChange?(textField.text.orEmpty)
         switch validationType {
         case .amount:
@@ -296,7 +298,10 @@ final class DJTextField: BaseView {
         if errorLabelVisible {
             errorLabelVisible = false
             heightConstraint?.constant -= (errorLabelHeightConstraint?.constant ?? 0)
-            errorLabelHeightConstraint?.constant = 0
+            if let errorLabelHeightConstraint {
+                removeConstraint(errorLabelHeightConstraint)
+            }
+            errorLabelHeightConstraint = nil
         }
         kanimate(duration: 0.2) { [weak self] in
             self?.errorLabel.showView(false)
@@ -308,7 +313,6 @@ final class DJTextField: BaseView {
     fileprivate func updateTextFieldAppearance(success: Bool = true) {
         with(textField) {
             $0.borderColor = success ? .djBorder : .systemRed
-            $0.textColor = success ? .aLabel : .systemRed
             if !success {
                 $0.shake(duration: 0.2)
             }

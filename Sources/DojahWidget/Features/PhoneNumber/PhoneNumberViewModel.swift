@@ -37,7 +37,7 @@ final class PhoneNumberViewModel: BaseViewModel {
     
     func didTapContinue() {
         preference.DJOTPVerificationInfo = number
-        if preference.DJAuthStep.config.verification ?? false {
+        if preference.DJAuthStep.config?.verification ?? false {
             viewProtocol?.showVerifyController()
         } else {
             logPhoneNumberValidationEvent()

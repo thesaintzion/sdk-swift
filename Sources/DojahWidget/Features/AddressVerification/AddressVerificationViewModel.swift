@@ -57,7 +57,7 @@ final class AddressVerificationViewModel: BaseViewModel {
             return
         }
         
-        guard preference.DJAuthStep.config.verification == true else {
+        guard preference.DJAuthStep.config?.verification == true else {
             runAfter { [weak self] in
                 self?.setNextAuthStep()
             }

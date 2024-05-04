@@ -62,13 +62,13 @@ class BaseViewModel {
     }
     
     func setNextAuthStep(step: Int = 1, showNext: Bool = true) {
-        let nextStep = preference.DJAuthStep.id + step
+        let nextStep = (preference.DJAuthStep.id ?? 0) + step
         guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else {
             makeVerificationDecision()
             return
         }
         preference.DJAuthStep = authStep
-        kprint(preference.DJAuthStep.name.rawValue)
+        //kprint(preference.DJAuthStep.name.rawValue)
         if step > 0 && showNext {
             showNextPage?()
         }

@@ -26,7 +26,7 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         selectedID.idType?.isFrontAndBack ?? false
     }
     private var pageName: DJPageName {
-        preference.DJAuthStep.name
+        preference.DJAuthStep.name ?? .index
     }
     private var isBusinessID: Bool {
         pageName == .businessID

@@ -68,13 +68,13 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             return
         }
         
-        if analysisResponse.face?.quality?.brightness ?? 0 <= preference.DJAuthStep.config.brightnessThreshold ?? 40 {
+        if analysisResponse.face?.quality?.brightness ?? 0 <= preference.DJAuthStep.config?.brightnessThreshold ?? 40 {
             showLoader?(false)
             viewProtocol?.showSelfieImageError(message: "Not bright enough. Please move to a brighter area")
             return
         }
         
-        if preference.DJAuthStep.config.glassesCheck ?? true != 
+        if preference.DJAuthStep.config?.glassesCheck ?? true !=
             (analysisResponse.face?.details?.eyeglasses?.value ?? false || analysisResponse.face?.details?.sunglasses?.value ?? false) {
             showLoader?(false)
             viewProtocol?.showSelfieImageError(message: "Glasses detected. Retake selfie without your glasses")

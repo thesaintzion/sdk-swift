@@ -33,6 +33,7 @@ struct DJPageConfig: Codable {
     let saID, saDL: Bool?
     let configDefault: String?
     let information: String?
+    let freeProvider, disposable: Bool?
     
     enum CodingKeys: String, CodingKey {
         case bvn, dl, vnin, nin
@@ -52,6 +53,7 @@ struct DJPageConfig: Codable {
         case saDL = "sa-dl"
         case configDefault = "default"
         case information
+        case freeProvider, disposable
     }
     
     init(
@@ -83,7 +85,9 @@ struct DJPageConfig: Codable {
         saID: Bool? = nil,
         saDL: Bool? = nil,
         configDefault: String? = nil,
-        information: String? = nil
+        information: String? = nil,
+        freeProvider: Bool? = nil,
+        disposable: Bool? = nil
     ) {
         self.bvn = bvn
         self.dl = dl
@@ -114,5 +118,13 @@ struct DJPageConfig: Codable {
         self.saDL = saDL
         self.configDefault = configDefault
         self.information = information
+        self.freeProvider = freeProvider
+        self.disposable = disposable
+    }
+}
+
+extension [DJPage] {
+    func by(pageName: DJPageName) -> DJPage? {
+        first { $0.pageName == pageName }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 final class SignatureViewModel: BaseViewModel {
-    lazy var signatureInformation = preference.DJAuthStep.config.information.orEmpty
+    lazy var signatureInformation = preference.DJAuthStep.config?.information ?? ""
     
     func confirm(name: String) {
         postEvent(

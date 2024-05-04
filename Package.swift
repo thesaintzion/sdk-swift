@@ -35,6 +35,8 @@ let package = Package(
             resources: [
                 .copy("Resources/JSON/countries.json"),
                 .copy("Resources/JSON/government_data_config.json"),
+                .copy("Resources/JSON/free_email_domains.json"),
+                .copy("Resources/JSON/disposable_email_domains.json"),
                 .copy("Resources/Animations/loading-circle.json"),
                 .copy("Resources/Animations/cancel.json"),
                 .copy("Resources/Animations/warning.json"),

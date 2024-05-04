@@ -15,6 +15,7 @@ struct DJWidget: Codable {
     let env: String?
     let company: DJCompany?
     let duplicateCheck, directFeedback: Bool?
+    let rules: DJWidgetRules?
     
     enum CodingKeys: String, CodingKey {
         case published, pages
@@ -23,5 +24,8 @@ struct DJWidget: Codable {
         case reviewProcess = "review_process"
         case duplicateCheck = "duplicate_check"
         case directFeedback = "direct_feedback"
+        case rules
     }
 }
+
+struct DJWidgetRules: Codable {}

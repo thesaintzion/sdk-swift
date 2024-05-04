@@ -9,4 +9,6 @@ import Foundation
 
 protocol EventsRemoteDatasourceProtocol {
     func postEvent(request: DJEventRequest, completion: @escaping DJResultAction<SuccessEntityResponse>)
+    
+    func postEmailCollectedEvent(request: DJEventRequest, completion: @escaping DJResultAction<EntityResponse<EmailCollectedEventResponse>>)
 }

@@ -92,8 +92,7 @@ public class DJBaseViewController: UIViewController {
             runOnMainThread {
                 self?.kpopToRoot()
             }
-        }
-    }
+        }    }
     
     func showLoader(_ show: Bool) {
         if show {
@@ -132,7 +131,8 @@ public class DJBaseViewController: UIViewController {
         case .address:
             didChooseAddressVerification()
         case .email:
-            break
+            let controller = EmailViewController()
+            kpush(controller)
         case .governmentData:
             let controller = GovernmentDataViewController()
             kpush(controller)
@@ -159,6 +159,8 @@ public class DJBaseViewController: UIViewController {
         case .signature:
             let controller = SignatureViewController()
             kpush(controller)
+        case .none:
+            break
         }
     }
     

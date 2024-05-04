@@ -15,15 +15,19 @@ final class OTPVerificationViewModel: BaseViewModel {
         verificationMethod == .phoneNumberOTP
     }
     var verificationInfo: String {
-        let lastDigits = String(preference.DJOTPVerificationInfo.suffix(4))
+        let suffix = preference.DJAuthStep.name == .email ? 0 : 4
+        let lastDigits = String(preference.DJOTPVerificationInfo.suffix(suffix))
         return "XXXXXXX\(lastDigits)"
     }
     var otp = ""
     private var otpReference = ""
     private var otpRequestChannel: Any {
-        if preference.DJAuthStep.name == .phoneNumber {
+        switch preference.DJAuthStep.name {
+        case .phoneNumber:
             return ["sms", "whatsapp", "voice"]
-        } else {
+        case .email:
+            return "email"
+        default:
             return "sms"
         }
     }
@@ -37,7 +41,7 @@ final class OTPVerificationViewModel: BaseViewModel {
         showLoader?(true)
         hideMessage()
         let params: DJParameters = [
-            "destination": preference.DJOTPVerificationInfo,
+            preference.DJAuthStep.name == .email ? "email" : "destination": preference.DJOTPVerificationInfo,
             "length" : 4,
             "channel" : otpRequestChannel,
             "sender_id": "kedesa",
@@ -87,9 +91,12 @@ final class OTPVerificationViewModel: BaseViewModel {
     }
     
     private func didVerifyOTP() {
-        if preference.DJAuthStep.name == .phoneNumber {
+        switch preference.DJAuthStep.name {
+        case .phoneNumber:
             logPhoneNumberValidationEvent()
-        } else {
+        case .email:
+            logEmailCollectedEvent()
+        default:
             postStepCompletedEvent()
         }
     }
@@ -108,8 +115,9 @@ final class OTPVerificationViewModel: BaseViewModel {
     }
     
     private func postStepCompletedEvent() {
+        guard let pageName = preference.DJAuthStep.name else { return }
         postEvent(
-            request: .event(name: .stepCompleted, pageName: preference.DJAuthStep.name),
+            request: .event(name: .stepCompleted, pageName: pageName),
             showLoader: false,
             showError: false,
             didSucceed: { [weak self] _ in
@@ -142,6 +150,72 @@ final class OTPVerificationViewModel: BaseViewModel {
         showLoader?(false)
         runOnMainThread { [weak self] in
             self?.viewProtocol?.showErrorMessage(message)
+        }
+    }
+    
+    private func logEmailCollectedEvent() {
+        let eventRequest = DJEventRequest(
+            name: .emailCollected,
+            value: "\(preference.DJOTPVerificationInfo),Successful,\(preference.preAuthResponse?.widget?.duplicateCheck ?? false)"
+        )
+        showLoader?(true)
+        eventsRemoteDatasource.postEmailCollectedEvent(request: eventRequest) { [weak self] result in
+            self?.showLoader?(false)
+            switch result {
+            case let .success(eventsResponse):
+                self?.didReceiveEmailCollectedResponse(eventsResponse)
+            case let .failure(error):
+                self?.viewProtocol?.showErrorMessage(error.uiMessage)
+            }
+        }
+    }
+    
+    private func didReceiveEmailCollectedResponse(_ response: EntityResponse<EmailCollectedEventResponse>) {
+        postEvent(
+            request: .event(name: .stepCompleted, pageName: .email),
+            showLoader: false,
+            showError: false
+        )
+        
+        guard let emailResponse = response.entity else {
+            viewProtocol?.showErrorMessage(DJSDKError.tryAgain.uiMessage)
+            return
+        }
+        
+        if emailResponse.duplicateReference ?? false {
+            showMessage?(
+                .success(
+                    titleText: "Verification successful",
+                    message: "Your identification has been successfully verified."
+                )
+            )
+            return
+        }
+        
+        if emailResponse.continueVerification ?? false, let config = emailResponse.data {
+            continueVerification(using: config)
+        }
+    }
+    
+    private func continueVerification(using config: DJInitDataConfig) {
+        if let verificationID = config.verificationID {
+            preference.DJVerificationID = verificationID
+        }
+        
+        if let sessionID = config.sessionID, sessionID.isNotEmpty {
+            preference.DJRequestHeaders.updateValue(sessionID, forKey: "session")
+        }
+        
+        if let referenceID = config.referenceID, referenceID.isNotEmpty {
+            preference.DJRequestHeaders.updateValue(referenceID, forKey: "reference")
+        }
+        
+        if let steps = config.steps?.by(statuses: [.notdone, .pending]), steps.isNotEmpty {
+            preference.DJSteps = steps
+        }
+        
+        runAfter { [weak self] in
+            self?.setNextAuthStep()
         }
     }
 }

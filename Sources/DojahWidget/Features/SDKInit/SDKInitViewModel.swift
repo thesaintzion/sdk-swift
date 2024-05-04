@@ -150,18 +150,22 @@ final class SDKInitViewModel {
         var currentID = 0
         steps.append(.init(name: .index, id: 0, config: .init()))
         
+        let emailPageConfig = preAuthRes.widget?.pages?.by(pageName: .email)?.config ?? .init()
+        currentID += 1
+        steps.append(.init(name: .email, id: currentID, config: emailPageConfig))
+        
         if (preAuthRes.widget?.countries ?? []).countGreaterThan(1) {
             currentID += 1
             steps.append(.init(name: .countries, id: currentID, config: .init(configDefault: "")))
         }
         
-        let userDataPage = preAuthRes.widget?.pages?.first(where: { $0.pageName == .userData })
+        let userDataPage = preAuthRes.widget?.pages?.by(pageName: .userData)
         if let userDataPage {
             currentID += 1
             steps.append(.init(name: .userData, id: currentID, config: userDataPage.config ?? .init()))
         }
         
-        let pages = preAuthRes.widget?.pages?.filter { $0.pageName != .userData } ?? []
+        let pages = preAuthRes.widget?.pages?.filter { ![.userData].contains($0.pageName) } ?? []
         guard pages.isNotEmpty else {
             return steps.map { $0.dictionary }
         }
