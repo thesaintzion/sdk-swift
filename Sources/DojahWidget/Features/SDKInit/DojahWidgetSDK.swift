@@ -9,8 +9,17 @@ import Foundation
 import UIKit
 
 public final class DojahWidgetSDK {
-    public static func initialize(widgetID: String, navController: UINavigationController) {
-        let viewModel = SDKInitViewModel(widgetID: widgetID)
+    public static func initialize(
+        widgetID: String,
+        referenceID: String? = nil,
+        emailAddress: String? = nil,
+        navController: UINavigationController
+    ) {
+        let viewModel = SDKInitViewModel(
+            widgetID: widgetID,
+            referenceID: referenceID,
+            emailAddress: emailAddress
+        )
         let controller = SDKInitViewController(viewModel: viewModel)
         navController.pushViewController(controller, animated: true)
     }

@@ -89,6 +89,7 @@ final class DJGovernmentDataViewModel: BaseViewModel {
             case let .success(lookupResponse):
                 if let response = lookupResponse.entity {
                     self?.lookupEntity = response
+                    self?.sendVerificationsPageConfigCollectedEvent()
                     self?.postGovernmentDataCollectedEvent()
                 } else {
                     self?.postStepFailedEvent()
@@ -126,14 +127,6 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         runOnMainThread { [weak self] in
             self?.viewProtocol?.showErrorMessage(message)
         }
-        /*showMessage?(
-            .error(
-                message: message,
-                doneAction: { [weak self] in
-                    self?.viewProtocol?.errorAction()
-                }
-            )
-        )*/
     }
     
     private func postGovernmentDataCollectedEvent() {
@@ -201,5 +194,14 @@ final class DJGovernmentDataViewModel: BaseViewModel {
         runAfter { [weak self] in
             self?.setNextAuthStep()
         }
+    }
+    
+    private func sendVerificationsPageConfigCollectedEvent() {
+        guard let modeParam = selectedGovernmentIDVerificationMethod?.verificationModeParam, let phoneNumber = lookupEntity?.phoneNumber else { return }
+        postEvent(
+            request: .init(name: .verificationsPageConfigCollected, value: "\(modeParam),\(phoneNumber)"),
+            showLoader: false,
+            showError: false
+        )
     }
 }

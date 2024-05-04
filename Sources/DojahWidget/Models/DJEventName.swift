@@ -20,4 +20,5 @@ enum DJEventName: String, Codable {
     case customerBusinessDataCollected = "customer_business_data_collected"
     case stepFailed = "step_failed"
     case signature
+    case verificationsPageConfigCollected = "verifications_page_config_collected"
 }

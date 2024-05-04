@@ -30,6 +30,7 @@ enum DJSDKError: Error, Equatable {
     case govtIDCouldNotBeCaptured
     case imageCheckOrAnalysisError
     case countryNotSupported
+    case verificationCompleted
     
     var uiMessage: String {
         switch self {
@@ -70,6 +71,8 @@ enum DJSDKError: Error, Equatable {
             return "invalidIDThirdPartyFailure"
         case .countryNotSupported:
             return "Widget is not supported in your country"
+        case .verificationCompleted:
+            return "verificationCompleted"
         }
     }
 }

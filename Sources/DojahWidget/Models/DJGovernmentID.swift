@@ -42,7 +42,6 @@ struct DJGovernmentID: Codable {
         DJGovernmentIDType(rawValue: value ?? "")
     }
     
-    //var businessType
 }
 
 extension [DJGovernmentID] {

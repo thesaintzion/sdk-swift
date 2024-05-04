@@ -94,4 +94,8 @@ struct GovernmentDataLookupEntity: Codable {
         case uuid, licenseNo, issuedDate, expiryDate, stateOfIssue, birthDate
         case status
     }
+    
+    var phoneNumber: String? {
+        phoneNumber1 ?? phoneNumber2
+    }
 }

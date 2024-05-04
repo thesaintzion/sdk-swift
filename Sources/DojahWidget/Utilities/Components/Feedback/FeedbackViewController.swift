@@ -10,8 +10,6 @@ import Lottie
 
 final public class FeedbackViewController: DJBaseViewController {
     
-    public static func newInstance() -> FeedbackViewController { FeedbackViewController() }
-    
     private let config: FeedbackConfig
     
     init(config: FeedbackConfig = .success(feedbackType: .warning)) {

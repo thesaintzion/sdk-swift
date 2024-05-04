@@ -19,14 +19,20 @@ final class SDKInitViewModel {
     private let authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol
     private var authResponse: DJAuthResponse?
     private var preAuthRes: DJPreAuthResponse?
+    private let referenceID: String?
+    private let emailAddress: String?
     
     init(
         widgetID: String,
+        referenceID: String? = nil,
+        emailAddress: String? = nil,
         preference: PreferenceProtocol = PreferenceImpl(),
         countriesDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource(),
         authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol = AuthenticationRemoteDatasource()
     ) {
         self.widgetID = widgetID
+        self.referenceID = referenceID
+        self.emailAddress = emailAddress
         self.preference = preference
         self.preference.DJWidgetID = widgetID
         self.countriesDatasource = countriesDatasource
@@ -105,7 +111,7 @@ final class SDKInitViewModel {
     }
     
     private func authenticate(using preAuthRes: DJPreAuthResponse) {
-        let params: DJParameters = [
+        var params: DJParameters = [
             "app_id": preAuthRes.appConfig?.id ?? "",
             "public_key": preAuthRes.publicKey.orEmpty,
             "type": "kyc",
@@ -113,12 +119,24 @@ final class SDKInitViewModel {
             "steps": createStepsParameters()
         ]
         
+        if let referenceID, referenceID.isNotEmpty {
+            params["reference_id"] = referenceID
+        }
+        
+        if let emailAddress, emailAddress.isNotEmpty {
+            params["email"] = emailAddress
+        }
+        
         authenticationRemoteDatasource.authenticate(params: params) { [weak self] result in
             switch result {
             case let .success(authResponse):
                 self?.didGetAuthenticationResponse(authResponse: authResponse)
             case let .failure(error):
-                self?.initializationDidFail(error: error)
+                if error == .verificationCompleted {
+                    self?.viewProtocol?.showVerificationSuccessful()
+                } else {
+                    self?.initializationDidFail(error: error)
+                }
             }
         }
     }
@@ -139,7 +157,13 @@ final class SDKInitViewModel {
             "reference": authResponse.initData?.data?.referenceID ?? ""
         ]
         preference.DJVerificationID = authResponse.initData?.data?.verificationID ?? 0
-        preference.DJSteps = authResponse.initData?.data?.steps ?? []
+        if (referenceID.orEmpty.isNotEmpty || emailAddress.orEmpty.isNotEmpty),
+            let steps = authResponse.initData?.data?.steps?.by(statuses: [.notdone, .pending, .failed]), 
+            steps.isNotEmpty {
+            preference.DJSteps = steps
+        } else {
+            preference.DJSteps = authResponse.initData?.data?.steps ?? []
+        }
         
         getIPAddress()
     }

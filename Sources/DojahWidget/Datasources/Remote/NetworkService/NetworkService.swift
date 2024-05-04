@@ -69,7 +69,7 @@ final class NetworkService: NetworkServiceProtocol {
                 }
                 
                 if [.events, .imageCheck].contains(remotePath) {
-                    parameters = parameters.merge(["step_number": preference.DJAuthStep.id])
+                    parameters = parameters.merge(["step_number": preference.DJAuthStep.id ?? 0])
                 }
                 
                 if remotePath == .events {
@@ -124,6 +124,11 @@ final class NetworkService: NetworkServiceProtocol {
                 kprint("Error: \(String(describing: error))")
                 
                 if (400...499).contains(statusCode) {
+                    if statusCode == 402 && remotePath == .auth {
+                        completion(.failure(.verificationCompleted))
+                        return
+                    }
+                    
                     if statusCode == 402 {
                         completion(.failure(.lowBalance))
                         return
@@ -172,7 +177,11 @@ final class NetworkService: NetworkServiceProtocol {
             if let data {
                 
                 if let networkError = try? data.decode(into: NetorkErrorResponse.self).error {
-                    completion(.failure(.networkError(networkError.message ?? DJConstants.genericErrorMessage)))
+                    if networkError.code == 402 && remotePath == .auth {
+                        completion(.failure(.verificationCompleted))
+                    } else {
+                        completion(.failure(.networkError(networkError.message ?? DJConstants.genericErrorMessage)))
+                    }
                     return
                 }
                 

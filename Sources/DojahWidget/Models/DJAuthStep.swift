@@ -35,7 +35,7 @@ struct DJAuthStep: Codable {
 }
 
 enum DJAuthStepStatus: String, Codable {
-    case done, notdone, pending
+    case done, notdone, pending, failed
 }
 
 extension DJAuthStep {
