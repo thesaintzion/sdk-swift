@@ -189,7 +189,7 @@ final class SDKInitViewModel {
             steps.append(.init(name: .userData, id: currentID, config: userDataPage.config ?? .init()))
         }
         
-        let pages = preAuthRes.widget?.pages?.filter { ![.userData].contains($0.pageName) } ?? []
+        let pages = preAuthRes.widget?.pages?.filter { ![.userData, .email].contains($0.pageName) } ?? []
         guard pages.isNotEmpty else {
             return steps.map { $0.dictionary }
         }
