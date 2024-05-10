@@ -31,7 +31,7 @@ final class UserDataViewModel: BaseViewModel {
             "middle_name": middleName,
             "last_name": lastName,
             "dob": dob,
-            "step_number": preference.DJAuthStep.id
+            "step_number": preference.DJAuthStep.id ?? 0
         ]
         
         showLoader?(true)

@@ -38,7 +38,11 @@ class BaseViewModel {
         if showLoader {
             self.showLoader?(true)
         }
-        eventsRemoteDatasource.postEvent(request: request) { [weak self] result in
+        var kRequest = request
+        if request.services.isEmpty, request.hasServices {
+            kRequest.services = PricingServicesFactory.shared.services()
+        }
+        eventsRemoteDatasource.postEvent(request: kRequest) { [weak self] result in
             if showLoader {
                 self?.showLoader?(false)
             }

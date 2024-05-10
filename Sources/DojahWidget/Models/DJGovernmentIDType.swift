@@ -35,6 +35,9 @@ enum DJGovernmentIDType: String, Codable {
     case saID = "SA-ID"
     case cacRCNumber = "RC-NUMBER"
     case tin = "TIN"
+    case aoNin = "ao-nin"
+    case zaId = "za-id"
+    case bvnAdvance
     
     var remotePath: DJRemotePath {
         switch self {

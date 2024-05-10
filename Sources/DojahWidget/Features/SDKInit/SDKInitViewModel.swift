@@ -55,7 +55,8 @@ final class SDKInitViewModel {
         }
         
         guard let countriesJsonData = jsonData(from: "countries"),
-              let governmentIDConfigJsonData = jsonData(from: "government_data_config")
+              let governmentIDConfigJsonData = jsonData(from: "government_data_config"),
+              let pricingConfigJsonData = jsonData(from: "pricing_config")
         else {
             initializationDidFail()
             return
@@ -68,6 +69,9 @@ final class SDKInitViewModel {
             
             let governmentIDConfig = try governmentIDConfigJsonData.decode(into: DJGovernmentIDConfig.self)
             preference.DJGovernmentIDConfig = governmentIDConfig
+            
+            let pricingServicesConfig = try pricingConfigJsonData.decode(into: PricingServicesConfig.self)
+            preference.DJPricingServicesConfig = pricingServicesConfig
             
             preference.DJConfigurationInitialized = true
             preAuthenticate()

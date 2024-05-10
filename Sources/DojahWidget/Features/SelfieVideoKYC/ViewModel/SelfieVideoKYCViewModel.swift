@@ -17,16 +17,24 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
     weak var viewProtocol: SelfieVideoKYCViewProtocol?
     private let remoteDatasource: LivenessRemoteDatasourceProtocol
     let verificationMethod: GovtIDVerificationMethod
+    var viewState: SelfieVideoKYCViewState
     var imageData: Data?
     private var imageAnalysisTries = 0
     private var imageCheckMaxTries = 0
+    private var pricingServices: [String] {
+        PricingServicesFactory.shared.services(
+            verificationMethod: verificationMethod
+        )
+    }
     
     init(
         remoteDatasource: LivenessRemoteDatasourceProtocol = LivenessRemoteDatasource(),
-        verificationMethod: GovtIDVerificationMethod = .selfie
+        verificationMethod: GovtIDVerificationMethod = .selfie,
+        viewState: SelfieVideoKYCViewState = .capture
     ) {
         self.remoteDatasource = remoteDatasource
         self.verificationMethod = verificationMethod
+        self.viewState = viewState
         super.init()
     }
     
@@ -117,7 +125,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
     private func didGetImageCheckResponse(_ response: EntityResponse<ImageCheckResponse>) {
         if imageAnalysisTries >= Constants.imageAnalysisMaxTries {
             postEvent(
-                request: .event(name: .stepFailed, pageName: .governmentDataVerification),
+                request: .event(name: .stepFailed, pageName: .governmentDataVerification, services: pricingServices),
                 showLoader: false,
                 showError: false
             )
@@ -136,7 +144,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
                 postEvent(
-                    request: .stepFailed(errorCode: .imageCheckFailedAfterMaxRetries),
+                    request: .stepFailed(errorCode: .imageCheckFailedAfterMaxRetries, services: pricingServices),
                     showLoader: false,
                     showError: false
                 )
@@ -151,7 +159,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
     
     private func postCheckFailedEvent() {
         postEvent(
-            request: .event(name: .stepFailed, pageName: .governmentDataVerification),
+            request: .event(name: .stepFailed, pageName: .governmentDataVerification, services: pricingServices),
             showLoader: false,
             showError: false
         )
@@ -159,7 +167,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
     
     private func imageCheckDidSucceed() {
         postEvent(
-            request: .event(name: .stepCompleted, pageName: .governmentDataVerification),
+            request: .event(name: .stepCompleted, pageName: .governmentDataVerification, services: pricingServices),
             showLoader: false,
             showError: false
         )

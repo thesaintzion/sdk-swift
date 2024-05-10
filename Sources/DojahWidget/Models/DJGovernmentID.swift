@@ -42,6 +42,19 @@ struct DJGovernmentID: Codable {
         DJGovernmentIDType(rawValue: value ?? "")
     }
     
+    var verificationMethod: GovtIDVerificationMethod? {
+        switch name?.lowercased() {
+        case "otp":
+            return .phoneNumberOTP
+        case "selfie":
+            return .selfie
+        case "selfie-video":
+            return .selfieVideo
+        default:
+            return nil
+        }
+    }
+    
 }
 
 extension [DJGovernmentID] {

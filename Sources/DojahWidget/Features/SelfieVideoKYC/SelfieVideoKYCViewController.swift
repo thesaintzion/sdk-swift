@@ -11,7 +11,7 @@ import AVFoundation
 final class SelfieVideoKYCViewController: DJBaseViewController {
 
     private let viewModel: SelfieVideoKYCViewModel
-    private var viewState = SelfieVideoKYCViewState.captureRecord
+    //private var viewState = SelfieVideoKYCViewState.capture
     private let captureSession = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -102,6 +102,9 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     private var cameraBorderLayer: CAShapeLayer?
     private var isCaptureCameraBorders = true
     private var selfieImageBlurEffectView: UIVisualEffectView?
+    private var viewState: SelfieVideoKYCViewState {
+        viewModel.viewState
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -236,10 +239,14 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     
     private func updateViewState() {
         switch viewState {
-        case .captureRecord:
-            viewState = .preview
-        case .preview:
-            viewState = .captureRecord
+        case .capture:
+            viewModel.viewState = .previewSelfie
+        case .previewSelfie:
+            viewModel.viewState = .capture
+        case .record:
+            viewModel.viewState = .previewSelfieVideo
+        case .previewSelfieVideo:
+            viewModel.viewState = .record
         }
         updateUIState()
     }
@@ -247,16 +254,25 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     private func updateUIState() {
         primaryButton.title = viewState.primaryButtonTitle
         topHintView.text = viewState.hintText
-        isCaptureCameraBorders = viewState == .captureRecord
+        isCaptureCameraBorders = [.capture, .record].contains(viewState)
         
         switch viewState {
-        case .captureRecord:
+        case .capture:
             cameraView.backgroundColor = .djBorder.withAlphaComponent(0.3)
             [bottomHintStackView, cameraHintView, cameraView].showViews()
             [disclaimerItemsView, secondaryButton, selfieImageView].showViews(false)
             startCaptureSession()
-        case .preview:
+        case .previewSelfie:
             startCaptureSession(false)
+            [bottomHintStackView, cameraHintView, cameraView].showViews(false)
+            [disclaimerItemsView, secondaryButton, selfieImageView].showViews()
+        case .record:
+            cameraView.backgroundColor = .djBorder.withAlphaComponent(0.3)
+            [bottomHintStackView, cameraHintView, cameraView].showViews()
+            [disclaimerItemsView, secondaryButton, selfieImageView].showViews(false)
+            //startCaptureSession() //TODO: do video stuff
+        case .previewSelfieVideo:
+            //startCaptureSession(false) //TODO: do video stuff
             [bottomHintStackView, cameraHintView, cameraView].showViews(false)
             [disclaimerItemsView, secondaryButton, selfieImageView].showViews()
         }
@@ -264,10 +280,14 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     
     private func didTapPrimaryButton() {
         switch viewState {
-        case .captureRecord:
+        case .capture:
             capturePhoto()
-        case .preview:
+        case .previewSelfie:
             viewModel.analyseImage()
+        case .record:
+            break //TODO: do video recording
+        case .previewSelfieVideo:
+            break //TODO: do video analysis
         }
     }
     
@@ -335,7 +355,6 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
 
 extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {
     func showSelfieImageError(message: String) {
-        //showToast(message: message, type: .error)
         runOnMainThread { [weak self] in
             guard let self else { return }
             with(self.cameraHintView) {
@@ -359,7 +378,6 @@ extension SelfieVideoKYCViewController: AVCapturePhotoCaptureDelegate {
             didCaptureImage(uiImage)
         } else {
             kprint("Error capturing photo: \(error?.localizedDescription ?? "Unknown error")")
-            //Toast.shared.show("Error taking photo, please try again", type: .error)
         }
     }
     

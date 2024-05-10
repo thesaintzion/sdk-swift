@@ -8,6 +8,7 @@
 import Foundation
 
 struct PreferenceImpl: PreferenceProtocol {
+    
     @UserDefaultPrimitive(key: .DJWidgetID, default: "")
     var DJWidgetID: String
     
@@ -55,4 +56,7 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultCodable(key: .WidgetIDCache, default: [])
     var WidgetIDCache: [WidgetIDCache]
+    
+    @UserDefaultCodable(key: .DJPricingServicesConfig, default: nil)
+    var DJPricingServicesConfig: PricingServicesConfig?
 }

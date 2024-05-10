@@ -7,8 +7,8 @@
 
 import UIKit
 
-enum GovtIDVerificationMethod: Int, CaseIterable, SelectableItem {
-    case govtID, selfie, phoneNumberOTP, emailOTP, videoKYC
+enum GovtIDVerificationMethod: String, CaseIterable, SelectableItem {
+    case govtID, selfie, phoneNumberOTP, emailOTP, selfieVideo
     
     var title: String {
         switch self {
@@ -18,7 +18,7 @@ enum GovtIDVerificationMethod: Int, CaseIterable, SelectableItem {
             return "Phone Number OTP"
         case .emailOTP:
             return "Email OTP"
-        case .videoKYC:
+        case .selfieVideo:
             return "Video KYC"
         case .govtID:
             return "Govt. ID"
@@ -31,7 +31,7 @@ enum GovtIDVerificationMethod: Int, CaseIterable, SelectableItem {
             return "Capture"
         case .phoneNumberOTP, .emailOTP, .govtID:
             return ""
-        case .videoKYC:
+        case .selfieVideo:
             return "Record"
         }
     }

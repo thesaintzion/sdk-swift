@@ -76,8 +76,7 @@ final class NetworkService: NetworkServiceProtocol {
                     parameters = parameters.merge([
                         "session_id": preference.DJRequestHeaders["session"] ?? "",
                         "app_id": preference.DJRequestHeaders["app-id"] ?? "",
-                        "price": 0,
-                        "services": []
+                        "cost": 0
                     ])
                 }
                 

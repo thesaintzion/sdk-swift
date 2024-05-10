@@ -1,0 +1,52 @@
+{
+    "index": {},
+    "countries": {},
+    "aml": {
+        "aml": "aml"
+    },
+    "government-data": {
+        "bvn": "kyc_bvn_full",
+        "bvnAdvance": "kyc_bvn_advance",
+        "vnin": "kyc_nin",
+        "nin": "kyc_nin",
+        "dl": "kyc_drivers_license",
+        "mobile": "kyc_mobile",
+        "gh-dl": "ghana_kyc_dl",
+        "gh-voter": "ghana_kyc_voter",
+        "ke-kra": "kenya_kyc_kra",
+        "ke-id": "kenya_kyc_id",
+        "ke-dl": "kenya_kyc_dl",
+        "ao-nin": "angola_kyc_nin",
+        "za-id": "za_kyc_id"
+    },
+    "government-data-verification": {
+        "selfie": "kyc_liveness_selfie",
+        "video": "kyc_liveness_video",
+        "otp": "sms",
+        "emailOtp": "email_otp"
+    },
+    "selfie": {
+        "selfie": "kyc_liveness_selfie",
+        "video": "kyc_liveness_video"
+    },
+    "business-data": {
+        "cac": "kyc_cac"
+    },
+    "phone-number": {
+        "verification": "sms"
+    },
+    "address": {
+        "verification": "kyc_address_verification"
+    },
+    "email": {
+        "verification": "email_otp"
+    },
+    "business-id": {
+        "default": "kyc_document_analysis"
+    },
+    "id": {
+        "default": "kyc_document_analysis"
+    },
+    "additional-document": {},
+    "signature": {}
+}

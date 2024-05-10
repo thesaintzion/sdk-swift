@@ -24,4 +24,5 @@ protocol PreferenceProtocol {
     var DJSelectedGovernmentIDVerificationMethod: DJGovernmentID? { get set }
     var DJOTPVerificationInfo: String { get set }
     var WidgetIDCache: [WidgetIDCache] { get set }
+    var DJPricingServicesConfig: PricingServicesConfig? { get set }
 }

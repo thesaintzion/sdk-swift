@@ -17,6 +17,12 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     var selectedGovernmentIDVerificationMethod: DJGovernmentID?
     var idNumber = ""
     private var lookupEntity: GovernmentDataLookupEntity? = nil
+    private var pricingServices: [String] {
+        PricingServicesFactory.shared.services(
+            governmentIDType: selectedGovernmentID?.idType,
+            verificationMethod: selectedGovernmentIDVerificationMethod?.verificationMethod
+        )
+    }
     
     init(remoteDatasource: GovernmentDataRemoteDatasourceProtocol = GovernmentDataRemoteDatasource()) {
         self.governmentDataRemoteDatasource = remoteDatasource
@@ -109,8 +115,12 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     }
     
     private func postStepFailedEvent() {
+        let request: DJEventRequest = .stepFailed(
+            errorCode: .invalidIDNotFound,
+            services: pricingServices
+        )
         postEvent(
-            request: .stepFailed(errorCode: .invalidIDNotFound),
+            request: request,
             showLoader: false,
             showError: false
         )
@@ -169,7 +179,12 @@ final class DJGovernmentDataViewModel: BaseViewModel {
     }
     
     private func postStepCompletedEvent() {
-        eventsRemoteDatasource.postEvent(request: .event(name: .stepCompleted, pageName: .governmentData)) { [weak self] result in
+        let request: DJEventRequest = .event(
+            name: .stepCompleted,
+            pageName: .governmentData,
+            services: pricingServices
+        )
+        eventsRemoteDatasource.postEvent(request: request) { [weak self] result in
             switch result {
             case let .success(successResponse):
                 if successResponse.entity?.success ?? false {

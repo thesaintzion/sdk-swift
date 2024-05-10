@@ -97,8 +97,12 @@ struct GovernmentIDFactory {
         
         var methods = [DJGovernmentID]()
         
-        if authStep.config?.selfie == true, let selfieConfig = govtDataConfig.selfie {
-            methods.append(selfieConfig)
+        if authStep.config?.selfie == true, let selfieConfig = govtDataConfig.selfie, let selfieVideoConfig = govtDataConfig.selfieVideo {
+            if authStep.config?.version == 3 {
+                methods.append(selfieConfig)
+            } else {
+                methods.append(selfieVideoConfig)
+            }
         }
         
         if authStep.config?.otp == true, let otpConfig = govtDataConfig.otp {

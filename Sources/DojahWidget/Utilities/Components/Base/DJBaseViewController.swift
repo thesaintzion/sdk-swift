@@ -109,17 +109,14 @@ public class DJBaseViewController: UIViewController {
     }
     
     func showNextPage() {
-        kprint("navigationController.isNil: \(navigationController.isNil)")
         guard let kviewModel else { return }
         let pageName = kviewModel.preference.DJAuthStep.name
         switch pageName {
         case .countries:
             if kviewModel.preference.DJCanSeeCountryPage {
-                kprint("show countries")
                 let viewController = CountryPickerViewController()
                 kpush(viewController)
             } else {
-                kprint("don't show countries")
                 kviewModel.setNextAuthStep()
             }
         case .userData:
@@ -147,7 +144,11 @@ public class DJBaseViewController: UIViewController {
             let controller = BusinessDataViewController()
             kpush(controller)
         case .selfie:
-            break
+            if preference.DJAuthStep.config?.version == 3 {
+                didChooseLiveness()
+            } else {
+                didChooseLiveness(verificationMethod: .selfieVideo, viewState: .record)
+            }
         case .id, .businessID, .additionalDocument:
             let controller = GovtIDCaptureViewController()
             kpush(controller)
@@ -169,13 +170,22 @@ public class DJBaseViewController: UIViewController {
         kpush(controller)
     }
     
-    private func didChooseLiveness() {
+    private func didChooseLiveness(
+        verificationMethod: GovtIDVerificationMethod = .selfie,
+        viewState: SelfieVideoKYCViewState = .capture
+    ) {
         if attachmentManager.hasCameraPermission {
-            showSelfieVideoController()
+            showSelfieVideoController(
+                verificationMethod: verificationMethod,
+                viewState: viewState
+            )
         } else {
             let controller = PermissionViewController(permissionType: .camera) { [weak self] in
                 self?.attachmentManager.requestCameraPermission(success:  { [weak self] in
-                    self?.showSelfieVideoController()
+                    self?.showSelfieVideoController(
+                        verificationMethod: verificationMethod,
+                        viewState: viewState
+                    )
                 })
             }
             controller.modalPresentationStyle = .overCurrentContext
@@ -183,8 +193,15 @@ public class DJBaseViewController: UIViewController {
         }
     }
     
-    private func showSelfieVideoController() {
-        let controller = SelfieVideoKYCViewController()
+    private func showSelfieVideoController(
+        verificationMethod: GovtIDVerificationMethod = .selfie,
+        viewState: SelfieVideoKYCViewState = .capture
+    ) {
+        let viewModel = SelfieVideoKYCViewModel(
+            verificationMethod: verificationMethod,
+            viewState: viewState
+        )
+        let controller = SelfieVideoKYCViewController(viewModel: viewModel)
         kpush(controller)
     }
     
