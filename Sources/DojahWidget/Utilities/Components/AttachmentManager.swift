@@ -70,11 +70,13 @@ final class AttachmentManager: NSObject {
             return
         }
         AVCaptureDevice.requestAccess(for: .video) { granted in
-            if granted {
-                success?()
-            } else {
-                Toast.shared.show("Camera permission denied", type: .error)
-                error?()
+            runOnMainThread {
+                if granted {
+                    success?()
+                } else {
+                    Toast.shared.show("Camera permission denied", type: .error)
+                    error?()
+                }
             }
         }
     }

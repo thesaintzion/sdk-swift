@@ -57,8 +57,8 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
     }
     
     private func didGetImageAnalysisResponse(_ response: EntityResponse<ImageAnalysisResponse>) {
-        guard [.governmentDataVerification, .governmentData].contains(preference.DJAuthStep.name),
-              let analysisResponse = response.entity else {
+        //[.governmentDataVerification, .governmentData].contains(preference.DJAuthStep.name)
+        guard let analysisResponse = response.entity else {
             showLoader?(false)
             viewProtocol?.showSelfieImageError(message: DJConstants.genericErrorMessage)
             return

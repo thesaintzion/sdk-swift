@@ -39,6 +39,10 @@ final class NetworkService: NetworkServiceProtocol {
             }
         }
         
+        if remotePath == .cac {
+            urlComponents.queryItems?.append(.init(name: "app_id", value: preference.DJRequestHeaders["app-id"] ?? ""))
+        }
+        
         if remotePath == .decision {
             let params: DJParameters = [
                 "verification_id": preference.DJVerificationID,
