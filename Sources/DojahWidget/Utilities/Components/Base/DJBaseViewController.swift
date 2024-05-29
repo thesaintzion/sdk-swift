@@ -237,12 +237,16 @@ public class DJBaseViewController: UIViewController {
     }
     
     func didTapNavBackButton() {
-        kviewModel?.setNextAuthStep(step: -1)
+        if preference.DJAuthStep.name != .email {
+            kviewModel?.setNextAuthStep(step: -1)
+        }
         kpop()
     }
     
     func didTapNavCloseButton() {
-        kviewModel?.setNextAuthStep(step: -1)
+        if preference.DJAuthStep.name != .email {
+            kviewModel?.setNextAuthStep(step: -1)
+        }
         kpop()
     }
     

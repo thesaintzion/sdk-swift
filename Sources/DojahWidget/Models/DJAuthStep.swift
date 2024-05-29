@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DJAuthStep: Codable {
+struct DJAuthStep: Codable, Equatable {
     let name: DJPageName?
     let id: Int?
     let config: DJPageConfig?
@@ -31,6 +31,10 @@ struct DJAuthStep: Codable {
     enum CodingKeys: String, CodingKey {
         case name, id, config, status
         case sessionID = "session_id"
+    }
+    
+    static func == (lhs: DJAuthStep, rhs: DJAuthStep) -> Bool {
+        lhs.id == rhs.id && lhs.name == rhs.name
     }
 }
 

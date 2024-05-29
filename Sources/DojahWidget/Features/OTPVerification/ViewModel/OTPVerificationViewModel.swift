@@ -194,6 +194,10 @@ final class OTPVerificationViewModel: BaseViewModel {
         
         if emailResponse.continueVerification ?? false, let config = emailResponse.data {
             continueVerification(using: config)
+        } else {
+            runAfter { [weak self] in
+                self?.setNextAuthStep()
+            }
         }
     }
     

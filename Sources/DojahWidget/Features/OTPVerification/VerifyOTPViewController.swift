@@ -11,7 +11,7 @@ final class VerifyOTPViewController: DJBaseViewController {
 
     private let viewModel: OTPVerificationViewModel
     
-    init(viewModel: OTPVerificationViewModel = OTPVerificationViewModel()) {
+    init(viewModel: OTPVerificationViewModel = .init()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         kviewModel = viewModel
@@ -72,7 +72,7 @@ final class VerifyOTPViewController: DJBaseViewController {
         subviews: [attrLabel, otpView, resendCodeButton, continueButton],
         spacing: 20
     )
-    private let timerLimit: Int = 10 //600 // 10 minutes
+    private let timerLimit: Int = 600 // 10 minutes
     private var timer: Timer?
     private var duration: Int = 0
     private var remainingTime: String {
