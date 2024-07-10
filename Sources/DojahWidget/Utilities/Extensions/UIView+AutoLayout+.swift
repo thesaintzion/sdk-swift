@@ -94,10 +94,10 @@ extension UIView {
         }
     }
     
-    func centerYInSuperview() {
+    func centerYInSuperview(offset: CGFloat = 0) {
         translatesAutoresizingMaskIntoConstraints = false
         if let centerY = superview?.centerYAnchor {
-            centerYAnchor.constraint(equalTo: centerY).isActive = true
+            centerYAnchor.constraint(equalTo: centerY, constant: offset).isActive = true
         }
     }
     
@@ -145,6 +145,11 @@ extension UIView {
         return self
     }
     
+    @discardableResult func withSize(_ size: CGFloat) -> Self {
+        constraintSize(height: size, width: size)
+        return self
+    }
+    
     func constraintSize(height: CGFloat, width: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: height).isActive = true
@@ -169,6 +174,11 @@ extension UIView {
     
     func centerVertically(to constraint: NSLayoutYAxisAnchor) {
         centerYAnchor.constraint(equalTo: constraint).activate()
+    }
+    
+    func centerIn(_ parentView: UIView) {
+        centerXAnchor.constraint(equalTo: parentView.centerXAnchor).activate()
+        centerYAnchor.constraint(equalTo: parentView.centerYAnchor).activate()
     }
     
     func heightEquals(_ view: UIView) {

@@ -38,54 +38,88 @@ final class AttachmentManager: NSObject {
     var dismissHandler: NoParamHandler?
     
     enum AttachmentType: String {
-        case camera, video, photoLibrary, file
+        case camera = "Camera", video = "Video", photoLibrary = "Photo Library", files = "Files"
+        
+        var alertTitle: String {
+            "Dojah Widget SDK does not have access to your \(rawValue). Enable access in your Settings app."
+        }
     }
     
-    //MARK: - Constants
-    struct Constants {
-        static let actionFileTypeHeading = "Add a File"
-        static let actionFileTypeDescription = "Choose a filetype to add..."
-        static let camera = "Camera"
-        static let phoneLibrary = "Phone Library"
-        static let video = "Video"
-        static let file = "File"
-        static let alertForPhotoLibraryMessage = "Dojah Widget SDK does not have access to your photos. To enable access, tap settings and turn on Photo Library Access."
-        static let alertForCameraAccessMessage = "Dojah Widget SDK does not have access to your camera. To enable access, tap settings and turn on Camera."
-        static let alertForVideoLibraryMessage = "Dojah Widget SDK does not have access to your video. To enable access, tap settings and turn on Video Library Access."
-        static let settingsBtnTitle = "Settings"
-        static let cancelBtnTitle = "Cancel"
+    var hasCameraPermission: Bool {
+        AVCaptureDevice.authorizationStatus(for: .video) == .authorized
+    }
+    
+    func checkCameraPermission(success: (() -> Void)? = nil, error: (() -> Void)? = nil) {
+        let authStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        switch authStatus {
+        case .authorized:
+            success?()
+        case .notDetermined:
+            requestCameraPermission(success: success, error: error)
+        case .denied, .restricted:
+            Toast.shared.show("Camera permission is required", type: .error)
+            error?()
+        @unknown default:
+            break
+        }
+    }
+
+    func requestCameraPermission(success: (() -> Void)? = nil, error: (() -> Void)? = nil) {
+        guard !hasCameraPermission else {
+            success?()
+            return
+        }
+        AVCaptureDevice.requestAccess(for: .video) { granted in
+            runOnMainThread {
+                if granted {
+                    success?()
+                } else {
+                    Toast.shared.show("Camera permission denied", type: .error)
+                    error?()
+                }
+            }
+        }
     }
     
     //MARK: - showAttachmentActionSheet
     // This function is used to show the attachment sheet for image, video, photo and file.
-    func showOptions(on vc: UIViewController, attachmentTypes: [AttachmentType] = [.camera, .photoLibrary]) {
+    func showOptions(
+        on vc: UIViewController,
+        attachmentTypes: [AttachmentType] = [.camera, .photoLibrary],
+        docTypes: [String]? = nil
+    ) {
         viewController = vc
-        let actionSheet = UIAlertController(title: Constants.actionFileTypeHeading, message: Constants.actionFileTypeDescription, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(
+            title: "Add a File",
+            message: "Choose a filetype to add...",
+            preferredStyle: .actionSheet
+        )
         
-        attachmentTypes.forEach {
-            
-            switch $0 {
-            case .camera:
-                actionSheet.addAction(UIAlertAction(title: Constants.camera, style: .default, handler: { (action) -> Void in
-                    self.authorisationStatus(attachmentTypeEnum: .camera, vc: self.viewController!)
-                }))
-            case .photoLibrary:
-                actionSheet.addAction(UIAlertAction(title: Constants.phoneLibrary, style: .default, handler: { (action) -> Void in
-                    self.authorisationStatus(attachmentTypeEnum: .photoLibrary, vc: self.viewController!)
-                }))
-            case .video:
-                actionSheet.addAction(UIAlertAction(title: Constants.video, style: .default, handler: { (action) -> Void in
-                    self.authorisationStatus(attachmentTypeEnum: .video, vc: self.viewController!)
-                }))
-            case .file:
-                actionSheet.addAction(UIAlertAction(title: Constants.file, style: .default, handler: { (action) -> Void in
-                    self.documentPicker()
-                }))
+        attachmentTypes.forEach { attachmentType in
+            switch attachmentType {
+            case .camera, .video, .photoLibrary:
+                let alertAction = UIAlertAction(
+                    title: attachmentType.rawValue,
+                    style: .default,
+                    handler: { _ in
+                        self.authorisationStatus(for: attachmentType, vc: self.viewController!)
+                    }
+                )
+                actionSheet.addAction(alertAction)
+            case .files:
+                let alertAction = UIAlertAction(
+                    title: attachmentType.rawValue,
+                    style: .default,
+                    handler: { (action) -> Void in
+                        self.openDocumentPicker(on: vc, docTypes: docTypes)
+                    }
+                )
+                actionSheet.addAction(alertAction)
             }
             
         }
         
-        actionSheet.addAction(UIAlertAction(title: Constants.cancelBtnTitle, style: .cancel, handler: { [weak self] action in
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { [weak self] action in
             self?.dismissHandler?()
         }))
         
@@ -96,60 +130,57 @@ final class AttachmentManager: NSObject {
     // This is used to check the authorisation status whether user gives access to import the image, photo library, video.
     // if the user gives access, then we can import the data safely
     // if not show them alert to access from settings.
-    func authorisationStatus(attachmentTypeEnum: AttachmentType, vc: UIViewController) {
+    func authorisationStatus(for attachmentType: AttachmentType, vc: UIViewController) {
         viewController = vc
-        
         let status = PHPhotoLibrary.authorizationStatus()
         switch status {
         case .authorized:
-            runOnMainThread { [weak self] in
-                if attachmentTypeEnum == AttachmentType.camera {
-                    self?.openCamera(on: vc)
-                }
-                if attachmentTypeEnum == AttachmentType.photoLibrary {
-                    self?.openPhotoLibrary(on: vc)
-                }
-                if attachmentTypeEnum == AttachmentType.video {
-                    self?.videoLibrary()
-                }
-            }
+            didAuthorize()
         case .denied:
-            self.addAlertForSettings(attachmentTypeEnum)
+            self.showSettingsAlert(attachmentType)
         case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({ status in
-                runOnMainThread {
-                    if status == PHAuthorizationStatus.authorized {
-                        if attachmentTypeEnum == AttachmentType.camera {
-                            self.openCamera(on: vc)
-                        }
-                        if attachmentTypeEnum == AttachmentType.photoLibrary {
-                            self.openPhotoLibrary(on: vc)
-                        }
-                        if attachmentTypeEnum == AttachmentType.video {
-                            self.videoLibrary()
-                        }
-                    } else {
-                        self.addAlertForSettings(attachmentTypeEnum)
+            PHPhotoLibrary.requestAuthorization { status in
+                if status == PHAuthorizationStatus.authorized {
+                    didAuthorize()
+                } else {
+                    runOnMainThread {
+                        self.showSettingsAlert(attachmentType)
                     }
                 }
-            })
+            }
         case .restricted:
-            self.addAlertForSettings(attachmentTypeEnum)
+            self.showSettingsAlert(attachmentType)
         default:
             break
+        }
+        
+        func didAuthorize() {
+            runOnMainThread { [weak self] in
+                switch attachmentType {
+                case .camera:
+                    self?.openCamera(on: vc)
+                case .video:
+                    self?.openVideoLibrary(on: vc)
+                case .photoLibrary:
+                    self?.openPhotoLibrary(on: vc)
+                case .files:
+                    break
+                }
+            }
         }
     }
     
     
     //MARK: - CAMERA PICKER
     //This function is used to open camera from the iphone and
-    func openCamera(on vc: UIViewController) {
+    func openCamera(on vc: UIViewController, device: UIImagePickerController.CameraDevice = .rear) {
         viewController = vc
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
-            myPickerController.sourceType = .camera
-            viewController?.present(myPickerController, animated: true, completion: nil)
+            let pickerController = UIImagePickerController()
+            pickerController.delegate = self
+            pickerController.sourceType = .camera
+            pickerController.cameraDevice = device
+            viewController?.present(pickerController, animated: true, completion: nil)
         } else {
             Toast.shared.show("Your device doesn't have camera capabilties", type: .error)
         }
@@ -172,23 +203,25 @@ final class AttachmentManager: NSObject {
     }
     
     //MARK: - VIDEO PICKER
-    func videoLibrary() {
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
-            myPickerController.sourceType = .photoLibrary
-            myPickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeVideo as String]
-            viewController?.present(myPickerController, animated: true, completion: nil)
-        } else {
-            runOnMainThread {
-                Toast.shared.show("Your device doesn't have video picking capabilties", type: .error)
+    func openVideoLibrary(on vc: UIViewController) {
+        viewController = vc
+        runOnMainThread { [weak self] in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let myPickerController = UIImagePickerController()
+                myPickerController.delegate = self
+                myPickerController.sourceType = .photoLibrary
+                myPickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeVideo as String]
+                self?.viewController?.present(myPickerController, animated: true, completion: nil)
+            } else {
+                showToast(message: "Your device doesn't have video picking capabilties", type: .error)
             }
         }
     }
     
     //MARK: - FILE PICKER
-    func documentPicker() {
-        let docTypes = [
+    func openDocumentPicker(on vc: UIViewController, docTypes: [String]? = nil) {
+        viewController = vc
+        let docTypes = docTypes ?? [
             String(kUTTypePDF),
             String(kUTTypeMP3),
             String(kUTTypePNG),
@@ -202,33 +235,28 @@ final class AttachmentManager: NSObject {
             String(kUTTypeData)
         ]
         
-        let documentPicker = UIDocumentPickerViewController(documentTypes: docTypes, in: .import)
-        documentPicker.delegate = self
-        viewController?.present(documentPicker, animated: true)
+        runOnMainThread { [weak self] in
+            let documentPicker = UIDocumentPickerViewController(documentTypes: docTypes, in: .import)
+            documentPicker.delegate = self
+            self?.viewController?.present(documentPicker, animated: true)
+        }
     }
     
     //MARK: - SETTINGS ALERT
-    func addAlertForSettings(_ attachmentTypeEnum: AttachmentType) {
-        var alertTitle: String = ""
-        if attachmentTypeEnum == AttachmentType.camera{
-            alertTitle = Constants.alertForCameraAccessMessage
-        }
-        if attachmentTypeEnum == AttachmentType.photoLibrary{
-            alertTitle = Constants.alertForPhotoLibraryMessage
-        }
-        if attachmentTypeEnum == AttachmentType.video{
-            alertTitle = Constants.alertForVideoLibraryMessage
-        }
+    func showSettingsAlert(_ attachmentType: AttachmentType) {
+        let alertController = UIAlertController (
+            title: attachmentType.alertTitle,
+            message: nil, 
+            preferredStyle: .alert
+        )
         
-        let cameraUnavailableAlertController = UIAlertController (title: alertTitle , message: nil, preferredStyle: .alert)
-        
-        let settingsAction = UIAlertAction(title: Constants.settingsBtnTitle, style: .destructive) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: "Settings", style: .destructive) { _ in
             openSettingsApp()
         }
-        let cancelAction = UIAlertAction(title: Constants.cancelBtnTitle, style: .default, handler: nil)
-        cameraUnavailableAlertController.addAction(cancelAction)
-        cameraUnavailableAlertController.addAction(settingsAction)
-        viewController?.present(cameraUnavailableAlertController , animated: true, completion: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertController.addAction(cancelAction)
+        alertController.addAction(settingsAction)
+        viewController?.present(alertController , animated: true, completion: nil)
     }
 }
 

@@ -11,9 +11,10 @@ final class VerifyOTPViewController: DJBaseViewController {
 
     private let viewModel: OTPVerificationViewModel
     
-    init(viewModel: OTPVerificationViewModel) {
+    init(viewModel: OTPVerificationViewModel = .init()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
     }
     
     @available(*, unavailable)
@@ -62,16 +63,16 @@ final class VerifyOTPViewController: DJBaseViewController {
         textColor: .primary,
         height: nil
     ) { [weak self] in
-        
+        self?.viewModel.requestOTP()
     }
     private lazy var continueButton = DJButton(title: "Continue", isEnabled: false) { [weak self] in
-        self?.didTapContinueButton()
+        self?.viewModel.verifyOTP()
     }
     private lazy var contentStackView = VStackView(
         subviews: [attrLabel, otpView, resendCodeButton, continueButton],
         spacing: 20
     )
-    private let timerLimit: Int = 600
+    private let timerLimit: Int = 600 // 10 minutes
     private var timer: Timer?
     private var duration: Int = 0
     private var remainingTime: String {
@@ -84,7 +85,8 @@ final class VerifyOTPViewController: DJBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        startCountdownTimer()
+        viewModel.viewProtocol = self
+        viewModel.requestOTP()
     }
     
     private func setupUI() {
@@ -99,7 +101,25 @@ final class VerifyOTPViewController: DJBaseViewController {
         }
     }
     
-    private func startCountdownTimer() {
+    private func stopCountdownTimer() {
+        duration = 0
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private func handleOTPCompleted(_ otp: String) {
+        continueButton.enable(otp.countEquals(4))
+        viewModel.otp = otp
+    }
+    
+    deinit {
+        stopCountdownTimer()
+    }
+
+}
+
+extension VerifyOTPViewController: VerifyOTPViewProtocol {
+    func startCountdownTimer() {
         duration = timerLimit
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
@@ -121,26 +141,11 @@ final class VerifyOTPViewController: DJBaseViewController {
         }
     }
     
-    private func stopCountdownTimer() {
-        duration = 0
-        timer?.invalidate()
-        timer = nil
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
     }
     
-    private func handleOTPCompleted(_ otp: String) {
-        continueButton.enable(otp.countEquals(4))
+    func hideMessage() {
+        navView.hideMessage()
     }
-    
-    private func didTapContinueButton() {
-        showFeedbackController(
-            message: "Your phone number has been successfully verified, you will now be redirected."
-        ) { [weak self] in
-            self?.popToViewController(ofClass: DojahWidgetViewController.self)
-        }
-    }
-    
-    deinit {
-        stopCountdownTimer()
-    }
-
 }

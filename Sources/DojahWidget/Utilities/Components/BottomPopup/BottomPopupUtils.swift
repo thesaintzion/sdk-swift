@@ -10,7 +10,7 @@ import UIKit
 
 typealias BottomPresentableViewController = BottomPopupAttributesDelegate & UIViewController
 
-public protocol BottomPopupDelegate: class {
+public protocol BottomPopupDelegate: AnyObject {
     func bottomPopupViewLoaded()
     func bottomPopupWillAppear()
     func bottomPopupDidAppear()
@@ -28,7 +28,7 @@ public extension BottomPopupDelegate {
     func bottomPopupDismissInteractionPercentChanged(from oldValue: CGFloat, to newValue: CGFloat) { }
 }
 
-public protocol BottomPopupAttributesDelegate: class {
+public protocol BottomPopupAttributesDelegate: AnyObject {
     var popupHeight: CGFloat { get }
     var popupTopCornerRadius: CGFloat { get }
     var popupPresentDuration: Double { get }

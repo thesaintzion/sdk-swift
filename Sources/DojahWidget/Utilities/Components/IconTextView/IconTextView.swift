@@ -98,7 +98,7 @@ class IconTextView: BaseView {
         contentStackView.fillSuperview()
         
         if let iconURL = iconURL {
-            iconImageView.setImageFromURL(url: iconURL, placeholderImage: icon)
+            iconImageView.setImageFromURL(iconURL, placeholder: icon)
         }
     }
     
@@ -165,7 +165,7 @@ class IconTextView: BaseView {
         contentStackView.fillSuperview()
         
         if let iconURL = iconURL {
-            iconImageView.setImageFromURL(url: iconURL, placeholderImage: icon)
+            iconImageView.setImageFromURL(iconURL, placeholder: icon)
         }
     }
     
@@ -182,7 +182,7 @@ class IconTextView: BaseView {
     var iconImageURL: String? {
         didSet {
             if let iconImageURL {
-                iconImageView.setImageFromURL(url: iconImageURL, placeholderImage: iconImageView.image)
+                iconImageView.setImageFromURL(iconImageURL, placeholder: iconImageView.image)
             }
         }
     }

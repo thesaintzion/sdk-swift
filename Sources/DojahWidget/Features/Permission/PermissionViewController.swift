@@ -10,9 +10,11 @@ import UIKit
 final class PermissionViewController: DJBaseViewController {
     
     private let permissionType: PermissionType
+    private let didAllowPermission: NoParamHandler?
     
-    init(permissionType: PermissionType = .camera) {
+    init(permissionType: PermissionType = .camera, didAllowPermission: NoParamHandler? = nil) {
         self.permissionType = permissionType
+        self.didAllowPermission = didAllowPermission
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -40,7 +42,7 @@ final class PermissionViewController: DJBaseViewController {
     )
     private lazy var disclaimerItemsView = DisclaimerItemsView(items: permissionType.disclaimerItems)
     private lazy var allowButton = DJButton(title: "Allow Permissions") { [weak self] in
-        self?.didTapAllowButton()
+        self?.didTapAllowPermission()
     }
     private let howToAllowIconTextView = IconTextView(
         text: "How to allow permission", 
@@ -54,7 +56,7 @@ final class PermissionViewController: DJBaseViewController {
         spacing: 15
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -87,14 +89,22 @@ final class PermissionViewController: DJBaseViewController {
             $0.setCustomSpacing(25, after: disclaimerItemsView)
             $0.setCustomSpacing(30, after: allowButton)
         }
+        
+        navView.showNavBackControl(false)
+    }
+    
+    private func didTapAllowPermission() {
+        kdismiss { [weak self] in
+            self?.didAllowPermission?()
+        }
     }
     
     override func addTapGestures() {
         howToAllowIconTextView.didTap()
     }
     
-    private func didTapAllowButton() {
-        
+    override func didTapNavCloseButton() {
+        kdismiss()
     }
 
 }

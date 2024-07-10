@@ -58,3 +58,9 @@ extension UIButton {
         )
     }
 }
+
+extension [UIButton] {
+    func enable(_ enable: Bool = true) {
+        forEach { $0.enable(enable) }
+    }
+}

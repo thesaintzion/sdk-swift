@@ -8,14 +8,14 @@
 import UIKit
 
 final class DJTextField: BaseView {
-    fileprivate let titleLabel = UILabel(
+    private let titleLabel = UILabel(
         text: "Title Label",
-        font: .light(13),
+        font: .regular(13),
         numberOfLines: 0,
         color: .aLabel,
         alignment: .left
     )
-    fileprivate let errorLabel = UILabel(
+    private let errorLabel = UILabel(
         text: "Error Label",
         font: .regular(13),
         numberOfLines: 0, 
@@ -32,16 +32,17 @@ final class DJTextField: BaseView {
         radius: 5
     )
     let leftIconImageView = UIImageView()
-    fileprivate let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
-    fileprivate let pickerManager = PickerManager()
-    fileprivate let pickerView = UIPickerView()
-    fileprivate var passwordVisible = false
-    fileprivate var validationType: ValidationType?
-    fileprivate let inputValidator = InputValidatorImpl()
-    fileprivate var heightConstraint: NSLayoutConstraint?
-    fileprivate var errorLabelHeightConstraint: NSLayoutConstraint?
-    fileprivate var errorLabelVisible = false
-    fileprivate var maxLength: Int? = nil
+    private let rightIconImageView = UIImageView(image: UIImage(), tintColor: .primary, size: 22)
+    private let pickerManager = PickerManager()
+    private let pickerView = UIPickerView()
+    private var passwordVisible = false
+    private var validationType: ValidationType?
+    private let inputValidator = InputValidatorImpl()
+    private var heightConstraint: NSLayoutConstraint?
+    private var errorLabelHeightConstraint: NSLayoutConstraint?
+    private var errorLabelVisible = false
+    var maxLength: Int? = nil
+    var textDidChange: ParamHandler<String>? = nil
     
     var title: String {
         get { titleLabel.text.orEmpty }
@@ -77,6 +78,7 @@ final class DJTextField: BaseView {
                 ]
             )
             $0.font = .regular(15)
+            $0.autocapitalizationType = .none
             $0.delegate = self
             $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
             $0.enableUserInteraction(editable)
@@ -145,6 +147,8 @@ final class DJTextField: BaseView {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        hideError()
+        textDidChange?(textField.text.orEmpty)
         switch validationType {
         case .amount:
             textField.text = textField.text?.amountSanitized.double?.currencyFormatted()
@@ -294,7 +298,10 @@ final class DJTextField: BaseView {
         if errorLabelVisible {
             errorLabelVisible = false
             heightConstraint?.constant -= (errorLabelHeightConstraint?.constant ?? 0)
-            errorLabelHeightConstraint?.constant = 0
+            if let errorLabelHeightConstraint {
+                removeConstraint(errorLabelHeightConstraint)
+            }
+            errorLabelHeightConstraint = nil
         }
         kanimate(duration: 0.2) { [weak self] in
             self?.errorLabel.showView(false)
@@ -305,8 +312,7 @@ final class DJTextField: BaseView {
     
     fileprivate func updateTextFieldAppearance(success: Bool = true) {
         with(textField) {
-            $0.borderColor = success ? .primary.withAlphaComponent(0.7) : .systemRed
-            $0.textColor = success ? .primary : .systemRed
+            $0.borderColor = success ? .djBorder : .systemRed
             if !success {
                 $0.shake(duration: 0.2)
             }

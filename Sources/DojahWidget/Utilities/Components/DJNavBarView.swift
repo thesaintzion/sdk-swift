@@ -16,18 +16,38 @@ final class DJNavBarView: BaseView {
     weak var delegate: DJNavBarViewDelegate?
     private let backImageView = UIImageView(image: .res(.backTextIcon), height: 24, width: 64)
     private let closeImageView = UIImageView(image: .res(.xmarkFilledIcon), size: 18)
-    private let orchestrateImageView = UIImageView(image: .res(.orchestrateIcon), height: 20)
-    private lazy var contentStackView = HStackView(
-        subviews: [backImageView, orchestrateImageView, closeImageView],
-        alignment: .center
+    private let appImageView = UIImageView(image: .res(.circleIcon), contentMode: .scaleAspectFit)
+    let hintIconTextView = PillIconTextView(
+        text: "Fill the form as it appears on your valid ID",
+        icon: .res(.greenInfoCircle),
+        iconSize: 18,
+        textColor: .djGreen,
+        bgColor: .djLightGreen
     )
+    private lazy var hintContainerView = hintIconTextView.withHStackCentering()
+    private lazy var hintParentView = VStackView(subviews: [hintContainerView, UIView.vspacer(1)])
     
     override func setup() {
-        with(contentStackView) {
-            addSubview($0)
-            $0.fillSuperview()
+        addSubviews(backImageView, closeImageView, appImageView, hintParentView)
+        with(appImageView) {
+            $0.centerXInSuperview()
+            $0.anchor(top: topAnchor)
+            backImageView.centerVertically(to: $0.centerYAnchor)
+            backImageView.anchor(leading: leadingAnchor)
+            closeImageView.centerVertically(to: $0.centerYAnchor)
+            closeImageView.anchor(trailing: trailingAnchor)
+            hintParentView.anchor(
+                top: $0.bottomAnchor,
+                leading: leadingAnchor,
+                bottom: bottomAnchor,
+                trailing: trailingAnchor,
+                padding: .kinit(top: 30, left: 10, right: 10)
+            )
         }
+        
         addTapGestures()
+        setAppImage()
+        hintContainerView.showView(false)
     }
     
     private func addTapGestures() {
@@ -38,6 +58,51 @@ final class DJNavBarView: BaseView {
         closeImageView.didTap { [weak self] in
             self?.delegate?.didDismiss()
         }
+    }
+    
+    func showNavControls(_ show: Bool) {
+        backImageView.showView(show)
+        closeImageView.showView(show)
+    }
+    
+    func showNavBackControl(_ show: Bool) {
+        backImageView.showView(show)
+    }
+    
+    func showNavCloseControl(_ show: Bool) {
+        closeImageView.showView(show)
+    }
+    
+    private func setAppImage() {
+        if let appLogoURL = preference.DJAppConfig?.logo {
+            appImageView.setImageFromURL(appLogoURL, placeholder: .res(.circleIcon))
+        }
+    }
+    
+    func showErrorMessage(_ message: String) {
+        with(hintIconTextView) {
+            $0.text = message
+            $0.backgroundColor = .djLightRed
+            $0.iconTextView.textColor = .djRed
+            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
+            $0.iconTextView.icontTint = .djRed
+        }
+        hintContainerView.showView()
+    }
+    
+    func showSuccessMessage(_ message: String) {
+        with(hintIconTextView) {
+            $0.text = message
+            $0.backgroundColor = .djLightGreen
+            $0.iconTextView.textColor = .djGreen
+            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
+            $0.iconTextView.icontTint = .djGreen
+        }
+        hintContainerView.showView()
+    }
+    
+    func hideMessage() {
+        hintContainerView.showView(false)
     }
 
 }

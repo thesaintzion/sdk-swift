@@ -120,26 +120,25 @@ class InputValidatorImpl: IInputValidator {
         return ValidationMessage(isValid: true, message: "", validationType: .numeric)
     }
     
-    func validateMileage(_ value: String, max: Double) -> ValidationMessage {
-        if value.isEmpty {
-            return ValidationMessage(message: "Cannot be empty", validationType: .mileage(max))
-        } else if value != value.filter("0123456789".contains) {
-            return ValidationMessage(message: "Invalid value", validationType: .mileage(max))
-        } else if value.double ?? 0 > max {
-            return ValidationMessage(message: "Cannot be above \(max).", validationType: .mileage(max))
+    //DOB Format: dd/mm/yyyy
+    func validateDOB(_ dob: String) -> ValidationMessage {
+        if dob.isEmpty {
+            return ValidationMessage(message: "Cannot be empty", validationType: .dob)
+        } else if !dob.isValidDate() {
+            return ValidationMessage(message: "Invalid date of birth", validationType: .dob)
         }
         
-        return ValidationMessage(isValid: true, message: "", validationType: .mileage(max))
+        return ValidationMessage(isValid: true, message: "", validationType: .dob)
     }
     
-    func validateVin(value: String, with maxLength: Int) -> ValidationMessage {
-        if value.isEmpty {
-            return ValidationMessage(message: "Cannot be empty", validationType: .vin(maxLength))
-        } else if value.count > maxLength || value.count < maxLength {
-            return ValidationMessage(message: "Must be \(maxLength) characters.", validationType: .vin(maxLength))
+    func validateAlphaNumeric(_ text: String) -> ValidationMessage {
+        if text.isEmpty {
+            return ValidationMessage(message: "Cannot be empty", validationType: .alphaNumeric)
         }
         
-        return ValidationMessage(isValid: true, message: "", validationType: .vin(maxLength))
+        //TODO: Implement .alphaNumeric validation rules
+        
+        return ValidationMessage(isValid: true, message: "", validationType: .alphaNumeric)
     }
     
     func validate(_ value: String, for type: ValidationType) -> ValidationMessage {
@@ -162,10 +161,10 @@ class InputValidatorImpl: IInputValidator {
             return validateNumeric(value)
         case .address:
             return validateAddress(value)
-        case .mileage(let max):
-            return validateMileage(value, max: max)
-        case .vin(let maxLength):
-            return validateVin(value: value, with: maxLength)
+        case .dob:
+            return validateDOB(value)
+        case .alphaNumeric:
+            return validateAlphaNumeric(value)
         }
     }
     

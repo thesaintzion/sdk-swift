@@ -50,7 +50,7 @@ extension DisclaimerItemsView: UITableViewConformable {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let infoText = DJConstants.disclaimerItems[indexPath.row]
+        let infoText = items[indexPath.row]
         let cell = tableView.deque(cell: DisclaimerCell.self, at: indexPath)
         cell.selectionStyle = .none
         cell.infoLabel.text = infoText

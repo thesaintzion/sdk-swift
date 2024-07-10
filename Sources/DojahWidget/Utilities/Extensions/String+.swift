@@ -114,6 +114,10 @@ extension String {
         localizedCaseInsensitiveContains(other)
     }
     
+    func insensitiveNotContains(_ other: String) -> Bool {
+        !insensitiveContains(other)
+    }
+    
     var currencySignRemoved: String {
         replacingOccurrences(of: "", with: "")
     }

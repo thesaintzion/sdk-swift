@@ -6,10 +6,22 @@
 //
 
 import UIKit
+import Kingfisher
 
 extension UIImageView {
-    func setImageFromURL(url: String, placeholderImage: UIImage? = nil) {
-        //sd_setImage(with: URL(string: url), placeholderImage: placeholderImage)
+    func setImageFromURL(_ url: String, placeholder: UIImage? = nil) {
+        let processor = DownsamplingImageProcessor(size: bounds.size)
+        kf.indicatorType = .activity
+        kf.setImage(
+            with: URL(string: url),
+            placeholder: placeholder,
+            options: [
+                .processor(processor),
+                .scaleFactor(UIScreen.main.scale),
+                .transition(.fade(1)),
+                .cacheOriginalImage
+            ]
+        )
     }
     
     func setImageColor(_ color: UIColor) {

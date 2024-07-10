@@ -9,7 +9,7 @@ import UIKit
 
 final class DJPickerView: BaseView {
 
-    private let titleLabel = UILabel(text: "", font: .light(13))
+    private let titleLabel = UILabel(text: "", font: .regular(13))
     private let leftIconImageView = UIImageView()
     private let valueLabel = UILabel(text: "")
     private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
@@ -32,8 +32,11 @@ final class DJPickerView: BaseView {
             $0.textFont = .regular(15)
             $0.direction = .bottom
             $0.selectionAction = { [weak self] index, value in
-                self?.valueLabel.text = value
-                self?.itemSelectionHandler?(value, index)
+                guard let self else { return }
+                if self.showSelectedItem {
+                    self.updateValue(value)
+                }
+                self.itemSelectionHandler?(value, index)
             }
         }
     }()
@@ -43,6 +46,7 @@ final class DJPickerView: BaseView {
         }
     }
     private var itemSelectionHandler: StringIntParamHandler?
+    private let showSelectedItem: Bool
     
     private lazy var contentStackView = VStackView(
         subviews: [titleLabel, valueView],
@@ -58,9 +62,11 @@ final class DJPickerView: BaseView {
         borderWidth: CGFloat = 0.7,
         showDropdownIcon: Bool = true,
         items: [String] = [],
+        showSelectedItem: Bool = true,
         itemSelectionHandler: StringIntParamHandler? = nil
     ) {
         selectionItems = items
+        self.showSelectedItem = showSelectedItem
         super.init(frame: .zero)
         titleLabel.text = title
         updateValue(value)
@@ -128,6 +134,13 @@ final class DJPickerView: BaseView {
     func updateInfo(country: Country) {
         with(country) {
             valueLabel.text = $0.name
+            leftIconImageView.image = $0.flag
+        }
+    }
+    
+    func updateInfo(country: DJCountryDB) {
+        with(country) {
+            valueLabel.text = $0.countryName
             leftIconImageView.image = $0.flag
         }
     }

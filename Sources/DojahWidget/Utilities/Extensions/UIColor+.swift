@@ -26,7 +26,9 @@ extension UIColor {
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
     
-    static var primary: UIColor { UIColor("#5E3EEB") }
+    static var primary: UIColor {
+        UIColor(preference.DJAppConfig?.colorCode ?? "#5E3EEB")
+    }
     
     static var primaryGrey: UIColor { UIColor("#F9F9F9") }
     

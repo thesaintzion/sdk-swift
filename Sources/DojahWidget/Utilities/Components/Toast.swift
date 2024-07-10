@@ -58,14 +58,16 @@ class Toast: UIView {
     let currentWindow = UIApplication.shared.keyWindow
     
     @objc func didTapToast() {
-        generateHapticFeedback()
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
-            self.transform = .init(scaleX: 0.95, y: 0.95)
-            UIView.animate(withDuration: 0.4, delay: 0.3, options: [], animations: {
-                self.transform = .identity
-                self.beginHideToast()
-            }, completion: nil)
-        })
+        runOnMainThread {
+            generateHapticFeedback()
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+                self.transform = .init(scaleX: 0.95, y: 0.95)
+                UIView.animate(withDuration: 0.4, delay: 0.3, options: [], animations: {
+                    self.transform = .identity
+                    self.beginHideToast()
+                }, completion: nil)
+            })
+        }
         
     }
     
@@ -76,38 +78,50 @@ class Toast: UIView {
     }
     
     private func beginHideToast() {
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: [], animations: {
-            self.transform = .init(translationX: 0, y: -200)
-        }, completion: nil)
+        runOnMainThread {
+            UIView.animate(
+                withDuration: 0.7,
+                delay: 0,
+                usingSpringWithDamping: 0.7,
+                initialSpringVelocity: 0.7,
+                options: [],
+                animations: {
+                    self.transform = .init(translationX: 0, y: -200)
+                },
+                completion: nil
+            )
+        }
     }
     
     func show(_ title: String, type: ToastType = .success) {
-        generateHapticFeedback()
-        
-        self.type = type
-        self.titleLabel.text = title
-        
-        guard let window = UIApplication.shared.keyWindow else { return }
-        
-        window.addSubview(self)
-        window.bringSubviewToFront(self)
-        
-        self.constraintHeight(notchHeight + 50)
-        
-        self.anchor(
-            top: window.topAnchor,
-            leading: window.leadingAnchor,
-            trailing: window.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
-        )
-        
-        self.transform = .init(translationX: 0, y: -200)
-        
-        UIView.animate(withDuration: 0.7, delay: 0, options: [], animations: {
-            self.transform = .identity
-        }, completion: nil)
-        
-        _hideToast()
+        runOnMainThread {
+            generateHapticFeedback()
+            
+            self.type = type
+            self.titleLabel.text = title
+            
+            guard let window = UIApplication.shared.keyWindow else { return }
+            
+            window.addSubview(self)
+            window.bringSubviewToFront(self)
+            
+            self.constraintHeight(notchHeight + 50)
+            
+            self.anchor(
+                top: window.topAnchor,
+                leading: window.leadingAnchor,
+                trailing: window.trailingAnchor,
+                padding: .init(top: 0, left: 0, bottom: 0, right: 0)
+            )
+            
+            self.transform = .init(translationX: 0, y: -200)
+            
+            UIView.animate(withDuration: 0.7, delay: 0, options: [], animations: {
+                self.transform = .identity
+            }, completion: nil)
+            
+            self._hideToast()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

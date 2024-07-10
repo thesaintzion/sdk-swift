@@ -7,6 +7,12 @@
 
 import UIKit
 
+func showToast(message: String, type: ToastType = .success) {
+    runOnMainThread {
+        Toast.shared.show(message, type: type)
+    }
+}
+
 //MARK: - Custom UIViewTapGestureRecognizer
 public class UIViewTapGestureRecognizer: UITapGestureRecognizer {
     var action : (()->Void)? = nil
@@ -33,7 +39,8 @@ extension UIView {
         backgroundColor: UIColor? = nil,
         borderWidth: CGFloat? = nil,
         borderColor: UIColor? = nil,
-        radius: CGFloat? = nil
+        radius: CGFloat? = nil,
+        clipsToBounds: Bool = false
     ) {
         self.init()
         if let subviews = subviews {
@@ -60,6 +67,7 @@ extension UIView {
         if let borderColor = borderColor {
             self.borderColor = borderColor
         }
+        self.clipsToBounds = clipsToBounds
     }
     
     var id: String? {
@@ -291,16 +299,40 @@ extension UIView {
     
     func addDottedBorder(
         dashPattern: [NSNumber] = [2, 2],
+        lineWidth: CGFloat = 1,
         strokeColor: UIColor? = nil
     ) {
         let borderLayer = CAShapeLayer()
         borderLayer.strokeColor = (strokeColor ?? borderColor ?? .primary).cgColor
-        borderLayer.lineWidth = 1
+        borderLayer.lineWidth = lineWidth
         borderLayer.lineDashPattern = dashPattern
         borderLayer.frame = bounds
         borderLayer.fillColor = nil
         borderLayer.path = UIBezierPath(rect: bounds).cgPath
         layer.addSublayer(borderLayer)
+    }
+    
+    @discardableResult
+    func addDashedBorder(
+        dashLength: NSNumber = 4,
+        dashSpacing: NSNumber = 4,
+        lineWidth: CGFloat = 1,
+        lineDashPhase: CGFloat = 0,
+        strokeColor: UIColor? = .black
+    ) -> CAShapeLayer {
+        let borderLayer = CAShapeLayer()
+        borderLayer.strokeColor = strokeColor?.cgColor
+        borderLayer.lineWidth = lineWidth
+        borderLayer.lineDashPattern = [dashLength, dashSpacing]
+        borderLayer.frame = bounds
+        borderLayer.lineDashPhase = lineDashPhase
+        borderLayer.fillColor = nil
+        borderLayer.path = UIBezierPath(
+            roundedRect: bounds,
+            cornerRadius: layer.cornerRadius
+        ).cgPath
+        layer.addSublayer(borderLayer)
+        return borderLayer
     }
     
     @discardableResult
@@ -325,6 +357,26 @@ extension UIView {
     func withHStackLeftAlignment() -> HStackView {
         HStackView(subviews: [self, UIView.vspacer()], alignment: .center)
     }
+    
+    @discardableResult
+    func applyBlurEffect(style: UIBlurEffect.Style = .extraLight, alpha: CGFloat = 0.7) -> UIVisualEffectView {
+        // Create a blur effect
+        let blurEffect = UIBlurEffect(style: style)
+        
+        // Create a visual effect view with the blur effect
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        // Set the frame of the visual effect view to match the view to be blurred
+        blurEffectView.frame = bounds
+        
+        // Set alpha to make the blur effect see-through
+        blurEffectView.alpha = alpha
+        
+        // Add the visual effect view as a subview
+        addSubview(blurEffectView)
+        
+        return blurEffectView
+    }
 }
 
 extension Array where Element == UIView {
@@ -346,6 +398,18 @@ extension Array where Element == UIView {
     
     func faded(_ fade: Bool = true, alpha: CGFloat = 0.7) {
         forEach { $0.faded(fade, alpha: alpha) }
+    }
+    
+    func centerXInSuperview() {
+        forEach { $0.centerXInSuperview() }
+    }
+    
+    func centerYInSuperview() {
+        forEach { $0.centerYInSuperview() }
+    }
+    
+    func centerInSuperview() {
+        forEach { $0.centerInSuperview() }
     }
 }
 

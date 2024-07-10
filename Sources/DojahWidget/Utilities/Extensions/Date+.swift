@@ -231,6 +231,14 @@ extension String {
         return timeStringArray[0] + ":" + timeStringArray[1] + (Int(timeStringArray[0])! < 12 ? " AM" : " PM")
     }
     
+    func isValidDate(format: String = DJConstants.dateFormat) -> Bool {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        return dateFormatter.date(from: self).isNotNil
+    }
 }
 
 func currentDate(format: String = "dd MMM yyyy HH:mm a") -> Date {

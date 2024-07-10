@@ -8,6 +8,7 @@
 import Foundation
 
 enum DJConstants {
+    static let genericErrorMessage = "An error occured. Try again later"
     static let disclaimerItems = [
         "You must be in a well lit environment before getting started.",
         "Avoid wearing anything that hinders or hides your face from being seen.",
@@ -26,9 +27,19 @@ enum DJConstants {
         "If you are satisfied with the captured image, proceed to the next step to continue with the verification process."
     ]
     
+    static let locationDisclaimerItems = [
+        "To ensure the security and integrity of your account, we request access to your device's location for:",
+        "Location address and IP address for a successful verification",
+        "Your privacy and security are our top priorities.",
+        "Location data is encrypted and will only be used for verification and security purposes."
+    ]
+    
     static let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     
     static let monthDays = Array(1...31)
     
     static let years = Array(1990...current(.year)).reversed()
+    
+    static let dateFormat = "dd-MM-yyyy"
+    
 }

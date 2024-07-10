@@ -142,7 +142,7 @@ final class DatePickerController: BottomPopupViewController {
         dayPickerView.updateValue(date.current(.day).string)
         calendarView.setContent(makeCalendarViewContent())
         runAfter(0.25) { [weak self] in
-            self?.dismissViewController()
+            self?.kdismiss()
         }
     }
     

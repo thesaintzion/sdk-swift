@@ -8,11 +8,38 @@
 import UIKit
 
 final class BusinessDataViewController: DJBaseViewController {
+    
+    private let viewModel: BusinessDataViewModel
+    
+    init(viewModel: BusinessDataViewModel = BusinessDataViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        kviewModel = viewModel
+    }
+    
+    @available(*, unavailable)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
-    private let documentTypeView = DJPickerView(title: "Document type")
-    private let documentNumberTextField = DJTextField(title: "Document Number")
-    private let businessNameTextField = DJTextField(title: "Business name", placeholder: "Business name")
-    private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
+    private lazy var documentTypeView = DJPickerView(
+        title: "Document Type",
+        items: viewModel.documentTypes.names,
+        itemSelectionHandler: { [weak self] _, index in
+            self?.continueButton.enable()
+            self?.viewModel.didChooseDocumentType(at: index)
+        }
+    )
+    private let documentNumberTextField = DJTextField(
+        title: "Document Number",
+        validationType: .alphaNumeric
+    )
+    private let businessNameTextField = DJTextField(
+        title: "Business Name",
+        placeholder: "Business name",
+        validationType: .name
+    )
+    private lazy var continueButton = DJButton(title: "Continue", isEnabled: false) { [weak self] in
         self?.didTapContinueButton()
     }
     private lazy var contentStackView = VStackView(
@@ -20,7 +47,6 @@ final class BusinessDataViewController: DJBaseViewController {
         spacing: 40
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-    private var govtID: GovtID?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,40 +76,39 @@ final class BusinessDataViewController: DJBaseViewController {
         
         [documentNumberTextField, businessNameTextField].showViews(false)
         
-    }
-    
-    override func addTapGestures() {
-        documentTypeView.valueView.didTap { [weak self] in
-            self?.didTapDocumentTypeView()
-        }
-    }
-    
-    private func didTapDocumentTypeView() {
-        showSelectableItemsViewController(
-            title: "Choose Document Type",
-            items: GovtID.allCases,
-            height: 260,
-            delegate: self
-        )
+        viewModel.viewProtocol = self
+        
     }
     
     private func didTapContinueButton() {
-        
+        if [businessNameTextField, documentNumberTextField].areValid {
+            viewModel.verifyBusiness(
+                name: businessNameTextField.text,
+                number: documentNumberTextField.text
+            )
+        }
     }
-
+    
 }
 
-extension BusinessDataViewController: SelectableItemsViewDelegate {
-    func didChooseItem(_ item: SelectableItem) {
-        if let govtID = item as? GovtID {
-            self.govtID = govtID
-            documentTypeView.updateValue(govtID.title)
-            with(documentNumberTextField) {
-                $0.textField.placeholder = govtID.numberTitle
-                $0.title = govtID.numberTitle
-                $0.showView()
-            }
-            businessNameTextField.showView()
+extension BusinessDataViewController: BusinessDataViewProtocol {
+    func updateNumberTextfield() {
+        guard let selectedDocument = viewModel.selectedDocument else { return }
+        continueButton.enable()
+        documentTypeView.updateValue(selectedDocument.name.orEmpty)
+        with(documentNumberTextField) {
+            $0.textField.placeholder = selectedDocument.placeholder.orEmpty
+            $0.title = selectedDocument.idEnum.orEmpty
+            $0.showView()
         }
+        businessNameTextField.showView()
+    }
+    
+    func showErrorMessage(_ message: String) {
+        navView.showErrorMessage(message)
+    }
+    
+    func hideMessage() {
+        navView.hideMessage()
     }
 }

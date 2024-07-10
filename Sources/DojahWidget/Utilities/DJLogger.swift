@@ -12,7 +12,7 @@ import os.log
 @available(iOS 14.0, *)
 let logger = Logger(subsystem: "com.dojah.widget.sdk", category: "DojahWidgetSDK")
 
-func log(_ msg: String, logType: OSLogType = .debug) {
+func kprint(_ msg: String, logType: OSLogType = .debug) {
     #if DEBUG
         switch logType {
         case .debug, .default:

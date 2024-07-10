@@ -24,7 +24,7 @@ enum PermissionType: String {
         case .camera:
             return DJConstants.idCaptureDisclaimerItems
         case .location:
-            return ["Location address and IP address for a successful verification"]
+            return DJConstants.locationDisclaimerItems
         }
     }
 }
