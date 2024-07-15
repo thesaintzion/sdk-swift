@@ -26,7 +26,7 @@ let package = Package(
             dependencies: [
                 "HorizonCalendar",
                 .product(name: "Lottie", package: "lottie-ios"),
-                .product(name: "Realm", package: "realm-swift"),
+                //.product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "IQKeyboardManagerSwift", package: "IQKeyboardManager"),
                 .product(name: "Kingfisher", package: "Kingfisher"),
