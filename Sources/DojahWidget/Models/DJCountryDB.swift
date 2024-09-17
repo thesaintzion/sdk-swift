@@ -80,7 +80,7 @@ class DJCountryDB: Object {
     }
     
     var flag: UIImage {
-        UIImage(named: iso2.lowercased(), in: Bundle.module, compatibleWith: nil) ?? .res(.ng)
+        UIImage(named: iso2.lowercased(), in: DojahBundle.bundle, compatibleWith: nil) ?? .res("ng")
     }
     
     var emoticon: String {

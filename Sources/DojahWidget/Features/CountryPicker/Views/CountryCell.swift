@@ -10,7 +10,7 @@ import UIKit
 final class CountryCell: BaseTableViewCell {
 
     private let iconImageView = UIImageView(
-        image: .res(.ngFlag),
+        image: .res("ngFlag"),
         contentMode: .scaleAspectFill,
         height: 14,
         width: 19

@@ -14,13 +14,13 @@ enum FeedbackType {
     var icon: UIImage {
         switch self {
         case .success:
-            return .res(.purpleSuccessCheckmark)
+            return .res("purpleSuccessCheckmark")
         case .failure:
-            return .res(.xCircle)
+            return .res("xCircle")
         case .countryNotSupported:
-            return .res(.globeIcon)
+            return .res("globeIcon")
         case .warning:
-            return .res(.xCircle)
+            return .res("xCircle")
         }
     }
     

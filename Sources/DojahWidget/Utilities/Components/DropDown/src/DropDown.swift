@@ -370,7 +370,7 @@ public final class DropDown: UIView {
     #if SWIFT_PACKAGE
     return Bundle.module
     #else
-    return Bundle(for: DropDownCell.self)
+      return DojahBundle.bundle
     #endif
   }
 	

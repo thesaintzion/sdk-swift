@@ -8,8 +8,23 @@
 import UIKit
 
 extension UIImage {
+    @available(iOS 17.0, *)
     static func res(_ res: ImageResource) -> UIImage {
         UIImage(resource: res)
+    }
+
+    static func res(_ name: String) -> UIImage {
+        let snakeName = name.toKebabCase()
+        if #available(iOS 17.0, *) {
+            let imageResource = ImageResource(name: snakeName, bundle: DojahBundle.bundle)
+            let image = UIImage(resource: imageResource)
+            // Use image resource for iOS 17+
+            return image
+        } else {
+            let image = UIImage(named: snakeName,in: DojahBundle.bundle,with: nil)
+            return image ?? UIImage()
+        }
+       
     }
     
     static func imageWithColor(color: UIColor, size: CGSize) -> UIImage? {
@@ -83,4 +98,6 @@ extension UIImage {
         
         return newImage!
     }
+    
+ 
 }

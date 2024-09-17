@@ -47,7 +47,7 @@ final class PermissionViewController: DJBaseViewController {
     private let howToAllowIconTextView = IconTextView(
         text: "How to allow permission", 
         font: .medium(15),
-        icon: .res(.purpleInfoCircleOutlined),
+        icon: .res("purpleInfoCircleOutlined"),
         iconSize: 18,
         textColor: .primary
     )

@@ -11,13 +11,13 @@ final class DJPhoneNumberTextField: BaseView {
     
     private let titleLabel = UILabel(text: "Enter phone number", font: .light(13))
     private let flagIconImageView = UIImageView(
-        image: .res(.ngFlag),
+        image: .res("ngFlag"),
         contentMode: .scaleAspectFill,
         height: 14,
         width: 19
     )
     private let codeLabel = UILabel(text: "+234", font: .regular(15)).withWidth(35)
-    private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
+    private let arrowdownImageView = UIImageView(image: .res("chevronDown"), size: 10)
     private lazy var flagStackView = HStackView(
         subviews: [flagIconImageView, codeLabel, arrowdownImageView],
         spacing: 8,

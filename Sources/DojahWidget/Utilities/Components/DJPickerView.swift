@@ -12,7 +12,7 @@ final class DJPickerView: BaseView {
     private let titleLabel = UILabel(text: "", font: .regular(13))
     private let leftIconImageView = UIImageView()
     private let valueLabel = UILabel(text: "")
-    private let arrowdownImageView = UIImageView(image: .res(.chevronDown), size: 10)
+    private let arrowdownImageView = UIImageView(image: .res("chevronDown"), size: 10)
     private lazy var valueStackView = HStackView(
         subviews: [leftIconImageView, valueLabel, arrowdownImageView],
         spacing: 10,

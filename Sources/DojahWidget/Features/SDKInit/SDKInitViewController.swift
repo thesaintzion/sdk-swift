@@ -22,7 +22,7 @@ final class SDKInitViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let animationView = LottieAnimationView(name: "circle-loader", bundle: Bundle.module).withSize(200)
+    private let animationView = LottieAnimationView(name: "circle-loader", bundle: DojahBundle.bundle).withSize(200)
     private let messageLabel = UILabel(text: "Initializing Dojah Widget SDK...", font: .medium(20), alignment: .center)
     private lazy var contentStackView = VStackView(subviews: [animationView, messageLabel], spacing: 10)
 

@@ -14,7 +14,7 @@ final class IconInfoView: BaseView {
     init(
         text: String,
         textColor: UIColor = .djGreen,
-        icon: UIImage = .res(.greenInfoCircle),
+        icon: UIImage = .res("greenInfoCircle"),
         bgColor: UIColor = .djLightGreen,
         textAlignment: NSTextAlignment = .left,
         numberOfLines: Int = 1,

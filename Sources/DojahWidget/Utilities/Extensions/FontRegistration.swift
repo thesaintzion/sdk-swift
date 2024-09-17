@@ -14,12 +14,22 @@ public enum FontError: Swift.Error {
 }
 
 func registerFont(named name: String) throws {
-   guard let asset = NSDataAsset(name: "Fonts/\(name)", bundle: Bundle.module),
-      let provider = CGDataProvider(data: asset.data as NSData),
-      let font = CGFont(provider),
-      CTFontManagerRegisterGraphicsFont(font, nil) else {
-    throw FontError.failedToRegisterFont
-   }
+Fo
+    print("DojahWidget Bundle Url: \(DojahBundle.bundle.bundleURL)\n")
+
+    if let fontURL = DojahBundle.bundle.url(forResource: name, withExtension: "ttf"){
+        print("Front Url is \(fontURL)")
+        CTFontManagerRegisterFontsForURL(fontURL as CFURL, CTFontManagerScope.process, nil)
+    }else{
+        print("can't get Url")
+        throw FontError.failedToRegisterFont
+    }
+//   guard let asset = NSDataAsset(name: "Fonts/\(name)", bundle: DojahBundle.bundle),
+//      let provider = CGDataProvider(data: asset.data as NSData),
+//      let font = CGFont(provider),
+//      CTFontManagerRegisterGraphicsFont(font, nil) else {
+//    throw FontError.failedToRegisterFont
+//   }
 }
 
 struct DJFont {

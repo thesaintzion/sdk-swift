@@ -22,7 +22,7 @@ final class DJDisclaimerViewController: DJBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let circleImageView = UIImageView(image: .res(.circleIcon), height: 60)
+    private let circleImageView = UIImageView(image: .res("circleIcon"), height: 60)
     private let disclaimerTitleLabel = UILabel(
         text: "Please note the following",
         font: .medium(15),
@@ -63,7 +63,7 @@ final class DJDisclaimerViewController: DJBaseViewController {
             top: navView.bottomAnchor,
             leading: safeAreaLeadingAnchor,
             trailing: safeAreaTrailingAnchor,
-            padding: .kinit(topBottom: 60, leftRight: 16)
+            padding: UIEdgeInsets.kinit(topBottom: 60, leftRight: 16)
         )
         
         disclaimerStackView.fillSuperview(padding: .kinit(topBottom: 15, leftRight: 20))

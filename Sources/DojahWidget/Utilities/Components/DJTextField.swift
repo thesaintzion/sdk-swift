@@ -222,7 +222,7 @@ final class DJTextField: BaseView {
     fileprivate func addDropDownChevron() {
         let dropButton = UIButton(type: .system)
         dropButton.frame = CGRect(x: 0, y: 5, width: frame.height, height: frame.height)
-        dropButton.setImage(.res(.chevronDown), for: .normal)
+        dropButton.setImage(.res("chevronDown"), for: .normal)
         dropButton.tintColor = .aLabel
         dropButton.contentEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 10)
         dropButton.addTarget(self, action: #selector(dropdownButtonSelected), for: .touchUpInside)

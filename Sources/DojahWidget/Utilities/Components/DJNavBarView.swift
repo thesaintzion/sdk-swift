@@ -14,12 +14,12 @@ protocol DJNavBarViewDelegate: AnyObject {
 
 final class DJNavBarView: BaseView {
     weak var delegate: DJNavBarViewDelegate?
-    private let backImageView = UIImageView(image: .res(.backTextIcon), height: 24, width: 64)
-    private let closeImageView = UIImageView(image: .res(.xmarkFilledIcon), size: 18)
-    private let appImageView = UIImageView(image: .res(.circleIcon), contentMode: .scaleAspectFit)
+    private let backImageView = UIImageView(image: .res("backTextIcon"), height: 24, width: 64)
+    private let closeImageView = UIImageView(image: .res("xmarkFilledIcon"), size: 18)
+    private let appImageView = UIImageView(image: .res("circleIcon"), contentMode: .scaleAspectFit)
     let hintIconTextView = PillIconTextView(
         text: "Fill the form as it appears on your valid ID",
-        icon: .res(.greenInfoCircle),
+        icon: .res("greenInfoCircle"),
         iconSize: 18,
         textColor: .djGreen,
         bgColor: .djLightGreen
@@ -75,29 +75,29 @@ final class DJNavBarView: BaseView {
     
     private func setAppImage() {
         if let appLogoURL = preference.DJAppConfig?.logo {
-            appImageView.setImageFromURL(appLogoURL, placeholder: .res(.circleIcon))
+            appImageView.setImageFromURL(appLogoURL, placeholder: .res("circleIcon"))
         }
     }
     
     func showErrorMessage(_ message: String) {
-        with(hintIconTextView) {
-            $0.text = message
-            $0.backgroundColor = .djLightRed
-            $0.iconTextView.textColor = .djRed
-            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
-            $0.iconTextView.icontTint = .djRed
-        }
+        
+            hintIconTextView.text = message
+            hintIconTextView.backgroundColor = .djLightRed
+            hintIconTextView.iconTextView.textColor = .djRed
+            hintIconTextView.iconTextView.icon = .res("greenInfoCircle").withRenderingMode(.alwaysTemplate)
+            hintIconTextView.iconTextView.icontTint = .djRed
+    
         hintContainerView.showView()
     }
     
     func showSuccessMessage(_ message: String) {
-        with(hintIconTextView) {
-            $0.text = message
-            $0.backgroundColor = .djLightGreen
-            $0.iconTextView.textColor = .djGreen
-            $0.iconTextView.icon = .res(.greenInfoCircle).withRenderingMode(.alwaysTemplate)
-            $0.iconTextView.icontTint = .djGreen
-        }
+        
+            hintIconTextView.text = message
+            hintIconTextView.backgroundColor = .djLightGreen
+            hintIconTextView.iconTextView.textColor = .djGreen
+            hintIconTextView.iconTextView.icon = .res("greenInfoCircle").withRenderingMode(.alwaysTemplate)
+            hintIconTextView.iconTextView.icontTint = .djGreen
+        
         hintContainerView.showView()
     }
     

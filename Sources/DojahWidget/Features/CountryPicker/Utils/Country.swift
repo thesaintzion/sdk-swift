@@ -24,11 +24,11 @@ enum Country: Int, CaseIterable, SelectableItem {
     var flag: UIImage {
         switch self {
         case .nigeria:
-            return .res(.ngFlag)
+            return .res("ngFlag")
         case .ghana:
-            return .res(.ghanaFlag)
+            return .res("ghanaFlag")
         case .kenya:
-            return .res(.kenyaFlag)
+            return .res("kenyaFlag")
         }
     }
     

@@ -59,7 +59,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     )
     private lazy var cameraBorderStackView = cameraBorderView.withHStackCentering()
     private lazy var selfieImageView = UIImageView(
-        image: .res(.femaleSelfie),
+        image: .res("femaleSelfie"),
         contentMode: .scaleAspectFill,
         size: cameraViewWidth,
         cornerRadius: cameraViewWidth / 2
@@ -67,7 +67,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     private let bottomHintView = PillIconTextView(
         text: "Please make sure you are in a well lit environment",
         font: .light(13),
-        icon: .res(.redInfoCircle),
+        icon: .res("redInfoCircle"),
         iconSize: 18,
         textColor: .djRed,
         bgColor: .djLightRed,

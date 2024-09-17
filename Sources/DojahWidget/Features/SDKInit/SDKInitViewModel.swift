@@ -40,7 +40,7 @@ import GooglePlaces
     }
     
     
-    func initialize() {
+     @MainActor func initialize() {
         IQKeyboardManager.shared.enable = true
         
         GMSPlacesClient.provideAPIKey("AIzaSyCGc1Yvx5sbnMklpcwg6A8bkKuDzNMbWu4")

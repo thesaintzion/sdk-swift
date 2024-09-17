@@ -22,7 +22,8 @@ public final class DojahWidgetSDK {
         )
         
         let controller = SDKInitViewController(viewModel: viewModel)
-        uiController.show(controller, sender: true)
+        uiController.present(controller,animated: true)
+//        uiController.show(controller, sender: true)
     }
     public static func initialize(
         widgetID: String,

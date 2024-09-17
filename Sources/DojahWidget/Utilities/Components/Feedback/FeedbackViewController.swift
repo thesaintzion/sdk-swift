@@ -24,7 +24,7 @@ final public class FeedbackViewController: DJBaseViewController {
 
     private lazy var animationView = LottieAnimationView(
         name: config.feedbackType.lottieAnimationName,
-        bundle: Bundle.module
+        bundle: DojahBundle.bundle
     ).withHeight(200)
     private lazy var iconImageView = UIImageView(
         image: config.feedbackType.icon,

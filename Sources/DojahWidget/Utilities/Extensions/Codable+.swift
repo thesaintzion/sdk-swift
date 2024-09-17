@@ -8,7 +8,7 @@
 import Foundation
 
 func jsonData(from fileName: String) -> Data? {
-    guard let jsonURL = Bundle.module.url(forResource: fileName, withExtension: "json") else {
+    guard let jsonURL = DojahBundle.bundle.url(forResource: fileName, withExtension: "json") else {
         print("unable to load json")
         return nil
     }

@@ -42,7 +42,7 @@ final class UserDataViewController: DJBaseViewController {
         placeholder: DJConstants.dateFormat,
         validationType: .dob,
         editable: false,
-        rightIcon: .res(.calendar)
+        rightIcon: .res("calendar")
     )
     private lazy var continueButton = DJButton(title: "Continue") { [weak self] in
         self?.didTapContinueButton()

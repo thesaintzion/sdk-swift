@@ -73,7 +73,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         clipsToBounds: true
     )
     private let idImageView = UIImageView(
-        image: .res(.driversLicense),
+        image: .res("driversLicense"),
         contentMode: .scaleAspectFill,
         cornerRadius: 3
     )
@@ -81,7 +81,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
     private lazy var hintView = PillIconTextView(
         text: "Make sure your \(viewModel.idName) is properly placed before you capture.",
         font: .light(13),
-        icon: .res(.greenInfoCircle),
+        icon: .res("greenInfoCircle"),
         iconSize: 18,
         textColor: .djGreen,
         bgColor: .djLightGreen,

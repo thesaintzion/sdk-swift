@@ -100,7 +100,7 @@ extension String {
         return self
     }
     
-    var jsonBundleURL: URL? { Bundle.main.url(forResource: self, withExtension: "json") }
+    var jsonBundleURL: URL? { DojahBundle.bundle.url(forResource: self, withExtension: "json") }
     
     func insensitiveEquals(_ other: String) -> Bool {
         localizedCaseInsensitiveCompare(other) == .orderedSame
@@ -141,5 +141,25 @@ extension String {
     var dashesRemoved: String { replacingOccurrences(of: "-", with: "") }
     
     var commasRemoved: String { replacingOccurrences(of: ",", with: "") }
+    
+    var isCamelCase: Bool {
+        let camelCasePattern = "^[a-z][a-zA-Z0-9]*$"
+        let camelCaseRegex = try? NSRegularExpression(pattern: camelCasePattern)
+        let range = NSRange(location: 0, length: self.utf16.count)
+        return camelCaseRegex?.firstMatch(in: self, options: [], range: range) != nil
+    }
+    
+    // Function to convert a camel case string to kebab case
+    func toKebabCase() -> String {
+        guard isCamelCase else {
+            return self
+        }
+        
+        let kebabCaseString = self
+            .replacingOccurrences(of: "([a-z])([A-Z])", with: "$1-$2", options: .regularExpression, range: nil)
+            .lowercased()
+        
+        return kebabCaseString
+    }
     
 }

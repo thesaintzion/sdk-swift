@@ -23,7 +23,7 @@ final class CountryPickerViewController: DJBaseViewController {
     }
 
     private let iconConfig = IconConfig(
-        icon: .res(.ngFlag),
+        icon: .res("ngFlag"),
         size: .init(width: 19, height: 14),
         contentMode: .scaleAspectFill
     )

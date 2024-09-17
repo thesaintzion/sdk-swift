@@ -10,7 +10,7 @@ import UIKit
 final class DisclaimerCell: BaseTableViewCell {
 
     private let checkImageView = UIImageView(
-        image: .res(.purpleSuccessTickIcon).withRenderingMode(.alwaysTemplate),
+        image: .res("purpleSuccessTickIcon").withRenderingMode(.alwaysTemplate),
         tintColor: .primary,
         size: 14
     )

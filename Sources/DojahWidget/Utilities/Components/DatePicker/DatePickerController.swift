@@ -15,7 +15,7 @@ final class DatePickerController: BottomPopupViewController {
     private lazy var dateIconTextView = PillIconTextView(
         text: Date().string(format: dateFormat).uppercased(),
         font: .light(14),
-        icon:.res(.calendar).withRenderingMode(.alwaysTemplate),
+        icon:.res("calendar").withRenderingMode(.alwaysTemplate),
         iconTint: .primaryGrey,
         textColor: .white,
         contentSpacing: 10,

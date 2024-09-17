@@ -27,7 +27,7 @@ final class AddressVerificationViewController: DJBaseViewController {
     private let addressTextField = DJTextField(
         title: "Input address",
         placeholder: "3-9 Olu Koleosho Street, off Simbiat Abiola Way.",
-        rightIcon: .res(.chevronDown)
+        rightIcon: .res("chevronDown")
     )
     private lazy var resultsTableView = UITableView(
         cells: [UITableViewCell.self],

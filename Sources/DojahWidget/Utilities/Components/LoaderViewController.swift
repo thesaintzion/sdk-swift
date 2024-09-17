@@ -11,8 +11,7 @@ import Lottie
 final class LoaderViewController: UIViewController {
     
     private let animationView = LottieAnimationView(
-        name: "circle-loader",
-        bundle: Bundle.module
+        name: "circle-loader",bundle: DojahBundle.bundle
     ).withSize(width: 200, height: 150)
     
     override func viewDidLoad() {

@@ -13,9 +13,9 @@ enum PermissionType: String {
     var icon: UIImage {
         switch self {
         case .camera:
-            return .res(.cameraPermission)
+            return .res("cameraPermission")
         case .location:
-            return .res(.locationPermission)
+            return .res("locationPermission")
         }
     }
     
