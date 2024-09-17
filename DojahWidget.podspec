@@ -1,18 +1,15 @@
 Pod::Spec.new do |s|
-  s.name         = 'DojahWidget'
-  s.version      = '1.0.0'
+  s.name         = 'DojahWidgetTest'
+  s.version      = '1.0.2'
   s.summary      = 'DojahWidget for react native.'
-  s.homepage     = 'https://github.com/shittu33/DojahWidget'
+  s.homepage     = 'https://github.com/shittu33/test-react-native-ios'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Your Name' => 'your.email@example.com' }
-  s.source       = { :git => 'https://github.com/shittu33/DojahWidget.git', :tag => s.version }
+  s.source       = { :git => 'https://github.com/shittu33/test-react-native-ios.git', :tag => s.version }
 
   s.ios.deployment_target = '14.0'
   s.swift_version = '5.0'
   s.source_files = 'Sources/**/*.{swift,h}'
-  # s.resource_bundles = {
-  #  'Resources' => ['Sources/DojahWidget/Resources/**/*']
-  # }
    s.resource_bundles = {
     'DojahWidgetResources' => [
       'Sources/DojahWidget/Resources/**/*',

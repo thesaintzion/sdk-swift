@@ -14,7 +14,6 @@ public enum FontError: Swift.Error {
 }
 
 func registerFont(named name: String) throws {
-Fo
     print("DojahWidget Bundle Url: \(DojahBundle.bundle.bundleURL)\n")
 
     if let fontURL = DojahBundle.bundle.url(forResource: name, withExtension: "ttf"){
