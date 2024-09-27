@@ -33,18 +33,18 @@ extension Encodable {
             return ""
         }
     }
-    
+
     var dictionary: [String: Any] {
         return (try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self))) as? [String: Any] ?? [:]
     }
-    
+
     var prettyJson: String {
         if let responseData = try? JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted) {
             return String(data: responseData, encoding: .utf8) ?? ""
         }
         return ""
     }
-    
+
     var dictionaryValue: Any {
         do {
             let data = try JSONEncoder().encode(self)
@@ -54,30 +54,30 @@ extension Encodable {
             return ""
         }
     }
-    
+
     var dictionaryArray: [[String: Any]] {
         return (try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self))) as? [[String: Any]] ?? [[:]]
     }
-    
+
     func encodedData() -> Data? {
         try? JSONEncoder().encode(self)
     }
-    
+
 }
 
 extension Data {
     func decode<T: Decodable>(into objectType: T.Type) throws -> T {
         try JSONDecoder().decode(T.self, from: self)
     }
-    
+
     func decode<T: Codable>(into objectType: T.Type) throws -> T {
         try JSONDecoder().decode(objectType.self, from: self)
     }
-    
+
     func prettyJson() throws -> String {
         let jsonObject = try JSONSerialization.jsonObject(with: self, options: [])
         let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
-        
+
         return String(data: prettyJsonData, encoding: .utf8) ?? "--unable--to--get--prettyJson--"
     }
 }
@@ -89,7 +89,7 @@ extension Dictionary {
         }
         return ""
     }
-    
+
     func serializedData() throws -> Data {
         try JSONSerialization.data(withJSONObject: self, options: [])
     }

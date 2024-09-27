@@ -9,7 +9,7 @@ import UIKit
 
 enum Country: Int, CaseIterable, SelectableItem {
     case nigeria, ghana, kenya
-    
+
     var name: String {
         switch self {
         case .nigeria:
@@ -20,7 +20,7 @@ enum Country: Int, CaseIterable, SelectableItem {
             return "Kenya"
         }
     }
-    
+
     var flag: UIImage {
         switch self {
         case .nigeria:
@@ -31,9 +31,9 @@ enum Country: Int, CaseIterable, SelectableItem {
             return .res("kenyaFlag")
         }
     }
-    
+
     var title: String { name }
-    
+
     var iconConfig: IconConfig {
         .init(
             icon: flag,
@@ -41,7 +41,7 @@ enum Country: Int, CaseIterable, SelectableItem {
             contentMode: .scaleAspectFill
         )
     }
-    
+
     var phoneCode: String {
         switch self {
         case .nigeria:
@@ -52,7 +52,7 @@ enum Country: Int, CaseIterable, SelectableItem {
             return "+254"
         }
     }
-    
+
     var emoticon: String {
         switch self {
         case .nigeria:

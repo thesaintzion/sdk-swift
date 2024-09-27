@@ -1,6 +1,6 @@
 //
 //  DisclaimerCell.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 27/10/2023.
 //
@@ -15,7 +15,7 @@ final class DisclaimerCell: BaseTableViewCell {
         size: 14
     )
     let infoLabel = UILabel(
-        text: "", 
+        text: "",
         numberOfLines: 0,
         alignment: .left
     )
@@ -24,7 +24,7 @@ final class DisclaimerCell: BaseTableViewCell {
         spacing: 10,
         alignment: .center
     )
-    
+
     override func setup() {
         clearBackground()
         with(contentStackView) {

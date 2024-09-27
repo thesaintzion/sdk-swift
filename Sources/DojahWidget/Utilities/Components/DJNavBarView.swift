@@ -1,6 +1,6 @@
 //
 //  DJNavBarView.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 27/10/2023.
 //
@@ -26,7 +26,7 @@ final class DJNavBarView: BaseView {
     )
     private lazy var hintContainerView = hintIconTextView.withHStackCentering()
     private lazy var hintParentView = VStackView(subviews: [hintContainerView, UIView.vspacer(1)])
-    
+
     override func setup() {
         addSubviews(backImageView, closeImageView, appImageView, hintParentView)
         with(appImageView) {
@@ -44,63 +44,63 @@ final class DJNavBarView: BaseView {
                 padding: .kinit(top: 30, left: 10, right: 10)
             )
         }
-        
+
         addTapGestures()
         setAppImage()
         hintContainerView.showView(false)
     }
-    
+
     private func addTapGestures() {
         backImageView.didTap { [weak self] in
             self?.delegate?.didTapBack()
         }
-        
+
         closeImageView.didTap { [weak self] in
             self?.delegate?.didDismiss()
         }
     }
-    
+
     func showNavControls(_ show: Bool) {
         backImageView.showView(show)
         closeImageView.showView(show)
     }
-    
+
     func showNavBackControl(_ show: Bool) {
         backImageView.showView(show)
     }
-    
+
     func showNavCloseControl(_ show: Bool) {
         closeImageView.showView(show)
     }
-    
+
     private func setAppImage() {
         if let appLogoURL = preference.DJAppConfig?.logo {
             appImageView.setImageFromURL(appLogoURL, placeholder: .res("circleIcon"))
         }
     }
-    
+
     func showErrorMessage(_ message: String) {
-        
+
             hintIconTextView.text = message
             hintIconTextView.backgroundColor = .djLightRed
             hintIconTextView.iconTextView.textColor = .djRed
             hintIconTextView.iconTextView.icon = .res("greenInfoCircle").withRenderingMode(.alwaysTemplate)
             hintIconTextView.iconTextView.icontTint = .djRed
-    
+
         hintContainerView.showView()
     }
-    
+
     func showSuccessMessage(_ message: String) {
-        
+
             hintIconTextView.text = message
             hintIconTextView.backgroundColor = .djLightGreen
             hintIconTextView.iconTextView.textColor = .djGreen
             hintIconTextView.iconTextView.icon = .res("greenInfoCircle").withRenderingMode(.alwaysTemplate)
             hintIconTextView.iconTextView.icontTint = .djGreen
-        
+
         hintContainerView.showView()
     }
-    
+
     func hideMessage() {
         hintContainerView.showView(false)
     }

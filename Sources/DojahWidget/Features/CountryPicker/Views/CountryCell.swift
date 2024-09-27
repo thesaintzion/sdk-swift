@@ -1,6 +1,6 @@
 //
 //  CountryCell.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 28/10/2023.
 //
@@ -21,7 +21,7 @@ final class CountryCell: BaseTableViewCell {
         spacing: 10,
         alignment: .center
     )
-    
+
     override func setup() {
         clearBackground()
         with(contentStackView) {
@@ -29,7 +29,7 @@ final class CountryCell: BaseTableViewCell {
             $0.fillSuperview(padding: .kinit(topBottom: 10))
         }
     }
-    
+
     func configure(country: Country) {
         with(country) {
             iconImageView.image = $0.flag

@@ -1,6 +1,6 @@
 //
 //  DJPoweredView.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 27/10/2023.
 //
@@ -16,7 +16,7 @@ final class DJPoweredView: BaseView {
         spacing: 4,
         alignment: .center
     )
-    
+
     override func setup() {
         with(contentStackView) {
             addSubview($0)

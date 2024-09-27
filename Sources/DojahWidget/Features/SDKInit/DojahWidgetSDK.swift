@@ -20,7 +20,7 @@ public final class DojahWidgetSDK {
             referenceID: referenceID,
             emailAddress: emailAddress
         )
-        
+
         let controller = SDKInitViewController(viewModel: viewModel)
         uiController.present(controller,animated: true)
 //        uiController.show(controller, sender: true)
@@ -39,7 +39,7 @@ public final class DojahWidgetSDK {
         let controller = SDKInitViewController(viewModel: viewModel)
         navController.pushViewController(controller, animated: true)
     }
-    
+
     public static func getCachedWidgetIDs() -> [WidgetIDCache] {
         preference.WidgetIDCache
     }

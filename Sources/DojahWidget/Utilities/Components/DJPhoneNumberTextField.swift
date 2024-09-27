@@ -1,6 +1,6 @@
 //
 //  DJPhoneNumberTextField.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 31/10/2023.
 //
@@ -8,7 +8,7 @@
 import UIKit
 
 final class DJPhoneNumberTextField: BaseView {
-    
+
     private let titleLabel = UILabel(text: "Enter phone number", font: .light(13))
     private let flagIconImageView = UIImageView(
         image: .res("ngFlag"),
@@ -53,7 +53,7 @@ final class DJPhoneNumberTextField: BaseView {
             }
         }
     }()
-    
+
     var fullNumber: String {
         "\(codeLabel.text.orEmpty)\(textField.text.orEmpty)"
     }
@@ -61,17 +61,17 @@ final class DJPhoneNumberTextField: BaseView {
     override func setup() {
         super.setup()
         clearBackground()
-        
+
         with(contentStackView) {
             addSubview($0)
             $0.fillSuperview()
         }
-        
+
         with(textFieldStackView) {
             $0.fillSuperview(padding: .kinit(leftRight: 15))
             $0.setCustomSpacing(0, after: lineView)
         }
-        
+
         with(textField) {
             $0.font = .regular(15)
             $0.keyboardType = .numberPad
@@ -85,12 +85,12 @@ final class DJPhoneNumberTextField: BaseView {
             $0.delegate = self
             $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         }
-        
+
         flagStackView.didTap { [weak self] in
             self?.showCountries()
         }
     }
-    
+
     private func showCountries() {
         with(dropdownView) {
             $0.anchorView = contentView
@@ -99,16 +99,16 @@ final class DJPhoneNumberTextField: BaseView {
             $0.show()
         }
     }
-    
+
     func updateDatasource(_ datasource: [String]) {
         dropdownView.dataSource = datasource
     }
-    
+
     func updateCountryDetails(phoneCode: String, flag: UIImage) {
         flagIconImageView.image = flag
         codeLabel.text = phoneCode
     }
-    
+
     @objc private func textFieldDidChange(_ textField: UITextField) {
         textDidChange?(textField.text.orEmpty)
     }

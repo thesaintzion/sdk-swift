@@ -1,6 +1,6 @@
 //
 //  PermissionsViewController.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 31/10/2023.
 //
@@ -8,21 +8,21 @@
 import UIKit
 
 final class PermissionViewController: DJBaseViewController {
-    
+
     private let permissionType: PermissionType
     private let didAllowPermission: NoParamHandler?
-    
+
     init(permissionType: PermissionType = .camera, didAllowPermission: NoParamHandler? = nil) {
         self.permissionType = permissionType
         self.didAllowPermission = didAllowPermission
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private lazy var circleImageView = UIImageView(image: permissionType.icon, height: 60)
     private lazy var titleLabel = UILabel(
         text: "\(permissionType.rawValue) Permission Required",
@@ -45,7 +45,7 @@ final class PermissionViewController: DJBaseViewController {
         self?.didTapAllowPermission()
     }
     private let howToAllowIconTextView = IconTextView(
-        text: "How to allow permission", 
+        text: "How to allow permission",
         font: .medium(15),
         icon: .res("purpleInfoCircleOutlined"),
         iconSize: 18,
@@ -56,16 +56,16 @@ final class PermissionViewController: DJBaseViewController {
         spacing: 15
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
-    
+
     private func setupUI() {
         with(contentScrollView) {
             addSubview($0)
-            
+
             $0.anchor(
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
@@ -73,7 +73,7 @@ final class PermissionViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(leftRight: 20)
             )
-            
+
             contentStackView.anchor(
                 top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
@@ -82,27 +82,27 @@ final class PermissionViewController: DJBaseViewController {
                 padding: .kinit(top: 50, bottom: 20)
             )
         }
-        
+
         with(contentStackView) {
             $0.setCustomSpacing(40, after: subtitleLabel)
             $0.setCustomSpacing(8, after: itemsTitleLabel)
             $0.setCustomSpacing(25, after: disclaimerItemsView)
             $0.setCustomSpacing(30, after: allowButton)
         }
-        
+
         navView.showNavBackControl(false)
     }
-    
+
     private func didTapAllowPermission() {
         kdismiss { [weak self] in
             self?.didAllowPermission?()
         }
     }
-    
+
     override func addTapGestures() {
         howToAllowIconTextView.didTap()
     }
-    
+
     override func didTapNavCloseButton() {
         kdismiss()
     }

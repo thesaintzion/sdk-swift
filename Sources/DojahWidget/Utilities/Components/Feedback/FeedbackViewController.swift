@@ -1,6 +1,6 @@
 //
 //  FeedbackViewController.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 31/10/2023.
 //
@@ -9,14 +9,14 @@ import UIKit
 import Lottie
 
 final public class FeedbackViewController: DJBaseViewController {
-    
+
     private let config: FeedbackConfig
-    
+
     init(config: FeedbackConfig = .success(feedbackType: .warning)) {
         self.config = config
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -46,7 +46,7 @@ final public class FeedbackViewController: DJBaseViewController {
         spacing: 10,
         alignment: .center
     )
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         navView.showNavControls(config.showNavControls)
@@ -59,22 +59,22 @@ final public class FeedbackViewController: DJBaseViewController {
                 padding: .kinit(topBottom: 100, leftRight: 20)
             )
         }
-        
+
         with(animationView) {
             $0.loopMode = .loop
             $0.play()
         }
-        
+
         let countryNotSupported = config.feedbackType == .countryNotSupported
         iconImageView.showView(countryNotSupported)
         animationView.showView(!countryNotSupported)
         messageLabel.font = countryNotSupported ? .medium(16) : .regular(16)
     }
-    
+
     override func didTapNavBackButton() {
         config.doneAction?()
     }
-    
+
     override func didTapNavCloseButton() {
         config.doneAction?()
     }

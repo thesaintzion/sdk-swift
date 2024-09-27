@@ -9,7 +9,7 @@ import UIKit
 
 enum PermissionType: String {
     case camera = "Camera", location = "Location"
-    
+
     var icon: UIImage {
         switch self {
         case .camera:
@@ -18,7 +18,7 @@ enum PermissionType: String {
             return .res("locationPermission")
         }
     }
-    
+
     var disclaimerItems: [String] {
         switch self {
         case .camera:

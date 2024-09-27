@@ -31,7 +31,7 @@ class DJCountryDB: Object {
     @Persisted var phonesMobile: String
     @Persisted var phonesLandline: String
     @Persisted var gdp: String
-    
+
     convenience init(
         iso2: String,
         countryName: String,
@@ -78,11 +78,11 @@ class DJCountryDB: Object {
         self.phonesLandline = phonesLandline
         self.gdp = gdp
     }
-    
+
     var flag: UIImage {
         UIImage(named: iso2.lowercased(), in: DojahBundle.bundle, compatibleWith: nil) ?? .res("ng")
     }
-    
+
     var emoticon: String {
         let baseFlagScalar: UInt32 = 127397
         var flagString = ""
@@ -94,7 +94,7 @@ class DJCountryDB: Object {
         }
         return flagString
     }
-    
+
     var emoticonCountryName: String {
         "\(emoticon)  \(countryName)"
     }

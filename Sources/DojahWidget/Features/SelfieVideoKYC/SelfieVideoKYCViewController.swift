@@ -1,6 +1,6 @@
 //
 //  SelfieVideoKYCViewController.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 31/10/2023.
 //
@@ -15,18 +15,18 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     private let captureSession = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
-    
+
     init(viewModel: SelfieVideoKYCViewModel = SelfieVideoKYCViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         kviewModel = viewModel
     }
-    
+
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private lazy var topHintView = PillTextView(
         text: viewState.hintText,
         textColor: .white,
@@ -105,26 +105,25 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
     private var viewState: SelfieVideoKYCViewState {
         viewModel.viewState
     }
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         showNavBar(false)
         setupUI()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         runAfter { [weak self] in
             self?.setBorders()
         }
     }
-    
+
     private func setupUI() {
         viewModel.viewProtocol = self
         with(contentScrollView) {
-            
             addSubview($0)
-            
+
             $0.anchor(
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
@@ -132,7 +131,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(leftRight: 20)
             )
-            
+
             contentStackView.anchor(
                 top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
@@ -144,24 +143,24 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
             contentStackView.setCustomSpacing(15, after: secondaryButton)
             contentStackView.setCustomSpacing(20, after: disclaimerItemsView)
         }
-        
+
         [disclaimerItemsView, secondaryButton].showViews(false)
-        
+
         attachmentManager.imagePickedHandler = { [weak self] uiimage, imageURL, sourceType in
             self?.didPickImage(uiimage, at: imageURL, using: sourceType)
         }
-        
+
         cameraBorderView.addSubview(cameraContainerView)
         cameraContainerView.centerInSuperview()
         cameraContainerView.addSubviews(selfieImageView, cameraView, cameraHintView)
         [cameraView, selfieImageView, cameraHintView].centerInSuperview()
         selfieImageView.showView(false)
-        
+
         runAfter { [weak self] in
             self?.setupCameraView()
         }
     }
-    
+
     private func setupCameraView() {
         guard let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
             kprint("Front camera not available.")
@@ -184,14 +183,14 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
                 cameraView.clearBackground()
                 previewLayer.frame = cameraView.layer.bounds
                 cameraView.layer.insertSublayer(previewLayer, at: 0)
-                
+
                 startCaptureSession()
             }
         } catch {
             kprint("Error setting up camera input: \(error.localizedDescription)")
         }
     }
-    
+
     private func setBorders() {
         if isCaptureCameraBorders {
             if let cameraBorderLayer {
@@ -224,9 +223,9 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
                 strokeColor: .djGreen
             )
         }
-        
+
     }
-    
+
     private func didPickImage(
         _ uiimage: UIImage,
         at imageURL: URL?,
@@ -237,7 +236,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         [topHintView, bottomHintView].showViews(false)
         updateViewState()
     }
-    
+
     private func updateViewState() {
         switch viewState {
         case .capture:
@@ -251,12 +250,12 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         }
         updateUIState()
     }
-    
+
     private func updateUIState() {
         primaryButton.title = viewState.primaryButtonTitle
         topHintView.text = viewState.hintText
         isCaptureCameraBorders = [.capture, .record].contains(viewState)
-        
+
         switch viewState {
         case .capture:
             cameraView.backgroundColor = .djBorder.withAlphaComponent(0.3)
@@ -278,7 +277,7 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
             [disclaimerItemsView, secondaryButton, selfieImageView].showViews()
         }
     }
-    
+
     private func didTapPrimaryButton() {
         switch viewState {
         case .capture:
@@ -291,17 +290,17 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
             break //TODO: do video analysis
         }
     }
-    
+
     private func didTapSecondaryButton() {
         updateViewState()
     }
-    
+
     private func capturePhoto() {
         let photoSettings = AVCapturePhotoSettings()
         photoSettings.flashMode = .off
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
-    
+
     @discardableResult
     private func setDashedBorder(
         on uiview: UIView,
@@ -325,18 +324,18 @@ final class SelfieVideoKYCViewController: DJBaseViewController {
         uiview.layer.addSublayer(borderLayer)
         return borderLayer
     }
-    
+
     private func removeLayer(_ layer: CAShapeLayer?, from uiview: UIView) {
         uiview.layer.sublayers?.removeAll { $0 == layer }
     }
-    
+
     private func startCaptureSession(_ start: Bool = true) {
         cameraHintView.showView(!start)
         runOnBackgroundThread { [weak self] in
             start ? self?.captureSession.startRunning() : self?.captureSession.stopRunning()
         }
     }
-    
+
     override func showLoader(_ show: Bool) {
         [primaryButton, secondaryButton].enable(!show)
         with(cameraHintView) {
@@ -364,7 +363,7 @@ extension SelfieVideoKYCViewController: SelfieVideoKYCViewProtocol {
                 $0.textLabel.text = message
             }
             [self.primaryButton, self.secondaryButton].enable()
-            
+
             runAfter(2) {
                 self.showLoader(false)
             }
@@ -381,7 +380,7 @@ extension SelfieVideoKYCViewController: AVCapturePhotoCaptureDelegate {
             kprint("Error capturing photo: \(error?.localizedDescription ?? "Unknown error")")
         }
     }
-    
+
     private func didCaptureImage(_ uiImage: UIImage) {
         runOnMainThread { [weak self] in
             self?.updateViewState()

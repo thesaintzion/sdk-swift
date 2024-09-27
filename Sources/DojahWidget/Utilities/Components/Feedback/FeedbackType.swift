@@ -10,7 +10,7 @@ import UIKit
 
 enum FeedbackType {
     case success, failure, warning, countryNotSupported
-    
+
     var icon: UIImage {
         switch self {
         case .success:
@@ -23,7 +23,7 @@ enum FeedbackType {
             return .res("xCircle")
         }
     }
-    
+
     var lottieAnimationName: String {
         switch self {
         case .success:

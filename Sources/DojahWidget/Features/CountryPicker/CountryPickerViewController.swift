@@ -1,6 +1,6 @@
 //
 //  CountryPickerViewController.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 28/10/2023.
 //
@@ -8,15 +8,15 @@
 import UIKit
 
 final class CountryPickerViewController: DJBaseViewController {
-    
+
     private let viewModel: CountryPickerViewModel
-    
+
     init(viewModel: CountryPickerViewModel = CountryPickerViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         kviewModel = viewModel
     }
-    
+
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -60,13 +60,13 @@ final class CountryPickerViewController: DJBaseViewController {
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
     private var showCountries = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.viewProtocol = self
         with(contentScrollView) {
             addSubview($0)
-            
+
             $0.anchor(
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
@@ -74,7 +74,7 @@ final class CountryPickerViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(left: 20, bottom: 20, right: 20)
             )
-            
+
             contentStackView.anchor(
                 top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
@@ -83,23 +83,23 @@ final class CountryPickerViewController: DJBaseViewController {
                 padding: .kinit(top: 50, bottom: 20)
             )
         }
-        
+
         with(contentStackView) {
             $0.setCustomSpacing(5, after: countryPickerView)
             $0.setCustomSpacing(15, after: countriesContainerView)
         }
-        
+
         with(countriesContainerView) {
             $0.applyShadow(radius: 5)
             $0.showView(false)
-            
+
             searchTextField.anchor(
                 top: $0.topAnchor,
                 leading: $0.leadingAnchor,
                 trailing: $0.trailingAnchor,
                 padding: .kinit(topBottom: 7, leftRight: 12)
             )
-            
+
             countriesTableView.anchor(
                 top: searchTextField.bottomAnchor,
                 leading: $0.leadingAnchor,
@@ -107,17 +107,17 @@ final class CountryPickerViewController: DJBaseViewController {
                 trailing: $0.trailingAnchor,
                 padding: .kinit(top: -15, bottom: 20)
             )
-            
+
             countriesTableView.clearBackground()
         }
-        
+
         searchTextField.textField.addTarget(
             self,
             action: #selector(searchTextfieldDidChange),
             for: .editingChanged
         )
     }
-    
+
     override func addTapGestures() {
         countryPickerView.valueView.didTap { [weak self] in
             guard let self else { return }
@@ -125,11 +125,11 @@ final class CountryPickerViewController: DJBaseViewController {
             self.showCountriesContainer(self.showCountries)
         }
     }
-    
+
     @objc private func searchTextfieldDidChange() {
         viewModel.filterCountries(searchTextField.text)
     }
-    
+
     private func didChooseCountry(_ country: DJCountryDB) {
         countryPickerView.updateInfo(country: country)
         viewModel.didChooseCountry(country)
@@ -146,15 +146,15 @@ extension CountryPickerViewController: CountryPickerViewProtocol {
     func refreshCountries() {
         countriesTableView.reloadData()
     }
-    
+
     func showErrorMessage(_ message: String) {
         navView.showErrorMessage(message)
     }
-    
+
     func hideMessage() {
         navView.hideMessage()
     }
-    
+
     func enableContinueButton(_ enable: Bool) {
         continueButton.enable(enable)
     }
@@ -164,7 +164,7 @@ extension CountryPickerViewController: UITableViewConformable {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.countries.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let country = viewModel.countries[indexPath.row]
         return with(tableView.deque(cell: UITableViewCell.self, at: indexPath)) {
@@ -180,6 +180,6 @@ extension CountryPickerViewController: UITableViewConformable {
 
 extension CountryPickerViewController: TermsAndPrivacyViewDelegate {
     func didTapTerms() {}
-    
+
     func didTapPrivacy() {}
 }

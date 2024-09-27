@@ -47,12 +47,12 @@ final class DJPickerView: BaseView {
     }
     private var itemSelectionHandler: StringIntParamHandler?
     private let showSelectedItem: Bool
-    
+
     private lazy var contentStackView = VStackView(
         subviews: [titleLabel, valueView],
         spacing: 6
     )
-    
+
     init(
         title: String,
         value: String = "",
@@ -79,21 +79,21 @@ final class DJPickerView: BaseView {
             $0.borderColor = borderColor
         }
     }
-    
+
     @available(*, unavailable)
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func setup() {
         super.setup()
         clearBackground()
-        
+
         with(contentStackView) {
             addSubview($0)
             $0.fillSuperview()
         }
-        
+
         with(valueStackView) {
             $0.centerYInSuperview()
             $0.anchor(
@@ -102,14 +102,14 @@ final class DJPickerView: BaseView {
                 padding: .kinit(leftRight: 15)
             )
         }
-        
+
         if selectionItems.isNotEmpty {
             valueView.didTap { [weak self] in
                 self?.showItems()
             }
         }
     }
-    
+
     private func showItems() {
         guard selectionItems.isNotEmpty else { return }
         with(dropdownView) {
@@ -119,7 +119,7 @@ final class DJPickerView: BaseView {
             $0.show()
         }
     }
-    
+
     private func updateLeftIcon(config: IconConfig) {
         with(leftIconImageView) {
             $0.image = config.icon
@@ -130,21 +130,21 @@ final class DJPickerView: BaseView {
             }
         }
     }
-    
+
     func updateInfo(country: Country) {
         with(country) {
             valueLabel.text = $0.name
             leftIconImageView.image = $0.flag
         }
     }
-    
+
     func updateInfo(country: DJCountryDB) {
         with(country) {
             valueLabel.text = $0.countryName
             leftIconImageView.image = $0.flag
         }
     }
-    
+
     func updateValue(_ value: String) {
         with(valueLabel) {
             $0.text = value.isEmpty ? "Select" : value

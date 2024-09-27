@@ -18,7 +18,7 @@ final class DJTextField: BaseView {
     private let errorLabel = UILabel(
         text: "Error Label",
         font: .regular(13),
-        numberOfLines: 0, 
+        numberOfLines: 0,
         color: .systemRed,
         alignment: .left
     )
@@ -43,17 +43,17 @@ final class DJTextField: BaseView {
     private var errorLabelVisible = false
     var maxLength: Int? = nil
     var textDidChange: ParamHandler<String>? = nil
-    
+
     var title: String {
         get { titleLabel.text.orEmpty }
         set { titleLabel.text = newValue }
     }
-    
+
     var text: String {
         get { textField.text.orEmpty }
         set { textField.text = newValue }
     }
-    
+
     convenience init(
         title: String,
         placeholder: String = "",
@@ -89,16 +89,16 @@ final class DJTextField: BaseView {
         if let height = height {
             heightConstraint = constraintHeight(height)
         }
-        
+
         if isPassword {
             setupPassword()
         }
-        
+
         if let rightIcon {
             addRightIcon(rightIcon)
         }
     }
-    
+
     convenience init(
         title: String,
         valueText: String? = nil,
@@ -130,7 +130,7 @@ final class DJTextField: BaseView {
         if let height = height {
             heightConstraint = constraintHeight(height)
         }
-        
+
         pickerManager.items = items
         pickerManager.selectedItem = { [weak self] index in
             self?.textField.text = items[index]
@@ -145,7 +145,7 @@ final class DJTextField: BaseView {
             addLeftIcon(iconConfig: leftIconConfig)
         }
     }
-    
+
     @objc func textFieldDidChange(_ textField: UITextField) {
         hideError()
         textDidChange?(textField.text.orEmpty)
@@ -156,7 +156,7 @@ final class DJTextField: BaseView {
             break
         }
     }
-    
+
     func setupPassword() {
         let paddingView = UIView(size: 15, backgroundColor: .clear)
         let passwordIconStackView = HStackView(subviews: [rightIconImageView, paddingView], alignment: .center)
@@ -170,7 +170,7 @@ final class DJTextField: BaseView {
         }
         rightIconImageView.didTap(duration: 0.1, completion: togglePasswordVisibility)
     }
-    
+
     func togglePasswordVisibility() {
         if !passwordVisible && text.isNotEmpty {
             textField.isSecureTextEntry = false
@@ -182,17 +182,17 @@ final class DJTextField: BaseView {
             rightIconImageView.image = UIImage()
         }
     }
-    
+
     override public func setup() {
         super.setup()
         addSubviews(titleLabel, textField, errorLabel)
-        
+
         titleLabel.anchor(
             top: topAnchor,
             leading: leadingAnchor,
             trailing: trailingAnchor
         )
-        
+
         with(textField) {
             $0.anchor(
                 top: titleLabel.bottomAnchor,
@@ -207,7 +207,7 @@ final class DJTextField: BaseView {
             $0.backgroundColor = .primaryGrey
             $0.clipsToBounds = true
         }
-        
+
         with(errorLabel) {
             $0.anchor(
                 top: textField.bottomAnchor,
@@ -218,7 +218,7 @@ final class DJTextField: BaseView {
             $0.showView(false)
         }
     }
-    
+
     fileprivate func addDropDownChevron() {
         let dropButton = UIButton(type: .system)
         dropButton.frame = CGRect(x: 0, y: 5, width: frame.height, height: frame.height)
@@ -229,7 +229,7 @@ final class DJTextField: BaseView {
         textField.rightView =  HStackView(subviews: [dropButton, UIView.hspacer(5)], alignment: .center)
         textField.rightViewMode = .always
     }
-    
+
     private func addRightIcon(_ icon: UIImage) {
         let iconButton = UIButton(type: .system)
         iconButton.frame = CGRect(x: 0, y: 5, width: frame.height, height: frame.height)
@@ -239,7 +239,7 @@ final class DJTextField: BaseView {
         textField.rightView =  HStackView(subviews: [iconButton, UIView.hspacer(5)], alignment: .center)
         textField.rightViewMode = .always
     }
-    
+
     private func addLeftIcon(iconConfig: IconConfig) {
         with(leftIconImageView) {
             $0.image = iconConfig.icon
@@ -253,15 +253,15 @@ final class DJTextField: BaseView {
         textField.padding = .kinit(left: 35, right: 15)
         textField.leftViewMode = .always
     }
-    
+
     @objc fileprivate func dropdownButtonSelected() {
         textField.becomeFirstResponder()
     }
-    
+
     func localizeUI(title: String) {
         titleLabel.text = title
     }
-    
+
     var isValid: Bool {
         if let validationType = validationType {
             let result = inputValidator.validate(text, for: validationType)
@@ -270,13 +270,13 @@ final class DJTextField: BaseView {
         }
         return false
     }
-    
+
     func isValidPasswordConfirmation(password: String) -> Bool {
         let result = inputValidator.validateConfirmPassword(password, text)
         result.isValid ? hideError() : showError(result.message)
         return result.isValid
     }
-    
+
     func showError(_ message: String) {
         with(errorLabel) {
             $0.text = message
@@ -291,9 +291,9 @@ final class DJTextField: BaseView {
                 }
             }
         }
-        
+
     }
-    
+
     func hideError() {
         if errorLabelVisible {
             errorLabelVisible = false
@@ -309,7 +309,7 @@ final class DJTextField: BaseView {
             self?.layoutIfNeeded()
         }
     }
-    
+
     fileprivate func updateTextFieldAppearance(success: Bool = true) {
         with(textField) {
             $0.borderColor = success ? .djBorder : .systemRed
@@ -318,7 +318,7 @@ final class DJTextField: BaseView {
             }
         }
     }
-    
+
 }
 
 extension DJTextField: UITextFieldDelegate {
@@ -340,7 +340,7 @@ extension DJTextField: UITextFieldDelegate {
             return restrictTextfield(range, string)
         }
     }
-    
+
     fileprivate func restrictTextfield(_ range: NSRange, _ string: String) -> Bool {
         if let maxLength = maxLength {
             if [.numberPad, .phonePad].contains(textField.keyboardType) {
@@ -355,7 +355,7 @@ extension DJTextField: UITextFieldDelegate {
             return true
         }
     }
-    
+
 }
 
 class TextField: UITextField {
@@ -376,7 +376,7 @@ class TextField: UITextField {
     override open func editingRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
     }
-    
+
 }
 
 extension Array where Element == DJTextField {

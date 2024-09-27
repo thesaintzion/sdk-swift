@@ -24,9 +24,9 @@ extension UIImage {
             let image = UIImage(named: snakeName,in: DojahBundle.bundle,with: nil)
             return image ?? UIImage()
         }
-       
+
     }
-    
+
     static func imageWithColor(color: UIColor, size: CGSize) -> UIImage? {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -38,7 +38,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image
     }
-    
+
     func withTint(_ color: UIColor, size: CGSize) -> UIImage? {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -50,7 +50,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image
     }
-    
+
     func withColor(_ color: UIColor) -> UIImage? {
         let maskImage = cgImage!
 
@@ -73,12 +73,12 @@ extension UIImage {
             return nil
         }
     }
-    
+
     func withSize(_ newSize: CGSize) -> UIImage {
-        
+
         let widthRatio  = newSize.width  / size.width
         let heightRatio = newSize.height / size.height
-        
+
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
         if(widthRatio > heightRatio) {
@@ -86,18 +86,16 @@ extension UIImage {
         } else {
             newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
-        
+
         // This is the rect that we've calculated out and this is what is actually used below
         let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        
+
         // Actually do the resizing to the rect using the ImageContext stuff
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
         draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
+
         return newImage!
     }
-    
- 
 }

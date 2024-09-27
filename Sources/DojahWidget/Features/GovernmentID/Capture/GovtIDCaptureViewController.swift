@@ -1,6 +1,6 @@
 //
 //  GovtIDCaptureViewController.swift
-//  
+//
 //
 //  Created by Isaac Iniongun on 29/10/2023.
 //
@@ -10,27 +10,27 @@ import AVFoundation
 import MobileCoreServices
 
 final class GovtIDCaptureViewController: DJBaseViewController {
-    
+
     private let viewModel: GovtIDCaptureViewModel
-    
+
     init(viewModel: GovtIDCaptureViewModel = GovtIDCaptureViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         kviewModel = viewModel
     }
-    
+
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private var viewState: GovtIDCaptureViewState { viewModel.viewState }
     private let verificationMethod: GovtIDVerificationMethod = .govtID
     private let captureSession = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var idImageBlurEffectView: UIVisualEffectView?
-    
+
     private lazy var titleLabel = UILabel(
         text: viewState.title,
         font: .medium(16),
@@ -44,7 +44,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         .attributedString
     private lazy var uploadHintLabel = UILabel(
         attributedText: uploadHintAttributedText,
-        numberOfLines: 0, 
+        numberOfLines: 0,
         alignment: .center
     )
     private lazy var uploadView = UIView(
@@ -105,13 +105,13 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.viewProtocol = self
         setupUI()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         runAfter { [weak self] in
@@ -123,11 +123,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             )
         }
     }
-    
+
     private func setupUI() {
         with(contentScrollView) {
             addSubview($0)
-            
+
             $0.anchor(
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
@@ -135,7 +135,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(leftRight: 20)
             )
-            
+
             contentStackView.anchor(
                 top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
@@ -144,30 +144,30 @@ final class GovtIDCaptureViewController: DJBaseViewController {
                 padding: .kinit(top: 40, bottom: 20)
             )
         }
-        
+
         [uploadView, disclaimerItemsView, idImageView].showViews(false)
         [uploadHintLabel, cameraHintView].centerInSuperview()
         cameraView.fillSuperview(padding: .kinit(allEdges: 3))
         idImageView.fillSuperview(padding: .kinit(allEdges: 3))
         [primaryButton, secondaryButton].enable(false)
-        
+
         bindAttachmentManager()
-        
+
         runAfter { [weak self] in
             self?.setupCameraView()
         }
     }
-    
+
     private func bindAttachmentManager() {
         attachmentManager.imagePickedHandler = { [weak self] uiimage, imageURL, sourceType in
             self?.didPickImage(uiimage, at: imageURL, using: sourceType)
         }
-        
+
         attachmentManager.filePickedHandler = { [weak self] fileURL in
             self?.didPickFile(at: fileURL)
         }
     }
-    
+
     private func setupCameraView() {
         guard let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
             kprint("Front camera not available.")
@@ -190,21 +190,21 @@ final class GovtIDCaptureViewController: DJBaseViewController {
                 cameraView.clearBackground()
                 previewLayer.frame = cameraView.layer.bounds
                 cameraView.layer.insertSublayer(previewLayer, at: 0)
-                
+
                 startCaptureSession()
             }
         } catch {
             kprint("Error setting up camera input: \(error.localizedDescription)")
         }
     }
-    
+
     private func startCaptureSession(_ start: Bool = true) {
         cameraHintView.showView(!start)
         runOnBackgroundThread { [weak self] in
             start ? self?.captureSession.startRunning() : self?.captureSession.stopRunning()
         }
     }
-    
+
     override func addTapGestures() {
         uploadView.didTap { [weak self] in
             guard let self else { return }
@@ -215,7 +215,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             )
         }
     }
-    
+
     private func didPickImage(
         _ uiimage: UIImage,
         at imageURL: URL?,
@@ -227,14 +227,14 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             .attributedString
         viewModel.updateImageData(imageData)
     }
-    
+
     private func didPickFile(at fileURL: URL) {
         uploadHintLabel.attributedText = AttributedStringBuilder()
             .text(fileURL.lastPathComponent, attributes: [.textColor(.aSecondaryLabel), .font(.regular(16)), .alignment(.center)])
             .attributedString
         viewModel.updateIDData(from: fileURL)
     }
-    
+
     private func didTapPrimaryButton() {
         switch viewState {
         case .uploadFront, .uploadBack, .uploadCACDocument, .uploadDocument:
@@ -245,7 +245,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             viewModel.didTapContinue()
         }
     }
-    
+
     private func didTapSecondaryButton() {
         switch viewState {
         case .uploadFront:
@@ -275,7 +275,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         }
         updateUI()
     }
-    
+
     override func showLoader(_ show: Bool) {
         [primaryButton, secondaryButton].enable(!show)
         guard !viewModel.isDocumentUpload else {
@@ -294,13 +294,13 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             idImageBlurEffectView = nil
         }
     }
-    
+
     private func capturePhoto() {
         let photoSettings = AVCapturePhotoSettings()
         photoSettings.flashMode = .off
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
-    
+
 }
 
 extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
@@ -311,18 +311,18 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             $0.textLabel.text = message
         }
         [primaryButton, secondaryButton].enable()
-        
+
         runAfter { [weak self] in
             self?.showLoader(false)
         }
     }
-    
+
     func updateUI() {
         with(viewState) {
             titleLabel.text = $0.title
             primaryButton.title = $0.primaryButtonTitle
             secondaryButton.title = $0.secondaryButtonTitle
-            
+
             switch $0 {
             case .uploadFront, .uploadCACDocument, .uploadDocument:
                 startCaptureSession(false)
@@ -341,11 +341,11 @@ extension GovtIDCaptureViewController: GovtIDCaptureViewProtocol {
             }
         }
     }
-    
+
     func showErrorMessage(_ message: String) {
         navView.showErrorMessage(message)
     }
-    
+
     func hideMessage() {
         navView.hideMessage()
     }
@@ -361,7 +361,7 @@ extension GovtIDCaptureViewController: AVCapturePhotoCaptureDelegate {
             showToast(message: "Error taking photo, please try again", type: .error)
         }
     }
-    
+
     private func didCaptureImage(_ uiImage: UIImage) {
         runOnMainThread { [weak self] in
             self?.viewModel.updateViewState()

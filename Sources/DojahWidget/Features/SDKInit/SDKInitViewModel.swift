@@ -11,7 +11,7 @@ import WebKit
 import IQKeyboardManagerSwift
 import GooglePlaces
 
- final class SDKInitViewModel {
+final class SDKInitViewModel {
     weak var viewProtocol: SDKInitViewProtocol?
     private let widgetID: String
     private var preference: PreferenceProtocol
@@ -21,7 +21,7 @@ import GooglePlaces
     private var preAuthRes: DJPreAuthResponse?
     private let referenceID: String?
     private let emailAddress: String?
-    
+
     init(
         widgetID: String,
         referenceID: String? = nil,
@@ -38,23 +38,23 @@ import GooglePlaces
         self.countriesDatasource = countriesDatasource
         self.authenticationRemoteDatasource = authenticationRemoteDatasource
     }
-    
-    
+
+
      @MainActor func initialize() {
         IQKeyboardManager.shared.enable = true
-        
+
         GMSPlacesClient.provideAPIKey("AIzaSyCGc1Yvx5sbnMklpcwg6A8bkKuDzNMbWu4")
-        
+
         preference.DJAuthStep = .index
-        
+
         viewProtocol?.showLoader(true)
         getUserAgent()
-        
+
         guard !preference.DJConfigurationInitialized else {
             preAuthenticate()
             return
         }
-        
+
         guard let countriesJsonData = jsonData(from: "countries"),
               let governmentIDConfigJsonData = jsonData(from: "government_data_config"),
               let pricingConfigJsonData = jsonData(from: "pricing_config")
@@ -62,25 +62,25 @@ import GooglePlaces
             initializationDidFail()
             return
         }
-        
+
         do {
             let countries = try countriesJsonData.decode(into: [DJCountry].self)
             let dbCountries = countries.map { $0.countryDB }
             try countriesDatasource.saveCountries(dbCountries)
-            
+
             let governmentIDConfig = try governmentIDConfigJsonData.decode(into: DJGovernmentIDConfig.self)
             preference.DJGovernmentIDConfig = governmentIDConfig
-            
+
             let pricingServicesConfig = try pricingConfigJsonData.decode(into: PricingServicesConfig.self)
             preference.DJPricingServicesConfig = pricingServicesConfig
-            
+
             preference.DJConfigurationInitialized = true
             preAuthenticate()
         } catch {
             initializationDidFail(error: error)
         }
     }
-    
+
     private func initializationDidFail(error: Error? = nil) {
         if let error {
             kprint("\(error)")
@@ -88,7 +88,7 @@ import GooglePlaces
         viewProtocol?.showLoader(false)
         viewProtocol?.showSDKInitFailedView()
     }
-    
+
     private func preAuthenticate() {
         let params = ["widget_id": widgetID]
         authenticationRemoteDatasource.getPreAuthenticationInfo(params: params) { [weak self] result in
@@ -100,7 +100,7 @@ import GooglePlaces
             }
         }
     }
-    
+
     private func didGetPreAuthenticationResponse(_ preAuthRes: DJPreAuthResponse) {
         guard preAuthRes.widget?.pages?.isNotEmpty ?? false else {
             initializationDidFail()
@@ -114,7 +114,7 @@ import GooglePlaces
         preference.DJCanSeeCountryPage = preAuthRes.widget?.countries?.isNotEmpty ?? false
         authenticate(using: preAuthRes)
     }
-    
+
     private func authenticate(using preAuthRes: DJPreAuthResponse) {
         var params: DJParameters = [
             "app_id": preAuthRes.appConfig?.id ?? "",
@@ -123,15 +123,15 @@ import GooglePlaces
             "review_process": preAuthRes.widget?.reviewProcess ?? "Automatic",
             "steps": createStepsParameters()
         ]
-        
+
         if let referenceID, referenceID.isNotEmpty {
             params["reference_id"] = referenceID
         }
-        
+
         if let emailAddress, emailAddress.isNotEmpty {
             params["email"] = emailAddress
         }
-        
+
         authenticationRemoteDatasource.authenticate(params: params) { [weak self] result in
             switch result {
             case let .success(authResponse):
@@ -145,7 +145,7 @@ import GooglePlaces
             }
         }
     }
-    
+
     private func didGetAuthenticationResponse(authResponse: DJAuthResponse) {
         guard authResponse.initData.isNotNil else {
             initializationDidFail()
@@ -163,42 +163,42 @@ import GooglePlaces
         ]
         preference.DJVerificationID = authResponse.initData?.data?.verificationID ?? 0
         if (referenceID.orEmpty.isNotEmpty || emailAddress.orEmpty.isNotEmpty),
-            let steps = authResponse.initData?.data?.steps?.by(statuses: [.notdone, .pending, .failed]), 
+            let steps = authResponse.initData?.data?.steps?.by(statuses: [.notdone, .pending, .failed]),
             steps.isNotEmpty {
             preference.DJSteps = steps
         } else {
             preference.DJSteps = authResponse.initData?.data?.steps ?? []
         }
-        
+
         getIPAddress()
     }
-    
+
     private func createStepsParameters() -> [DJParameters] {
         guard let preAuthRes else { return [] }
         var steps = [DJAuthStep]()
         var currentID = 0
         steps.append(.init(name: .index, id: 0, config: .init()))
-        
+
         let emailPageConfig = preAuthRes.widget?.pages?.by(pageName: .email)?.config ?? .init()
         currentID += 1
         steps.append(.init(name: .email, id: currentID, config: emailPageConfig))
-        
+
         if (preAuthRes.widget?.countries ?? []).countGreaterThan(1) {
             currentID += 1
             steps.append(.init(name: .countries, id: currentID, config: .init(configDefault: "")))
         }
-        
+
         let userDataPage = preAuthRes.widget?.pages?.by(pageName: .userData)
         if let userDataPage {
             currentID += 1
             steps.append(.init(name: .userData, id: currentID, config: userDataPage.config ?? .init()))
         }
-        
+
         let pages = preAuthRes.widget?.pages?.filter { ![.userData, .email].contains($0.pageName) } ?? []
         guard pages.isNotEmpty else {
             return steps.map { $0.dictionary }
         }
-        
+
         for page in pages {
             if let pageName = page.pageName {
                 currentID += 1
@@ -219,12 +219,12 @@ import GooglePlaces
                 }
             }
         }
-        
+
         kprint(String(describing: steps.dictionaryArray))
-        
+
         return steps.map { $0.dictionary }
     }
-    
+
     private func getIPAddress() {
         authenticationRemoteDatasource.getIPAddress { [weak self] result in
             switch result {
@@ -235,7 +235,7 @@ import GooglePlaces
             }
         }
     }
-    
+
     private func saveIPAddress(_ ipAddress: DJIPAddress) {
         guard ipAddress.ip != "" else {
             initializationDidFail()
@@ -256,13 +256,13 @@ import GooglePlaces
             }
         }
     }
-    
+
     private func didSaveIPAddress(response: DJIPAddressResponse) {
         guard let country = response.entity?.country, country.isNotEmpty else {
             initializationDidFail()
             return
         }
-        
+
         guard let dbCountry = countriesDatasource.getCountryByName(country),
               let preAuthCountries = preference.preAuthResponse?.widget?.countries,
               preAuthCountries.isNotEmpty,
@@ -271,11 +271,11 @@ import GooglePlaces
             viewProtocol?.showCountryNotSupportedError()
             return
         }
-        
+
         preference.DJIPCountry = dbCountry.iso2
         viewProtocol?.showDisclaimer()
     }
-    
+
     private func getUserAgent() {
         guard preference.DJUserAgent.isEmpty else { return }
         if let userAgent = WKWebView().value(forKey: "userAgent") as? String {
@@ -285,7 +285,7 @@ import GooglePlaces
             kprint("Unable to get UserAgent")
         }
     }
-    
+
     private func cacheWidgetID() {
         let widgetIDAlreadyCached = preference.WidgetIDCache.first { $0.widgetID.insensitiveEquals(widgetID) }
         guard let authResponse, widgetIDAlreadyCached == nil  else { return }
