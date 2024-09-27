@@ -4,7 +4,8 @@ Pod::Spec.new do |s|
   s.summary      = 'DojahWidget SDK for Pod project.'
   s.homepage     = 'https://github.com/dojah-inc/sdk-swift.git'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
-  s.source       = { :git => 'https://github.com/dojah-inc/sdk-swift.git', :tag => s.version }
+  s.author       = { 'Dojah' => 'dojah@dojah.io' }
+  s.source       = { :git => 'https://github.com/shittu33/test-react-native-ios.git', :tag => s.version }
 
   s.ios.deployment_target = '14.0'
   s.swift_version = '5.0'
