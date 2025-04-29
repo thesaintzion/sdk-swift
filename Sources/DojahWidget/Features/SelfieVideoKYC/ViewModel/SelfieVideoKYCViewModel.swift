@@ -139,7 +139,10 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         }
         
         if checkResponse.match ?? false {
-            imageCheckDidSucceed()
+            self?.showLoader?(false)
+            runAfter { [weak self] in
+                self?.setNextAuthStep()
+            }
         } else {
             showLoader?(false)
             if imageCheckMaxTries > Constants.imageCheckMaxTries {
