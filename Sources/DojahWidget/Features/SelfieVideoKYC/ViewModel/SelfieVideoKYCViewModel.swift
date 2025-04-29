@@ -139,7 +139,7 @@ final class SelfieVideoKYCViewModel: BaseViewModel {
         }
         
         if checkResponse.match ?? false {
-            self?.showLoader?(false)
+            showLoader?(false)
             runAfter { [weak self] in
                 self?.setNextAuthStep()
             }
