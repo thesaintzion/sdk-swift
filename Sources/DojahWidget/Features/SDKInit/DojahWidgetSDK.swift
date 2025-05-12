@@ -22,9 +22,17 @@ public final class DojahWidgetSDK {
         )
 
         let controller = SDKInitViewController(viewModel: viewModel)
-        uiController.present(controller,animated: true)
+        uiController.present(controller,animated: true, completion: { result in
+            switch result {
+            case .success(let result):
+                print("Success: \(result)")
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        })
 //        uiController.show(controller, sender: true)
     }
+    
     public static func initialize(
         widgetID: String,
         referenceID: String? = nil,
@@ -37,7 +45,14 @@ public final class DojahWidgetSDK {
             emailAddress: emailAddress
         )
         let controller = SDKInitViewController(viewModel: viewModel)
-        navController.pushViewController(controller, animated: true)
+        navController.pushViewController(controller, animated: true, completion: { result in
+            switch result {
+            case .success(let result):
+                print("Success: \(result)")
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        })
     }
 
     public static func getCachedWidgetIDs() -> [WidgetIDCache] {
