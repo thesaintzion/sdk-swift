@@ -65,6 +65,11 @@ class BaseViewModel {
         }
     }
     
+    func getNextStep(step: Int = 1) -> DJAuthStep? {
+        let nextStep = (preference.DJAuthStep.id ?? 0) + step
+        return preference.DJSteps.first(where: { $0.id == nextStep })
+    }
+    
     func setNextAuthStep(step: Int = 1, showNext: Bool = true) {
         let nextStep = (preference.DJAuthStep.id ?? 0) + step
         guard let authStep = preference.DJSteps.first(where: { $0.id == nextStep }) else { //, preference.DJAuthStep != authStep
@@ -118,6 +123,7 @@ class BaseViewModel {
             return
         }
         preference.DJAuthStep = .index
+        preference.VerificationResultStatus = decisionStatus.verificationStatus
         let feedbackConfig = FeedbackConfig(
             feedbackType: decisionStatus.feedbackType,
             titleText: decisionStatus.feedbackTitle,
@@ -126,5 +132,9 @@ class BaseViewModel {
             doneAction: verificationDoneAction
         )
         showMessage?(feedbackConfig)
+        
+        
+        
+        //schedule a close all screen job
     }
 }

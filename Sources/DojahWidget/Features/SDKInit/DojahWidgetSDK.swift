@@ -45,4 +45,8 @@ public final class DojahWidgetSDK {
     public static func getCachedWidgetIDs() -> [WidgetIDCache] {
         preference.WidgetIDCache
     }
+    
+    public static func getVerificationResultStatus() -> String {
+        preference.VerificationResultStatus
+    }
 }

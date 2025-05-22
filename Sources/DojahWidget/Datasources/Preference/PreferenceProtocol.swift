@@ -25,4 +25,6 @@ protocol PreferenceProtocol {
     var DJOTPVerificationInfo: String { get set }
     var WidgetIDCache: [WidgetIDCache] { get set }
     var DJPricingServicesConfig: PricingServicesConfig? { get set }
+    var VerificationResultStatus: String { get set }
+
 }

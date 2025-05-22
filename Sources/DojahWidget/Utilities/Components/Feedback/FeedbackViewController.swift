@@ -69,6 +69,12 @@ final public class FeedbackViewController: DJBaseViewController {
         iconImageView.showView(countryNotSupported)
         animationView.showView(!countryNotSupported)
         messageLabel.font = countryNotSupported ? .medium(16) : .regular(16)
+        if config.titleText == "Verification successful" || config.titleText == "Verification awaiting approval" || config.titleText == "Verification failed" {
+            let delay : Double = 6.0
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.navigationController?.popToRootViewController(animated: false)
+            }
+        }
     }
 
     override func didTapNavBackButton() {

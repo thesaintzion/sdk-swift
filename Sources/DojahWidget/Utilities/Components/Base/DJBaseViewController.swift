@@ -33,6 +33,27 @@ public class DJBaseViewController: UIViewController {
         addTapGestures()
     }
     
+    
+    public override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillDisappear(animated)
+        self.resignFirstResponder()
+//        if preference.DJAuthStep.name != .email {
+//            kviewModel?.setNextAuthStep(step: -1)
+//        }
+        print("current page is \(String(describing: preference.DJAuthStep.name))")
+        //Is popped to the preview screen in the stack
+        if self.isMovingFromParent == true
+        {
+            print("View controller was popped:DJBaseViewController")
+        }
+        else
+        {
+            print("New view controller was pushed:DJBaseViewController")
+        }
+    }
+
+    
     private func setupNavView() {
         with(navView) {
             addSubview($0)
@@ -244,10 +265,11 @@ public class DJBaseViewController: UIViewController {
     }
     
     func didTapNavCloseButton() {
-        if preference.DJAuthStep.name != .email {
-            kviewModel?.setNextAuthStep(step: -1)
-        }
-        kpop()
+        self.navigationController?.popToRootViewController(animated: false)
+//        if preference.DJAuthStep.name != .email {
+//            kviewModel?.setNextAuthStep(step: -1)
+//        }
+//        kpop()
     }
     
     private func showGovernmentIDViewController(_ govtID: DJGovernmentID) {
