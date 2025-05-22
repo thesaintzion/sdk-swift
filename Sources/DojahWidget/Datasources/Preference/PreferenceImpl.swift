@@ -9,6 +9,9 @@ import Foundation
 
 struct PreferenceImpl: PreferenceProtocol {
     
+    @UserDefaultPrimitive(key: .VerificationResultStatus, default: "")
+    var VerificationResultStatus: String
+    
     @UserDefaultPrimitive(key: .DJWidgetID, default: "")
     var DJWidgetID: String
     

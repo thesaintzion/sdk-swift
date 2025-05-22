@@ -8,6 +8,10 @@
 import UIKit
 import Lottie
 
+protocol SDKInitViewControllerDelegate: AnyObject {
+    func resultViewController(_ controller: SDKInitViewController, didFinishWith result: String)
+}
+
 final class SDKInitViewController: UIViewController {
 
     private let viewModel: SDKInitViewModel
@@ -25,6 +29,24 @@ final class SDKInitViewController: UIViewController {
     private let animationView = LottieAnimationView(name: "circle-loader", bundle: DojahBundle.bundle).withSize(200)
     private let messageLabel = UILabel(text: "Initializing Dojah Widget SDK...", font: .medium(20), alignment: .center)
     private lazy var contentStackView = VStackView(subviews: [animationView, messageLabel], spacing: 10)
+    
+    
+//    override func viewWillDisappear(_ animated: Bool)
+//    {
+//        super.viewWillDisappear(animated)
+//        self.resignFirstResponder()
+//        
+//        //Is popped to the preview screen in the stack
+//        if self.isMovingFromParentViewController == true
+//        {
+//            print("View controller was popped")
+//        }
+//        else
+//        {
+//            print("New view controller was pushed")
+//        }
+//    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -56,4 +56,17 @@ enum DecisionStatus: String, Codable {
             return "Verification failed"
         }
     }
+    
+
+    var verificationStatus: String {
+        switch self {
+        case .approved:
+            return "approved"
+        case .pending:
+            return "pending"
+        case .failed:
+            return "failed"
+        }
+    }
+    
 }
