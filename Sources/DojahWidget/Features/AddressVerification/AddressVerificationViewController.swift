@@ -52,15 +52,32 @@ final class AddressVerificationViewController: DJBaseViewController {
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
 
+    private var isManualAddressLaunched: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.viewProtocol = self
         setupUI()
+        //if manual address is already passed,
+        //call the endpoints
+        let address = preference.DJExtraUserData?.address
+        if(address != nil){
+            locationManager.didUpdateLocation = { [weak self] location in
+                self?.viewModel.currentLocation = location
+                if(self?.isManualAddressLaunched == false){
+                    self?.viewModel.sendManualAddress(address:  address!)
+                    self?.isManualAddressLaunched = true
+
+                }
+            }
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        locationManager.stopUpdatingLocation()
+        if(preference.DJExtraUserData?.location?.isParamSet() != true){
+            locationManager.stopUpdatingLocation()
+        }
     }
 
     private func setupUI() {
@@ -96,11 +113,15 @@ final class AddressVerificationViewController: DJBaseViewController {
 
         contentStackView.setCustomSpacing(5, after: addressTextField)
 
-        locationManager.didUpdateLocation = { [weak self] location in
-            self?.viewModel.currentLocation = location
-        }
+        if(preference.DJExtraUserData?.location?.isParamSet() != true){
+            //if location is not manually passed
+            //start updating location
+            locationManager.didUpdateLocation = { [weak self] location in
+                self?.viewModel.currentLocation = location
+            }
 
-        locationManager.startUpdatingLocation()
+            locationManager.startUpdatingLocation()
+        }
 
         addressTextField.textField.addTarget(
             self,

@@ -15,8 +15,7 @@ public final class DojahWidgetSDK {
         referenceID: String? = nil,
         emailAddress: String? = nil,
         extraUserData: ExtraUserData? = nil,
-        navController: UINavigationController
-    ) {
+        navController: UINavigationController) {
         let viewModel = SDKInitViewModel(
             widgetID: widgetID,
             referenceID: referenceID,

@@ -230,7 +230,9 @@ public class DJBaseViewController: UIViewController {
         locationManager.didChangeAuthorization = { [weak self] status in
             self?.didChangeLocationAuthorization(status)
         }
-        if locationManager.hasLocationPermission {
+        
+        let isManualLocationSet = preference.DJExtraUserData?.location?.isParamSet() == true
+        if locationManager.hasLocationPermission || isManualLocationSet {
             showAddressVerificationController()
         } else {
             let controller = PermissionViewController(permissionType: .location) { [weak self] in

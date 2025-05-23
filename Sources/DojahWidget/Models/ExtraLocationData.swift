@@ -23,4 +23,8 @@ public struct ExtraLocationData: Codable  {
         case latitude = "latitude"
         case longitude = "longitude"
     }
+    
+    public func isParamSet() -> Bool {
+        return self != nil  && latitude != nil && longitude != nil
+    }
 }

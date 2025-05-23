@@ -23,6 +23,7 @@ final class AddressVerificationViewModel: BaseViewModel {
         super.init()
     }
     
+    
     func didTapContinue() {
         hideMessage()
         guard let selectedPlace else {
@@ -36,6 +37,33 @@ final class AddressVerificationViewModel: BaseViewModel {
             "latitude": selectedPlace.coordinate.latitude,
             "longitude": selectedPlace.coordinate.longitude,
             "name": selectedPlace.formattedAddress ?? ""
+        ]
+        
+        remoteDatasource.sendAddress(type: .userSelected, params: params) { [weak self] result in
+            switch result {
+            case let .success(response):
+                self?.didSendUserSelectedAddress(response)
+            case let .failure(error):
+                self?.showLoader?(false)
+                self?.postStepEvent(name: .stepFailed)
+                self?.showErrorMessage(error.uiMessage)
+            }
+        }
+    }
+       
+    func sendManualAddress(address: String) {
+        hideMessage()
+        guard let currentLocation else {
+            showErrorMessage("No valid address is passed")
+            return
+        }
+        
+        showLoader?(true)
+        
+        let params: DJParameters = [
+            "latitude": currentLocation.coordinate.latitude,
+            "longitude": currentLocation.coordinate.longitude,
+            "name": address ?? ""
         ]
         
         remoteDatasource.sendAddress(type: .userSelected, params: params) { [weak self] result in
@@ -64,32 +92,69 @@ final class AddressVerificationViewModel: BaseViewModel {
             return
         }
         
-        guard let selectedPlace, let currentLocation else {
+        let prefLocation = preference.DJExtraUserData?.location
+        var tempSelectedLocation = currentLocation
+        
+        if (preference.DJExtraUserData?.address == nil){
+            if(selectedPlace != nil){
+                tempSelectedLocation = CLLocation(
+                    latitude: selectedPlace!.coordinate.latitude,
+                    longitude: selectedPlace!.coordinate.longitude
+                )
+            }
+        }else{
+            tempSelectedLocation = currentLocation
+        }
+        
+        guard let tempSelectedLocation else {
             showErrorMessage("Unable to determine user's current location, please check your device settings and try again")
             return
         }
         
-        // we want to check if the device coordinates and the coordinates of the address
-        // the user selected on google places are within 50meters of each other and set
-        // the value of 'match' based on that
-        let distanceInMeters = currentLocation.distance(from: selectedPlace.coordinate.location)
-        let match = distanceInMeters <= 50
-        kprint("Distance(in meters) between Current Location(\(currentLocation.latLngString)) & Selected Location(\(selectedPlace.coordinate.latLngString)) => \(distanceInMeters)")
-        let params: DJParameters = [
-            "latitude": currentLocation.coordinate.latitude,
-            "longitude": currentLocation.coordinate.longitude,
-            "match": match
-        ]
         
-        remoteDatasource.sendAddress(type: .userLocation, params: params) { [weak self] result in
-            self?.showLoader?(false)
-            switch result {
-            case let .success(response):
-                self?.didSendCurrentLocationAddress(response)
-            case let .failure(error):
-                self?.postStepEvent(name: .stepFailed)
-                self?.showErrorMessage(error.uiMessage)
+        if(currentLocation == nil && prefLocation?.isParamSet() != true){
+             showErrorMessage("Unable to determine user's current location, please check your device settings and try again")
+             return
+        }
+        
+        var tmpCurrentLocation: CLLocation? = nil
+        
+
+        if (prefLocation?.isParamSet() == true) {
+            let lat = prefLocation?.latitude?.double
+            let lng = prefLocation?.longitude?.double
+            //if the location is manually passed use it
+            tmpCurrentLocation = CLLocation(latitude: lat ?? 0, longitude: lng ?? 0)
+        }else{
+            //else use current device location
+            tmpCurrentLocation = currentLocation
+        }
+    
+        if(tmpCurrentLocation.isNotNil){
+            // we want to check if the device coordinates and the coordinates of the address
+            // the user selected on google places are within 50meters of each other and set
+            // the value of 'match' based on that
+            let distanceInMeters = tmpCurrentLocation!.distance(from: tempSelectedLocation.coordinate.location)
+            
+            let match = distanceInMeters <= 50
+            kprint("Distance(in meters) between Current Location(\(tmpCurrentLocation!.latLngString)) & Selected Location(\(tempSelectedLocation.coordinate.latLngString)) => \(distanceInMeters)")
+            let params: DJParameters = [
+                "latitude": tmpCurrentLocation!.coordinate.latitude,
+                "longitude": tmpCurrentLocation!.coordinate.longitude,
+                "match": match
+            ]
+            
+            remoteDatasource.sendAddress(type: .userLocation, params: params) { [weak self] result in
+                self?.showLoader?(false)
+                switch result {
+                case let .success(response):
+                    self?.didSendCurrentLocationAddress(response)
+                case let .failure(error):
+                    self?.postStepEvent(name: .stepFailed)
+                    self?.showErrorMessage(error.uiMessage)
+                }
             }
+            
         }
     }
     
