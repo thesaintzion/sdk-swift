@@ -26,5 +26,6 @@ protocol PreferenceProtocol {
     var WidgetIDCache: [WidgetIDCache] { get set }
     var DJPricingServicesConfig: PricingServicesConfig? { get set }
     var VerificationResultStatus: String { get set }
+    var DJExtraUserData: ExtraUserData? { get set }
 
 }

@@ -9,8 +9,6 @@ import Foundation
 
 struct PreferenceImpl: PreferenceProtocol {
     
-    @UserDefaultPrimitive(key: .VerificationResultStatus, default: "")
-    var VerificationResultStatus: String
     
     @UserDefaultPrimitive(key: .DJWidgetID, default: "")
     var DJWidgetID: String
@@ -62,4 +60,13 @@ struct PreferenceImpl: PreferenceProtocol {
     
     @UserDefaultCodable(key: .DJPricingServicesConfig, default: nil)
     var DJPricingServicesConfig: PricingServicesConfig?
+    
+    @UserDefaultPrimitive(key: .VerificationResultStatus, default: "")
+    var VerificationResultStatus: String
+    
+    @UserDefaultCodable(key: .ExtraUserData, default: nil)
+    var DJExtraUserData: ExtraUserData?
+    
+    
+    
 }

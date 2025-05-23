@@ -9,33 +9,19 @@ import Foundation
 import UIKit
 
 public final class DojahWidgetSDK {
-    public static func initializeNormal(
-        widgetID: String,
-        referenceID: String? = nil,
-        emailAddress: String? = nil,
-        uiController: UIViewController
-    ) {
-        let viewModel = SDKInitViewModel(
-            widgetID: widgetID,
-            referenceID: referenceID,
-            emailAddress: emailAddress
-        )
-
-        let controller = SDKInitViewController(viewModel: viewModel)
-        uiController.present(controller,animated: true)
-//        uiController.show(controller, sender: true)
-    }
     
     public static func initialize(
         widgetID: String,
         referenceID: String? = nil,
         emailAddress: String? = nil,
+        extraUserData: ExtraUserData? = nil,
         navController: UINavigationController
     ) {
         let viewModel = SDKInitViewModel(
             widgetID: widgetID,
             referenceID: referenceID,
-            emailAddress: emailAddress
+            emailAddress: emailAddress,
+            extraUserData: extraUserData
         )
         let controller = SDKInitViewController(viewModel: viewModel)
     
@@ -51,3 +37,10 @@ public final class DojahWidgetSDK {
         preference.VerificationResultStatus
     }
 }
+
+
+
+
+
+
+

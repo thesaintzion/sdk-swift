@@ -32,6 +32,7 @@ enum DJRemotePath {
     case decision
     case cac
     case tin
+    case metadata
     
     var path: String {
         switch self {
@@ -83,6 +84,9 @@ enum DJRemotePath {
             return "widget/kyc/cac"
         case .tin:
             return "widget/kyc/tin"
+        case .metadata:
+            return "widget/kyc/metadata"
+            
         }
     }
     
@@ -91,3 +95,5 @@ enum DJRemotePath {
         "https://api.dojah.io/\(path)" //Prod
     }
 }
+
+import Foundation

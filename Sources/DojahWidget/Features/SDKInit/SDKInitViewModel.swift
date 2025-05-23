@@ -17,35 +17,44 @@ final class SDKInitViewModel {
     private var preference: PreferenceProtocol
     private let countriesDatasource: CountriesLocalDatasourceProtocol
     private let authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol
+    private let metadataRemoteDatasource: MetaDataRemoteDatasourceProtocol
     private var authResponse: DJAuthResponse?
     private var preAuthRes: DJPreAuthResponse?
     private let referenceID: String?
     private let emailAddress: String?
+    private var extraUserData: ExtraUserData?
 
     init(
         widgetID: String,
         referenceID: String? = nil,
         emailAddress: String? = nil,
+        extraUserData: ExtraUserData? = nil,
         preference: PreferenceProtocol = PreferenceImpl(),
         countriesDatasource: CountriesLocalDatasourceProtocol = CountriesLocalDatasource(),
-        authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol = AuthenticationRemoteDatasource()
+        authenticationRemoteDatasource: AuthenticationRemoteDatasourceProtocol = AuthenticationRemoteDatasource(),
+        metadataRemoteDatasource: MetaDataRemoteDatasourceProtocol = MetaDataRemoteDatasource()
     ) {
         self.widgetID = widgetID
         self.referenceID = referenceID
         self.emailAddress = emailAddress
+        self.extraUserData = extraUserData
         self.preference = preference
         self.preference.DJWidgetID = widgetID
         self.countriesDatasource = countriesDatasource
         self.authenticationRemoteDatasource = authenticationRemoteDatasource
+        self.metadataRemoteDatasource = metadataRemoteDatasource
     }
 
 
      @MainActor func initialize() {
         IQKeyboardManager.shared.enable = true
 
-        GMSPlacesClient.provideAPIKey("AIzaSyCGc1Yvx5sbnMklpcwg6A8bkKuDzNMbWu4")
+        GMSPlacesClient.provideAPIKey("AIzaSyBCukJV3oUhVHcBFADXIv5lcKMw8QlqitY")
 
-        preference.DJAuthStep = .index
+         preference.DJAuthStep = .index
+         if extraUserData != nil{
+             preference.DJExtraUserData = extraUserData!
+         }
 
         viewProtocol?.showLoader(true)
         getUserAgent()
@@ -146,6 +155,7 @@ final class SDKInitViewModel {
         }
     }
 
+
     private func didGetAuthenticationResponse(authResponse: DJAuthResponse) {
         guard authResponse.initData.isNotNil else {
             initializationDidFail()
@@ -171,6 +181,21 @@ final class SDKInitViewModel {
         }
 
         getIPAddress()
+        if(extraUserData?.metadata != nil){
+            sendMetaData()
+        }
+    }
+    
+    
+    private func sendMetaData() {
+        let params = [
+            "app-id": self.preAuthRes?.appConfig?.id ?? self.authResponse?.appConfig?.id ?? "",
+            "verification_id": preference.DJVerificationID,
+            "meta": extraUserData?.metadata
+        ] as [String : Any]
+        metadataRemoteDatasource.sendMetaData(params: params) { [weak self] result in
+            print ("metaData sent \(result)")
+        }
     }
 
     private func createStepsParameters() -> [DJParameters] {

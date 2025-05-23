@@ -26,4 +26,5 @@ enum PreferenceKey: String {
     case DJPreAuthResponse
     case DJPricingServicesConfig
     case VerificationResultStatus
+    case ExtraUserData
 }

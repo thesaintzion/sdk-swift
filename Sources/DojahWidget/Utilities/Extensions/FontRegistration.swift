@@ -36,7 +36,7 @@ struct DJFont {
 
    private init(named name: String) {
       self.name = name
-     do {
+      do {
         try registerFont(named: name)
      } catch {
         let reason = error.localizedDescription
