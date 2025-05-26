@@ -59,6 +59,7 @@ struct DJGovernmentID: Codable {
 
 extension [DJGovernmentID] {
     var names: [String] { compactMap { $0.name } }
+    var symbols: [String] { compactMap { $0.idEnum?.lowercased() } }
 }
 
 extension DJGovernmentID {

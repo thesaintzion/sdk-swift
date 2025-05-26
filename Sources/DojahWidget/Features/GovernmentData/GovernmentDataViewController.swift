@@ -59,6 +59,38 @@ final class GovernmentDataViewController: DJBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        let manualSelectGovData = preference.DJExtraUserData?.govData
+        
+        if(manualSelectGovData != nil && manualSelectGovData!.isFilled()){
+            let items = viewModel.governmentIDs.names
+            let symbols = self.viewModel.governmentIDs.symbols
+            
+            if(manualSelectGovData?.bvn?.isNotEmpty == true){
+                let index = symbols.firstIndex(of: "bvn") ?? 0
+                self.govtIDView.selectItem(item: items[index],index:index)
+                self.govtIDNumberTextField.text = manualSelectGovData?.bvn ?? ""
+            }else  if(manualSelectGovData?.dl?.isNotEmpty == true){
+                let index = symbols.firstIndex(of: "dl") ?? 0
+                self.govtIDView.selectItem(item: items[index],index:index)
+                self.govtIDNumberTextField.text = manualSelectGovData?.dl ?? ""
+            }else  if(manualSelectGovData?.nin?.isNotEmpty == true){
+                let index = symbols.firstIndex(of: "nin") ?? 0
+                self.govtIDView.selectItem(item: items[index],index:index)
+                self.govtIDNumberTextField.text = manualSelectGovData?.nin ?? ""
+            }else  if(manualSelectGovData?.vnin?.isNotEmpty == true){
+                let index = symbols.firstIndex(of: "vnin") ?? 0
+                self.govtIDView.selectItem(item: items[index],index:index)
+                self.govtIDNumberTextField.text = manualSelectGovData?.vnin ?? ""
+            }
+            
+            self.govtIDView.isUserInteractionEnabled = false
+            self.govtIDNumberTextField.isUserInteractionEnabled = false
+            govtIDNumberTextField.showView(true)
+        }else{
+            self.govtIDView.isUserInteractionEnabled = true
+            self.govtIDNumberTextField.isUserInteractionEnabled = true
+            govtIDNumberTextField.showView(false)
+        }
     }
     
     private func setupUI() {

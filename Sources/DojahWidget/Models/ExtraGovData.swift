@@ -31,5 +31,9 @@ public struct ExtraGovData: Codable  {
         case vnin = "vnin"
     }
     
+    public func isFilled() -> Bool {
+        return (bvn?.isNotEmpty == true || dl?.isNotEmpty == true || nin?.isNotEmpty == true || vnin?.isNotEmpty == true)
+    }
+    
 
 }

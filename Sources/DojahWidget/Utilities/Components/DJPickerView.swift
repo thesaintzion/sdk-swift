@@ -45,6 +45,7 @@ final class DJPickerView: BaseView {
             dropdownView.dataSource = selectionItems
         }
     }
+    
     private var itemSelectionHandler: StringIntParamHandler?
     private let showSelectedItem: Bool
 
@@ -150,6 +151,11 @@ final class DJPickerView: BaseView {
             $0.text = value.isEmpty ? "Select" : value
             $0.textColor = value.isEmpty ? .aSecondaryLabel : .aLabel
         }
+    }
+    
+    public func selectItem(item:String,index:Int) {
+        updateValue(item)
+        self.itemSelectionHandler?(item, index)
     }
 
 }
