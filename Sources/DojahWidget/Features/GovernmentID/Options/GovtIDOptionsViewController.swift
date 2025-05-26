@@ -49,6 +49,19 @@ final public class GovtIDOptionsViewController: DJBaseViewController {
                 padding: .kinit(topBottom: 40, leftRight: 20)
             )
         }
+        let manualGovId = preference.DJExtraUserData?.govId
+        if(manualGovId != nil && manualGovId!.isAnyDataAvailable()){
+            let govId = manualGovId!.getNgIdType()
+            let govIdTypes = viewModel.identificationTypes
+
+            if let index = govIdTypes.index(where: {
+                $0.idType?.rawValue == govId }
+            ) {
+                idTypeView.selectItem(item: govIdTypes[index].name ?? "", index: index)
+                self.viewModel.didChooseIdentificationType(at: index)
+                self.viewModel.didTapContinue()
+            }
+        }
     }
 
 }
