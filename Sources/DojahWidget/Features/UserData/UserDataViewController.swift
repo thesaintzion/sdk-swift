@@ -57,6 +57,15 @@ final class UserDataViewController: DJBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        let manualUserData = preference.DJExtraUserData?.userData
+        
+        if(manualUserData != nil){
+            if(manualUserData!.isAllFilled()){
+                autoSendUserData()
+            }else if(manualUserData!.isAnyFilled()){
+                prefillUserDataIfAvailable()
+            }
+        }
     }
 
     private func setupUI() {
@@ -82,6 +91,51 @@ final class UserDataViewController: DJBaseViewController {
         }
 
         navView.showSuccessMessage("Fill the form as it appears on your valid ID")
+    }
+    
+    private func autoSendUserData() {
+        let manualUserData = preference.DJExtraUserData?.userData
+        
+        if(manualUserData != nil){
+            if(manualUserData!.isAllFilled()){
+                contentScrollView.showView(false)
+                viewModel.saveUserData(
+                    firstName: manualUserData!.firstName!,
+                    middleName: nil,
+                    lastName: manualUserData!.lastName!,
+                    dob: manualUserData!.dob!,
+                    onFailure: {[weak self] in
+                        self?.contentScrollView.showView(true)
+                        self?.prefillUserDataIfAvailable()
+                    }
+                )
+            }
+        }
+    }
+    private func prefillUserDataIfAvailable() {
+        let manualUserData = preference.DJExtraUserData?.userData
+        
+        if(manualUserData?.firstName?.isNotEmpty == true){
+            firstNameTextField.text = manualUserData!.firstName!
+            firstNameTextField.isUserInteractionEnabled = false
+        }else{
+            firstNameTextField.isUserInteractionEnabled = true
+        }
+        
+        if(manualUserData?.lastName?.isNotEmpty == true){
+            lastNameTextField.text = manualUserData!.lastName!
+            lastNameTextField.isUserInteractionEnabled = false
+        }else{
+            lastNameTextField.isUserInteractionEnabled = true
+        }
+        
+        if(manualUserData?.dob?.isNotEmpty == true){
+            dobTextField.text = manualUserData!.dob!
+            dobTextField.isUserInteractionEnabled = false
+        }else{
+            dobTextField.isUserInteractionEnabled = true
+        }
+
     }
 
     private func didTapContinueButton() {

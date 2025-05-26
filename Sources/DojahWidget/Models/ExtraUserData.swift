@@ -41,5 +41,4 @@ public struct ExtraUserData:Codable {
         case address
     }
 
-
 }

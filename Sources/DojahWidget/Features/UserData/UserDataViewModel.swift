@@ -18,9 +18,10 @@ final class UserDataViewModel: BaseViewModel {
     
     func saveUserData(
         firstName: String,
-        middleName: String,
+        middleName: String? = nil,
         lastName: String,
-        dob: String
+        dob: String,
+        onFailure: @escaping () -> Void? = ({ nil })
     ) {
         hideMessage()
         let params: DJParameters = [
@@ -42,10 +43,12 @@ final class UserDataViewModel: BaseViewModel {
                     self?.postStepCompletedEvent()
                 } else {
                     self?.postStepFailedEvent()
+                    onFailure()
                     self?.showErrorMessage(res.entity?.msg ?? DJConstants.genericErrorMessage)
                 }
             case .failure(let error):
                 self?.postStepFailedEvent()
+                onFailure()
                 self?.showErrorMessage(error.uiMessage)
             }
         }

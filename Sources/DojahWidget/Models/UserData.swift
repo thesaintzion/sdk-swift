@@ -35,4 +35,12 @@ public struct UserBioData: Codable  {
         case dob
         case email
     }
+    
+    public func isAllFilled() -> Bool {
+        return firstName?.isNotEmpty == true && lastName?.isNotEmpty == true && dob?.isNotEmpty == true
+    }
+    
+    public func isAnyFilled() -> Bool {
+        return firstName?.isNotEmpty == true || lastName?.isNotEmpty == true || dob?.isNotEmpty == true
+    }
 }
