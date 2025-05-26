@@ -36,12 +36,12 @@ struct DJFont {
 
    private init(named name: String) {
       self.name = name
-//      do {
-//        try registerFont(named: name)
-//     } catch {
-//        let reason = error.localizedDescription
-//        fatalError("Failed to register font: \(reason)")
-//     }
+     do {
+       try registerFont(named: name)
+    } catch {
+       let reason = error.localizedDescription
+       fatalError("Failed to register font: \(reason)")
+    }
    }
 
    static let light = DJFont(named: "Atakk-Light")

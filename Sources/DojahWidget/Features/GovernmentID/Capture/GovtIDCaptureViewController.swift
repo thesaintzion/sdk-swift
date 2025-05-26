@@ -10,27 +10,27 @@ import AVFoundation
 import MobileCoreServices
 
 final class GovtIDCaptureViewController: DJBaseViewController {
-
+    
     private let viewModel: GovtIDCaptureViewModel
-
+    
     init(viewModel: GovtIDCaptureViewModel = GovtIDCaptureViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         kviewModel = viewModel
     }
-
+    
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private var viewState: GovtIDCaptureViewState { viewModel.viewState }
     private let verificationMethod: GovtIDVerificationMethod = .govtID
     private let captureSession = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var idImageBlurEffectView: UIVisualEffectView?
-
+    
     private lazy var titleLabel = UILabel(
         text: viewState.title,
         font: .medium(16),
@@ -105,13 +105,14 @@ final class GovtIDCaptureViewController: DJBaseViewController {
         spacing: 20
     )
     private lazy var contentScrollView = UIScrollView(children: [contentStackView])
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.viewProtocol = self
         setupUI()
+        autoUploadGovIdIfAvailable()
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         runAfter { [weak self] in
@@ -123,11 +124,11 @@ final class GovtIDCaptureViewController: DJBaseViewController {
             )
         }
     }
-
+    
     private func setupUI() {
         with(contentScrollView) {
             addSubview($0)
-
+            
             $0.anchor(
                 top: navView.bottomAnchor,
                 leading: safeAreaLeadingAnchor,
@@ -135,7 +136,7 @@ final class GovtIDCaptureViewController: DJBaseViewController {
                 trailing: safeAreaTrailingAnchor,
                 padding: .kinit(leftRight: 20)
             )
-
+            
             contentStackView.anchor(
                 top: $0.ktopAnchor,
                 leading: $0.kleadingAnchor,
@@ -144,20 +145,44 @@ final class GovtIDCaptureViewController: DJBaseViewController {
                 padding: .kinit(top: 40, bottom: 20)
             )
         }
-
+        
         [uploadView, disclaimerItemsView, idImageView].showViews(false)
         [uploadHintLabel, cameraHintView].centerInSuperview()
         cameraView.fillSuperview(padding: .kinit(allEdges: 3))
         idImageView.fillSuperview(padding: .kinit(allEdges: 3))
         [primaryButton, secondaryButton].enable(false)
-
+        
         bindAttachmentManager()
-
+        
         runAfter { [weak self] in
             self?.setupCameraView()
         }
     }
 
+    private func autoUploadGovIdIfAvailable() {
+        let manualGovId = preference.DJExtraUserData?.govId
+        if(manualGovId != nil && manualGovId!.isAnyDataAvailable()){
+            if(manualGovId!.others?.isNotEmpty == true){
+                //handle other id
+            }else{
+                DispatchQueue.main.async {
+                    let imageUrl = manualGovId!.getFirstData()
+                    self.viewModel.downloadImageAndConvertToBase64(from: imageUrl) { base64String in
+                        if let base64 = base64String {
+                            print("Base64 String generated")
+                            self.viewModel.autoUploadGovId(
+                                imageBase64: base64, idType: manualGovId!.getNgIdType(), docType: imageUrl.hasSuffix(".pdf") ?? false ? "pdf" : "image"
+                            )
+                        } else {
+                            //continue as normal
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+    
     private func bindAttachmentManager() {
         attachmentManager.imagePickedHandler = { [weak self] uiimage, imageURL, sourceType in
             self?.didPickImage(uiimage, at: imageURL, using: sourceType)

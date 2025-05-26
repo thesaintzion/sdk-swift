@@ -255,6 +255,29 @@ final class GovtIDCaptureViewModel: BaseViewModel {
         }
     }
     
+    public func autoUploadGovId(imageBase64: String,idType:String,docType:String) {
+
+        var params: DJParameters = [
+            "image": imageBase64,
+            "param": idType,
+            "doc_type": docType,
+            "continue_verification": false
+        ]
+        
+        livenessRemoteDatasource.performImageCheck(params: params) { [weak self] result in
+            guard let self else { return }
+            if self.isDocumentUpload {
+                self.showLoader?(false)
+            }
+            switch result {
+            case let .success(response):
+                self.didGetCheckRequestResponse(response)
+            case let .failure(error):
+                self.imageAnalysisOrCheckOrDocumentUploadDidFail(error)
+            }
+        }
+    }
+    
     private func didGetCheckRequestResponse(_ response: EntityResponse<ImageCheckResponse>) {
         if imageAnalysisTries >= Constants.imageAnalysisMaxTries {
             postEvent(
@@ -363,4 +386,32 @@ final class GovtIDCaptureViewModel: BaseViewModel {
             self?.viewProtocol?.showErrorMessage(message)
         }
     }
+    
+    public func downloadImageAndConvertToBase64(from urlString: String, completion: @escaping (String?) -> Void) {
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            completion(nil)
+            return
+        }
+
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error downloading image: \(error)")
+                completion(nil)
+                return
+            }
+
+            guard let data = data else {
+                print("No data received")
+                completion(nil)
+                return
+            }
+
+            let base64String = data.base64EncodedString()
+            completion(base64String)
+        }
+
+        task.resume()
+    }
+
 }
