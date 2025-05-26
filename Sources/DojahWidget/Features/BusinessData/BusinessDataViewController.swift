@@ -51,7 +51,9 @@ final class BusinessDataViewController: DJBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        prefillDataIfAvailable()
     }
+    
     
     private func setupUI() {
         with(contentScrollView) {
@@ -78,6 +80,29 @@ final class BusinessDataViewController: DJBaseViewController {
         
         viewModel.viewProtocol = self
         
+    }
+    
+    private func prefillDataIfAvailable() {
+        let manualSelectBizData = preference.DJExtraUserData?.businessData
+        
+        if(manualSelectBizData != nil && manualSelectBizData!.isFilled()){
+            let items = viewModel.documentTypes.names
+            let symbols = self.viewModel.documentTypes.symbols
+            
+            if(manualSelectBizData?.cac?.isNotEmpty == true){
+                let index = symbols.firstIndex(of: "cac") ?? 0
+                self.documentTypeView.selectItem(item: items[index],index:index)
+                self.documentNumberTextField.text = manualSelectBizData?.cac ?? ""
+            }
+            
+            self.documentTypeView.isUserInteractionEnabled = false
+            self.documentNumberTextField.isUserInteractionEnabled = false
+            documentNumberTextField.showView(true)
+        }else{
+            self.documentTypeView.isUserInteractionEnabled = true
+            self.documentNumberTextField.isUserInteractionEnabled = true
+            documentNumberTextField.showView(false)
+        }
     }
     
     private func didTapContinueButton() {

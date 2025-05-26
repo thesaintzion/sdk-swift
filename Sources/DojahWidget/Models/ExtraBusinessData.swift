@@ -18,5 +18,9 @@ public struct ExtraBusinessData: Codable  {
     enum CodingKeys: String, CodingKey {
         case cac
     }
+    
+    public func isFilled() -> Bool {
+        return cac?.isNotEmpty == true
+    }
 
 }
