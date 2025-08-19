@@ -30,7 +30,7 @@ let package = Package(
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "IQKeyboardManagerSwift", package: "IQKeyboardManager"),
                 .product(name: "Kingfisher", package: "Kingfisher"),
-                .product(name: "GooglePlaces", package: "ios-places-sdk")
+                // .product(name: "GooglePlaces", package: "ios-places-sdk")
             ],
             resources: [
                 .copy("Resources/JSON/countries.json"),
